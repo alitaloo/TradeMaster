@@ -1,0 +1,108 @@
+# TradeMaster Pro v2.0 - 配置範例
+# 複製此檔案為 settings.yaml 並填入實際值
+
+# ===== API 配置 =====
+api_keys:
+  # Yahoo Finance (免費，無需 Key)
+  yahoo_finance: null
+  
+  # Telegram 機器人
+  telegram:
+    token: "YOUR_BOT_TOKEN"
+    chat_id: "YOUR_CHAT_ID"
+  
+  # Email SMTP
+  email:
+    smtp:
+      server: "smtp.gmail.com"
+      port: 465
+      username: "your_email@gmail.com"
+      password: "your_app_password"
+    from: "trademaster@example.com"
+
+# ===== 交易配置 =====
+trading:
+  # 執行模式: paper / semi / live
+  mode: paper
+  
+  # 初始資金
+  initial_capital: 100000
+  
+  # 觀察清單
+  watchlist:
+    # 科技巨頭
+    - AAPL
+    - MSFT
+    - GOOGL
+    - AMZN
+    - NVDA
+    - TSLA
+    # 半導體/晶片
+    - TSM
+    - AMD
+    - INTC
+    - AVGO
+    # 軟體/服務
+    - UBER
+    - ORCL
+    # 儲存/記憶體
+    - WDC
+    - MU
+    # 加密
+    - COIN
+    # 太空
+    - RKLB
+
+# ===== 風控配置 =====
+risk:
+  # 單筆風險比例 (1-2%)
+  max_risk_per_trade: 0.01
+  
+  # 單股最大倉位比例
+  max_position_pct: 0.25
+  
+  # 每日最大虧損比例
+  max_daily_loss_pct: 0.05
+  
+  # 每日最大交易次數
+  max_orders_per_day: 50
+
+# ===== 技術參數 =====
+indicators:
+  rsi:
+    period: 14
+    overbought: 70
+    oversold: 30
+  
+  ema:
+    fast: 12
+    slow: 26
+    signal: 9
+  
+  macd:
+    fast: 12
+    slow: 26
+    signal: 9
+  
+  bollinger:
+    period: 20
+    std_dev: 2.0
+
+# ===== 通知配置 =====
+notifications:
+  # 發送交易信號
+  trade_signals: true
+  
+  # 發送持倉更新
+  position_updates: true
+  
+  # 發送每日總結
+  daily_summary: true
+  
+  # 發送風控警報
+  risk_alerts: true
+
+# ===== 日誌配置 =====
+logging:
+  level: INFO
+  file: logs/trademaster.log

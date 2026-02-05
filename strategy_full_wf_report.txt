@@ -1,0 +1,19 @@
+TradeMaster v2 - 55策略 Walk-Forward 回測報告
+生成時間: 2026-02-05 16:26
+
+AAPL: SMA_Crossover(5,20) (Sharpe=-0.98, 年化=-5.2%)
+MSFT: SMA_Crossover(5,20) (Sharpe=0.92, 年化=4.9%)
+GOOGL: SMA_Crossover(5,20) (Sharpe=1.09, 年化=5.4%)
+AMZN: SMA_Crossover(5,20) (Sharpe=1.22, 年化=5.7%)
+NVDA: SMA_Crossover(5,20) (Sharpe=0.66, 年化=6.8%)
+TSLA: SMA_Crossover(5,20) (Sharpe=0.98, 年化=17.9%)
+TSM: SMA_Crossover(5,20) (Sharpe=0.74, 年化=3.8%)
+AMD: SMA_Crossover(5,20) (Sharpe=-0.73, 年化=-9.9%)
+INTC: SMA_Crossover(5,20) (Sharpe=0.35, 年化=3.7%)
+AVGO: SMA_Crossover(5,20) (Sharpe=1.43, 年化=12.6%)
+UBER: SMA_Crossover(5,20) (Sharpe=-0.00, 年化=-0.0%)
+ORCL: SMA_Crossover(5,20) (Sharpe=0.05, 年化=0.5%)
+WDC: SMA_Crossover(5,20) (Sharpe=1.41, 年化=13.3%)
+MU: SMA_Crossover(5,20) (Sharpe=0.13, 年化=0.9%)
+COIN: SMA_Crossover(5,20) (Sharpe=0.47, 年化=9.3%)
+RKLB: SMA_Crossover(5,20) (Sharpe=-0.28, 年化=-3.5%)

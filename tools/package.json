@@ -1,0 +1,20 @@
+{
+  "name": "trademaster-gateway-sync",
+  "version": "1.0.0",
+  "description": "Auto-sync Gateway version with OpenClaw",
+  "main": "gateway_sync.js",
+  "scripts": {
+    "preupdate": "node gateway_sync.js",
+    "postinstall": "node gateway_sync.js",
+    "sync": "node gateway_sync.js",
+    "sync:force": "openclaw gateway restart && node gateway_sync.js"
+  },
+  "keywords": [
+    "gateway",
+    "sync",
+    "version",
+    "trademaster"
+  ],
+  "author": "Alita",
+  "license": "MIT"
+}

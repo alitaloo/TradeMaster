@@ -1,0 +1,19 @@
+TradeMaster v2 策略回測報告
+生成時間: 2026-02-05 16:20
+
+AAPL: ADX_Trend (Sharpe=1.26, 年化=20.9%)
+MSFT: BB_Strategy (Sharpe=0.83, 年化=6.7%)
+GOOGL: SMA_Crossover (Sharpe=1.10, 年化=25.9%)
+AMZN: BB_Strategy (Sharpe=1.47, 年化=11.3%)
+NVDA: ADX_Trend (Sharpe=1.84, 年化=63.0%)
+TSLA: MACD_Cross (Sharpe=1.35, 年化=60.5%)
+TSM: RSI_Strategy (Sharpe=1.27, 年化=18.3%)
+AMD: RSI_Strategy (Sharpe=1.28, 年化=26.4%)
+INTC: SMA_Crossover (Sharpe=0.00, 年化=0.0%)
+AVGO: ADX_Trend (Sharpe=1.40, 年化=54.3%)
+UBER: MACD_Cross (Sharpe=0.84, 年化=25.6%)
+ORCL: MACD_Cross (Sharpe=1.65, 年化=48.7%)
+WDC: SMA_Crossover (Sharpe=0.88, 年化=17.2%)
+MU: SMA_Crossover (Sharpe=1.34, 年化=36.7%)
+COIN: MACD_Cross (Sharpe=1.21, 年化=71.8%)
+RKLB: MA+MACD (Sharpe=2.64, 年化=192.7%)

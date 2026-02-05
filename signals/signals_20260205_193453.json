@@ -1,0 +1,301 @@
+{
+  "overview": {
+    "timestamp": "2026-02-05T11:34:53Z",
+    "total_stocks": 16,
+    "long_count": 6,
+    "short_count": 5,
+    "hold_count": 5,
+    "market_sentiment": "BULLISH",
+    "long_ratio": 54.5
+  },
+  "signals": {
+    "AAPL": {
+      "stock": "AAPL",
+      "success": true,
+      "strategy": "SMA(50>200)",
+      "backtest_sharpe": 1.63,
+      "backtest_return": 0.0,
+      "signal": "SHORT",
+      "price": 231.424,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 45.0,
+        "SMA50": 239.31,
+        "SMA200": 219.37,
+        "MACD": -2.3192,
+        "ADX": 92.59,
+        "BB_Pct": 0.49
+      }
+    },
+    "MSFT": {
+      "stock": "MSFT",
+      "success": true,
+      "strategy": "Bearish_MA",
+      "backtest_sharpe": 2.67,
+      "backtest_return": 0.0,
+      "signal": "SHORT",
+      "price": 413.29,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 42.64,
+        "SMA50": 431.11,
+        "SMA200": 424.74,
+        "MACD": -3.6334,
+        "ADX": 100.0,
+        "BB_Pct": 0.23
+      }
+    },
+    "GOOGL": {
+      "stock": "GOOGL",
+      "success": true,
+      "strategy": "RSI_Neutral",
+      "backtest_sharpe": 2.17,
+      "backtest_return": 0.0,
+      "signal": "HOLD",
+      "price": 191.33,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 46.12,
+        "SMA50": 188.66,
+        "SMA200": 174.13,
+        "MACD": 2.7915,
+        "ADX": 100.0,
+        "BB_Pct": 0.22
+      }
+    },
+    "AMZN": {
+      "stock": "AMZN",
+      "success": true,
+      "strategy": "Trend+RSI",
+      "backtest_sharpe": 2.08,
+      "backtest_return": 0.0,
+      "signal": "HOLD",
+      "price": 236.17,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 66.58,
+        "SMA50": 224.01,
+        "SMA200": 195.26,
+        "MACD": 4.6577,
+        "ADX": 95.55,
+        "BB_Pct": 0.69
+      }
+    },
+    "NVDA": {
+      "stock": "NVDA",
+      "success": true,
+      "strategy": "RSI>70",
+      "backtest_sharpe": 2.16,
+      "backtest_return": 0.0,
+      "signal": "SHORT",
+      "price": 124.83,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 42.69,
+        "SMA50": 135.83,
+        "SMA200": 123.0,
+        "MACD": -4.6221,
+        "ADX": 83.37,
+        "BB_Pct": 0.31
+      }
+    },
+    "TSLA": {
+      "stock": "TSLA",
+      "success": true,
+      "strategy": "RSI>60",
+      "backtest_sharpe": 2.02,
+      "backtest_return": 0.0,
+      "signal": "SHORT",
+      "price": 378.17,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 30.04,
+        "SMA50": 400.73,
+        "SMA200": 265.57,
+        "MACD": -3.5876,
+        "ADX": 99.92,
+        "BB_Pct": 0.06
+      }
+    },
+    "TSM": {
+      "stock": "TSM",
+      "success": true,
+      "strategy": "BB_Mid",
+      "backtest_sharpe": 2.18,
+      "backtest_return": 0.0,
+      "signal": "HOLD",
+      "price": 208.57,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 50.96,
+        "SMA50": 202.21,
+        "SMA200": 178.38,
+        "MACD": 0.5943,
+        "ADX": 100.0,
+        "BB_Pct": 0.49
+      }
+    },
+    "AMD": {
+      "stock": "AMD",
+      "success": true,
+      "strategy": "RSI<40",
+      "backtest_sharpe": 1.24,
+      "backtest_return": 0.0,
+      "signal": "LONG",
+      "price": 112.01,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 39.65,
+        "SMA50": 125.82,
+        "SMA200": 147.34,
+        "MACD": -2.9617,
+        "ADX": 100.0,
+        "BB_Pct": 0.06
+      }
+    },
+    "INTC": {
+      "stock": "INTC",
+      "success": true,
+      "strategy": "Bearish_MA",
+      "backtest_sharpe": 0.63,
+      "backtest_return": 0.0,
+      "signal": "SHORT",
+      "price": 19.65,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 49.38,
+        "SMA50": 20.82,
+        "SMA200": 25.07,
+        "MACD": -0.3099,
+        "ADX": 91.19,
+        "BB_Pct": 0.38
+      }
+    },
+    "AVGO": {
+      "stock": "AVGO",
+      "success": true,
+      "strategy": "Bearish_MA",
+      "backtest_sharpe": 1.78,
+      "backtest_return": 0.0,
+      "signal": "LONG",
+      "price": 232.0,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 52.01,
+        "SMA50": 211.46,
+        "SMA200": 171.07,
+        "MACD": 1.0315,
+        "ADX": 100.0,
+        "BB_Pct": 0.63
+      }
+    },
+    "UBER": {
+      "stock": "UBER",
+      "success": true,
+      "strategy": "RSI<30",
+      "backtest_sharpe": 1.56,
+      "backtest_return": 0.0,
+      "signal": "HOLD",
+      "price": 64.48,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 41.44,
+        "SMA50": 65.94,
+        "SMA200": 69.71,
+        "MACD": 0.4431,
+        "ADX": 85.9,
+        "BB_Pct": 0.05
+      }
+    },
+    "ORCL": {
+      "stock": "ORCL",
+      "success": true,
+      "strategy": "RSI_Neutral",
+      "backtest_sharpe": 1.89,
+      "backtest_return": 0.0,
+      "signal": "HOLD",
+      "price": 171.66,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 58.48,
+        "SMA50": 172.85,
+        "SMA200": 152.88,
+        "MACD": -0.1359,
+        "ADX": 100.0,
+        "BB_Pct": 0.64
+      }
+    },
+    "WDC": {
+      "stock": "WDC",
+      "success": true,
+      "strategy": "RSI_Neutral",
+      "backtest_sharpe": 1.94,
+      "backtest_return": 0.0,
+      "signal": "LONG",
+      "price": 48.904,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 50.27,
+        "SMA50": 49.67,
+        "SMA200": 51.56,
+        "MACD": -0.0254,
+        "ADX": 97.1,
+        "BB_Pct": 0.49
+      }
+    },
+    "MU": {
+      "stock": "MU",
+      "success": true,
+      "strategy": "ADX>20+DI+",
+      "backtest_sharpe": 1.2,
+      "backtest_return": 0.0,
+      "signal": "LONG",
+      "price": 93.6,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 37.71,
+        "SMA50": 97.48,
+        "SMA200": 108.32,
+        "MACD": -1.7622,
+        "ADX": 100.0,
+        "BB_Pct": 0.34
+      }
+    },
+    "COIN": {
+      "stock": "COIN",
+      "success": true,
+      "strategy": "Bearish_MA",
+      "backtest_sharpe": 1.62,
+      "backtest_return": 0.0,
+      "signal": "LONG",
+      "price": 275.14,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 50.11,
+        "SMA50": 288.91,
+        "SMA200": 233.07,
+        "MACD": 1.4854,
+        "ADX": 97.52,
+        "BB_Pct": 0.41
+      }
+    },
+    "RKLB": {
+      "stock": "RKLB",
+      "success": true,
+      "strategy": "SMA50+MACD",
+      "backtest_sharpe": 2.64,
+      "backtest_return": 0.0,
+      "signal": "LONG",
+      "price": 28.6,
+      "timestamp": "2026-02-05T11:34:53Z",
+      "indicators": {
+        "RSI": 61.41,
+        "SMA50": 26.12,
+        "SMA200": 11.81,
+        "MACD": 1.024,
+        "ADX": 86.99,
+        "BB_Pct": 0.58
+      }
+    }
+  }
+}

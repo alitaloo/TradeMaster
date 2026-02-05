@@ -1,0 +1,30 @@
+# TradeMaster Pro v2.0 - 依賴清單
+
+# 數據獲取
+yfinance>=0.2.36
+pandas>=2.0.0
+numpy>=1.24.0
+
+# 技術分析
+ta-lib>=0.4.24
+ta>=0.11.0
+
+# 通知
+requests>=2.31.0
+python-telegram-bot>=20.3
+
+# 工具
+python-dotenv>=1.0.0
+loguru>=0.7.0
+pyyaml>=6.0
+
+# API 服務
+flask>=3.0.0
+werkzeug>=3.0.0
+
+# 測試
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# 文檔
+mkdocs>=1.5.0
