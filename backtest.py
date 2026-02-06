@@ -376,21 +376,21 @@ class BacktestEngine:
             # 注意：不應該在每次迭代時更新 capital，只記錄交易 PnL
 
             # 計算凱利參數
-            if not trades or len(trades) < 5:
-                return 0.20  # 預設 20% 倉位
+            if not trades or len(trades) < 20:
+                return 0.15  # 預設 15% 倉位（樣本不足時保守處理）
 
             wins = [t for t in trades if t > 0]
             losses = [t for t in trades if t <= 0]
 
             if not wins or not losses:
-                return 0.20
+                return 0.15
 
             p = len(wins) / len(trades)  # 勝率
             avg_win = sum(wins) / len(wins)
             avg_loss = abs(sum(losses) / len(losses))  # 取絕對值
 
             if avg_loss == 0:
-                return 0.20
+                return 0.15
 
             b = avg_win / avg_loss  # 盈虧比
             q = 1 - p
@@ -401,13 +401,13 @@ class BacktestEngine:
             # 半凱利，避免過度槓桿
             kelly_pct = kelly_pct * self.kelly_fraction
 
-            # 限制在 5% - 100% 之間
-            kelly_pct = max(0.05, min(1.00, kelly_pct))
+            # 限制在 5% - 50% 之間（防止極端槓桿）
+            kelly_pct = max(0.05, min(0.50, kelly_pct))
 
             return kelly_pct
 
         except Exception:
-            return 0.20  # 預設 20%
+            return 0.15  # 預設 15% 倉位
 
     def run(self, symbol: str, strategy, data: pd.DataFrame, strategy_name: str = "Unknown") -> BacktestResult:
         df = self._prepare_data(data.copy())
