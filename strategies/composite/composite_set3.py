@@ -576,4 +576,15 @@ class CCIMeanReversion(BaseStrategy):
         sma = ind.get("SMA", {}).get("sma", pd.Series([0]))
         
         cci_val = cci.iloc[-1] if len(cci) > 0 else 0
-        sma_val = sm
+        sma_val = sma.iloc[-1] if len(sma) > 0 else 0
+        current_price = _get_current_price(data)
+        
+        close = data["Close"].iloc[-1]
+        above_sma = close > sma_val
+        
+        below_sma = close < sma_val
+        if cci_val < -100 and below_sma:
+            return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="CCI oversold with price below SMA", metadata={"type": "cci_oversold"})
+        elif cci_val > 100 and above_sma:
+            return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="CCI overbought with price above SMA", metadata={"type": "cci_overbought"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"cci": cci_val, "sma": sma_val})
