@@ -109,7 +109,7 @@ def run_walkforward_for_strategy_stock(strategy_cls, params, symbol, data, strat
         return None
 
 
-def generate_markdown_report(results: dict, strategies: list, filename: str, full_mode: bool = False):
+def generate_markdown_report(results: dict, strategies: list, filename: str, engine, full_mode: bool = False):
     """生成 Markdown 格式報告"""
     
     mode_note = "（快速版）" if not full_mode else "（完整版）"
@@ -360,11 +360,13 @@ def main():
     # 解析年份範圍
     try:
         start_year, end_year = map(int, args.years.split('-'))
-        start_date = f"{start_year}-01-01"
-        end_date = f"{end_year}-12-31"
+        start_date = pd.Timestamp(f"{start_year}-01-01")
+        end_date = pd.Timestamp(f"{end_year}-12-31")
+        date_range_note = f"{start_year}-{end_year}"
     except:
-        start_date = "2024-01-01"
-        end_date = "2025-12-31"
+        start_date = pd.Timestamp("2024-01-01")
+        end_date = pd.Timestamp("2025-12-31")
+        date_range_note = "2024-2025"
         print(f"   ⚠️ 無效年份格式，使用預設: 2024-2025")
     
     print("=" * 80)
@@ -395,13 +397,29 @@ def main():
     # 初始化回測引擎
     engine = BacktestEngine(
         initial_capital=100000,
-        commission=0.001,
+        commission=0.0015,
         slippage=0.001,
-        kelly_fraction=0.5
+        kelly_fraction=0.25
     )
     
     # 儲存結果
     results = {}
+
+    # 解析函數 - 移到全域
+    def parse_backtest_result(result):
+        if result is None:
+            return None
+        return {
+            'sharpe': result.sharpe_ratio,
+            'total_return': result.total_return,
+            'max_drawdown': result.max_drawdown,
+            'win_rate': result.win_rate,
+            'kelly_position': result.kelly_position,
+            'total_trades': result.total_trades,
+            'equity_curve': result.equity_curve,
+            'is_statistically_valid': getattr(result, 'is_statistically_valid', False),
+            'meets_sharpe_threshold': getattr(result, 'meets_sharpe_threshold', False)
+        }
     
     # 統計
     total_tests = len(STOCKS) * len(strategies)
@@ -421,9 +439,9 @@ def main():
             continue
         
         # 過濾日期範圍
-        if start_date and end_date:
+        if start_date is not None and end_date is not None:
             data = data[(data.index >= start_date) & (data.index <= end_date)]
-            print(f"   📅 {symbol}: {len(data)} 天 ({start_date} ~ {end_date})")
+            print(f"   📅 {symbol}: {len(data)} 天 ({date_range_note})")
         else:
             print(f"   📅 {symbol}: {len(data)} 天 (全部)")
         
@@ -484,7 +502,7 @@ def main():
     
     # 生成報告
     print(f"\n📝 生成報告...")
-    report_content = generate_markdown_report(results, strategies, report_filename, full_mode=args.full)
+    report_content = generate_markdown_report(results, strategies, report_filename, engine, full_mode=args.full)
     
     # 保存報告
     with open(report_path, 'w', encoding='utf-8') as f:
