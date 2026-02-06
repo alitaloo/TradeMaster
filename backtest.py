@@ -271,15 +271,17 @@ class BacktestEngine:
                         exit_price = current_price * (1 - self.slippage)
                         pnl = (exit_price - entry_price) * shares
                         trades.append(pnl)
-                    shares = int(capital / current_price)
+                    # 做空：賣出股票，獲得資金
+                    shares = int(capital * kelly_position / current_price)
                     entry_price = current_price * (1 + self.slippage)
-                    capital -= shares * entry_price  # 做空也需要保證金
+                    capital -= shares * entry_price  # 買入成本
                     position = PositionType.SHORT
 
                 # 更新權益
                 if position == PositionType.LONG:
                     capital = capital + shares * current_price
                 elif position == PositionType.SHORT:
+                    # 做空：價格下跌賺錢，上漲虧錢
                     capital = capital + (entry_price - current_price) * shares
 
             # 計算凱利參數
@@ -416,12 +418,20 @@ class BacktestEngine:
                 # 使用凱利倉位比例做空
                 position_capital = capital * kelly_position
                 shares = int(position_capital / current_price)
-                entry_price = current_price * (1 + self.slippage)
+                entry_price = current_price * (1 - self.slippage)  # 做空時是賣出價格
                 entry_date = current_date
-                capital -= shares * entry_price
+                capital -= shares * entry_price  # 賣出獲得資金
                 position = PositionType.SHORT
 
-            equity.append(capital + shares * current_price if position == PositionType.LONG else capital)
+            # 更新權益
+            if position == PositionType.LONG:
+                equity.append(capital + shares * current_price)
+            elif position == PositionType.SHORT:
+                # 做空：平倉時獲得 entry_price，買回時支付 current_price
+                unrealized_pnl = (entry_price - current_price) * shares
+                equity.append(capital + unrealized_pnl + shares * entry_price)
+            else:
+                equity.append(capital)
 
         result = self._calculate_result(symbol, strategy_name, df, trades, equity)
         result.kelly_position = kelly_position
