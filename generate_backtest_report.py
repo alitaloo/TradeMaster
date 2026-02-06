@@ -364,10 +364,11 @@ def main():
         end_date = pd.Timestamp(f"{end_year}-12-31")
         date_range_note = f"{start_year}-{end_year}"
     except:
-        start_date = pd.Timestamp("2024-01-01")
-        end_date = pd.Timestamp("2025-12-31")
-        date_range_note = "2024-2025"
-        print(f"   ⚠️ 無效年份格式，使用預設: 2024-2025")
+        # 預設使用最近 2 年數據
+        end_date = pd.Timestamp.now()
+        start_date = end_date - pd.DateOffset(years=2)
+        date_range_note = f"{start_date.year}-{end_date.year}"
+        print(f"   ⚠️ 使用預設日期範圍: {date_range_note}")
     
     print("=" * 80)
     print("           TradeMaster v2 - 回測報告生成器")
