@@ -1,26 +1,30 @@
 #!/usr/bin/env python3
 """
-TradeMaster v2 - 完整回測報告生成器
-功能：對所有股票執行回測 + Walk-Forward 分析，生成 Markdown 報告
+TradeMaster v2 - 快速回測報告生成器
+功能：對所有股票執行回測，生成 Markdown 報告
 
 報告命名規範：
-- {YYYYMMDD}_backtest_full_{HHMM}.md
+- {YYYYMMDD}_backtest_{HHMM}.md
 
-範例：20260206_backtest_full_0930.md
+範例：20260206_backtest_0945.md
+
+使用方法：
+- 基本回測（快速）：python3 generate_backtest_report.py
+- 完整回測+Walk-Forward：python3 generate_backtest_report.py --full
 """
 
+import argparse
 import sys
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
 import numpy as np
-import json
 
 # 添加專案根目錄
 PROJECT_DIR = Path(__file__).parent
 sys.path.insert(0, str(PROJECT_DIR))
 
-from backtest import BacktestEngine, WalkForwardBacktest, print_backtest_result, print_walk_forward_result
+from backtest import BacktestEngine, print_backtest_result
 from core import PluginRegistry
 from data import DataEngine
 
@@ -108,10 +112,12 @@ def run_walkforward_for_strategy_stock(strategy_cls, params, symbol, data, strat
         return None
 
 
-def generate_markdown_report(results: dict, strategies: list, filename: str):
+def generate_markdown_report(results: dict, strategies: list, filename: str, full_mode: bool = False):
     """生成 Markdown 格式報告"""
     
-    report = f"""# TradeMaster v2 - 完整回測報告
+    mode_note = "（快速版）" if not full_mode else "（完整版）"
+    
+    report = f"""# TradeMaster v2 - 回測報告{mode_note}
 
 ## 📋 報告資訊
 
@@ -123,8 +129,6 @@ def generate_markdown_report(results: dict, strategies: list, filename: str):
 | 策略數量 | {len(strategies)} |
 | 起始資金 | $100,000 |
 | 半凱利係數 | 0.5 |
-| 訓練窗口 | 252 天 (1年) |
-| 測試窗口 | 63 天 (3個月) |
 
 ---
 
@@ -192,8 +196,7 @@ def generate_markdown_report(results: dict, strategies: list, filename: str):
                     'max_dd': data['backtest'].get('max_drawdown', 0),
                     'win_rate': data['backtest'].get('win_rate', 0),
                     'kelly': data['backtest'].get('kelly_position', 0),
-                    'trades': data['backtest'].get('total_trades', 0),
-                    'walkforward': data.get('walkforward')
+                    'trades': data['backtest'].get('total_trades', 0)
                 })
         
         if not symbol_results:
@@ -213,17 +216,6 @@ def generate_markdown_report(results: dict, strategies: list, filename: str):
         report += f"| 勝率 | {best['win_rate']:.2%} |\n"
         report += f"| 交易次數 | {best['trades']} |\n"
         report += f"| 凱利倉位 | {best['kelly']:.1%} |\n"
-        
-        # Walk-Forward 結果
-        if best.get('walkforward'):
-            wf = best['walkforward']
-            report += f"\n**Walk-Forward 分析：**\n\n"
-            report += f"| 指標 | 值 |\n"
-            report += f"|------|-----|\n"
-            report += f"| Fold 數量 | {wf.get('n_folds', 'N/A')} |\n"
-            report += f"| 平均報酬 | {wf.get('mean_return', 0):.2%} |\n"
-            report += f"| 穩定性 | {wf.get('stability', 0):.2%} |\n"
-            report += f"| Walk-Forward 效率 | {wf.get('walk_forward_ratio', 0):.2f} |\n"
         
         # 所有策略對比表
         report += f"\n**所有策略對比：**\n\n"
@@ -298,14 +290,25 @@ def generate_markdown_report(results: dict, strategies: list, filename: str):
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="TradeMaster v2 - 回測報告生成器"
+    )
+    parser.add_argument(
+        "--full",
+        action="store_true",
+        help="執行完整回測（含 Walk-Forward 分析，較慢）"
+    )
+    args = parser.parse_args()
+    
     print("=" * 80)
-    print("           TradeMaster v2 - 完整回測報告生成器")
+    print("           TradeMaster v2 - 回測報告生成器")
     print(f"           {datetime.now()}")
+    print(f"           模式: {'完整版 (含 Walk-Forward)' if args.full else '快速版'}")
     print("=" * 80)
     
     # 生成報告文件名稱
     timestamp = datetime.now()
-    report_filename = f"{timestamp.strftime('%Y%m%d')}_backtest_full_{timestamp.strftime('%H%M')}.md"
+    report_filename = f"{timestamp.strftime('%Y%m%d')}_backtest_{timestamp.strftime('%H%M')}.md"
     report_path = PROJECT_DIR / "docs" / report_filename
     
     print(f"\n📁 報告將保存至: {report_path}")
@@ -328,13 +331,6 @@ def main():
         commission=0.001,
         slippage=0.001,
         kelly_fraction=0.5
-    )
-    
-    # 初始化 Walk-Forward 引擎
-    wf_engine = WalkForwardBacktest(
-        engine=engine,
-        train_window=252,
-        test_window=63
     )
     
     # 儲存結果
@@ -378,7 +374,7 @@ def main():
                 strategy = strategy_cls(**params)
                 
                 # 回測
-                print(f"   [{current}/{total_tests}] {strategy_name}...", end=" ")
+                print(f"   [{current}/{total_tests}] {strategy_name}...", end=" ", flush=True)
                 backtest_result = engine.run(symbol, strategy, data, strategy_name)
                 
                 # 計算夏普比率
@@ -387,10 +383,7 @@ def main():
                 else:
                     sharpe = 0
                 
-                # Walk-Forward 分析
-                wf_result = wf_engine.run(symbol, strategy, data, strategy_name)
-                
-                # 保存結果
+                # 保存結果（不含 Walk-Forward）
                 results[symbol][strategy_name] = {
                     'backtest': {
                         'total_return': backtest_result.total_return,
@@ -403,8 +396,7 @@ def main():
                         'kelly_position': backtest_result.kelly_position,
                         'profit_factor': backtest_result.profit_factor,
                         'average_holding_days': backtest_result.average_holding_days
-                    },
-                    'walkforward': wf_result
+                    }
                 }
                 
                 print(f"✓ 夏普={sharpe:.2f}, 報酬={backtest_result.total_return:.2%}")
@@ -418,7 +410,7 @@ def main():
     
     # 生成報告
     print(f"\n📝 生成報告...")
-    report_content = generate_markdown_report(results, strategies, report_filename)
+    report_content = generate_markdown_report(results, strategies, report_filename, full_mode=args.full)
     
     # 保存報告
     with open(report_path, 'w', encoding='utf-8') as f:
@@ -446,8 +438,8 @@ def main():
     if all_results:
         all_results.sort(key=lambda x: x['sharpe'], reverse=True)
         
-        print(f"\n🏆 最佳結果 (Top 5):")
-        for i, r in enumerate(all_results[:5], 1):
+        print(f"\n🏆 最佳結果 (Top 10):")
+        for i, r in enumerate(all_results[:10], 1):
             print(f"   {i}. {r['symbol']} - {r['strategy']}")
             print(f"      夏普: {r['sharpe']:.2f} | 報酬: {r['return']:.2%} | 最大回撤: {r['max_dd']:.2%}")
     
