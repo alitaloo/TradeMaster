@@ -32,7 +32,7 @@ class RSIReversalStrategy(BaseStrategy):
         current_price = _get_current_price(data)
         
         if len(rsi) < self.period:
-            return SignalResult(signal="HOLD", confidence=0.0, price=current_price, reason="Hold position", metadata={})
+            return SignalResult(signal="HOLD", confidence=0.0, price=_get_current_price(data), reason="Hold position", metadata={})
         
         latest_rsi = rsi.iloc[-1]
         prev_rsi = rsi.iloc[-2] if len(rsi) > 1 else latest_rsi
@@ -44,7 +44,7 @@ class RSIReversalStrategy(BaseStrategy):
             return SignalResult(
                 signal="LONG",
                 confidence=confidence,
-                price=current_price,
+                price=_get_current_price(data),
                 reason="RSI oversold with reversal signal",
                 metadata={"rsi": latest_rsi, "reason": "oversold_reversal"}
             )
@@ -55,9 +55,9 @@ class RSIReversalStrategy(BaseStrategy):
             return SignalResult(
                 signal="SHORT",
                 confidence=confidence,
-                price=current_price,
+                price=_get_current_price(data),
                 reason="RSI overbought with reversal signal",
                 metadata={"rsi": latest_rsi, "reason": "overbought_reversal"}
             )
         
-        return SignalResult(signal="HOLD", confidence=0.0, price=current_price, reason="Hold position", metadata={"rsi": latest_rsi})
+        return SignalResult(signal="HOLD", confidence=0.0, price=_get_current_price(data), reason="Hold position", metadata={"rsi": latest_rsi})

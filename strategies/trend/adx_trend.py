@@ -34,7 +34,7 @@ class ADXTrendStrategy(BaseStrategy):
         current_price = _get_current_price(data)
         
         if len(adx) < self.period:
-            return SignalResult(signal="HOLD", confidence=0.0, price=current_price, reason="Hold position", metadata={})
+            return SignalResult(signal="HOLD", confidence=0.0, price=_get_current_price(data), reason="Hold position", metadata={})
         
         latest_adx = adx.iloc[-1]
         latest_plus = plus_di.iloc[-1]
@@ -42,7 +42,7 @@ class ADXTrendStrategy(BaseStrategy):
         
         # ADX 低於閾值，趨勢不明確
         if latest_adx < self.adx_threshold:
-            return SignalResult(signal="HOLD", confidence=latest_adx / self.adx_threshold, price=current_price, reason="Hold position", metadata={"adx": latest_adx, "reason": "weak_trend"})
+            return SignalResult(signal="HOLD", confidence=latest_adx / self.adx_threshold, price=_get_current_price(data), reason="Hold position", metadata={"adx": latest_adx, "reason": "weak_trend"})
         
         # 趨勢強度
         trend_strength = min((latest_adx - self.adx_threshold) / (50 - self.adx_threshold), 1.0)
@@ -52,7 +52,7 @@ class ADXTrendStrategy(BaseStrategy):
             return SignalResult(
                 signal="LONG",
                 confidence=trend_strength,
-                price=current_price,
+                price=_get_current_price(data),
                 reason="+DI above -DI indicates uptrend",
                 metadata={
                     "adx": latest_adx,
@@ -67,7 +67,7 @@ class ADXTrendStrategy(BaseStrategy):
             return SignalResult(
                 signal="SHORT",
                 confidence=trend_strength,
-                price=current_price,
+                price=_get_current_price(data),
                 reason="-DI above +DI indicates downtrend",
                 metadata={
                     "adx": latest_adx,
@@ -77,4 +77,4 @@ class ADXTrendStrategy(BaseStrategy):
                 }
             )
         
-        return SignalResult(signal="HOLD", confidence=0.0, price=current_price, reason="Hold position", metadata={"adx": latest_adx})
+        return SignalResult(signal="HOLD", confidence=0.0, price=_get_current_price(data), reason="Hold position", metadata={"adx": latest_adx})

@@ -34,7 +34,7 @@ class MACDTrendStrategy(BaseStrategy):
         current_price = _get_current_price(data)
         
         if len(macd) < self.slow_period + self.signal_period:
-            return SignalResult(signal="HOLD", confidence=0.0, price=current_price, reason="Hold position", metadata={})
+            return SignalResult(signal="HOLD", confidence=0.0, price=_get_current_price(data), reason="Hold position", metadata={})
         
         latest_macd = macd.iloc[-1]
         latest_signal = signal.iloc[-1]
@@ -56,7 +56,7 @@ class MACDTrendStrategy(BaseStrategy):
             return SignalResult(
                 signal="LONG",
                 confidence=min(abs(diff) * 10 + momentum * 0.2, 1.0),
-                price=current_price,
+                price=_get_current_price(data),
                 reason="MACD golden cross detected",
                 metadata={
                     "macd": latest_macd,
@@ -78,7 +78,7 @@ class MACDTrendStrategy(BaseStrategy):
             return SignalResult(
                 signal="SHORT",
                 confidence=min(abs(diff) * 10 + momentum * 0.2, 1.0),
-                price=current_price,
+                price=_get_current_price(data),
                 reason="MACD death cross detected",
                 metadata={
                     "macd": latest_macd,
@@ -89,6 +89,6 @@ class MACDTrendStrategy(BaseStrategy):
         
         # 持有判斷
         elif latest_macd > latest_signal:
-            return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"macd": latest_macd, "signal": latest_signal, "position": "long"})
+            return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"macd": latest_macd, "signal": latest_signal, "position": "long"})
         else:
-            return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"macd": latest_macd, "signal": latest_signal, "position": "short"})
+            return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"macd": latest_macd, "signal": latest_signal, "position": "short"})

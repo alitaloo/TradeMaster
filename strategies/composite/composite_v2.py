@@ -10,6 +10,11 @@ from core.decorators import strategy
 from core.base_classes import BaseStrategy, SignalResult
 
 
+def _get_current_price(price_data):
+    """獲取當前價格"""
+    close = price_data["Close"]
+    return close.iloc[-1] if len(close) > 0 else 0.0
+
 @strategy(
     name="MultiFactorV2",
     type="composite",
@@ -129,7 +134,7 @@ class MultiFactorStrategyV2(BaseStrategy):
             return SignalResult(
                 signal="HOLD",
                 confidence=self.min_confidence,
-                price=current_price,
+                price=_get_current_price(price_data),
                 reason="Insufficient data for analysis",
                 metadata={"volatility_filtered": volatility_filtered}
             )
@@ -148,7 +153,7 @@ class MultiFactorStrategyV2(BaseStrategy):
             return SignalResult(
                 signal="LONG",
                 confidence=confidence,
-                price=current_price,
+                price=_get_current_price(price_data),
                 reason="; ".join(reason_parts) if reason_parts else "LONG signal",
                 indicators={
                     "bullish_count": len(factors["bullish"]),
@@ -165,7 +170,7 @@ class MultiFactorStrategyV2(BaseStrategy):
             return SignalResult(
                 signal="SHORT",
                 confidence=confidence,
-                price=current_price,
+                price=_get_current_price(price_data),
                 reason="; ".join(reason_parts) if reason_parts else "SHORT signal",
                 indicators={
                     "bullish_count": len(factors["bullish"]),
@@ -183,7 +188,7 @@ class MultiFactorStrategyV2(BaseStrategy):
         return SignalResult(
             signal="HOLD",
             confidence=0.5,
-            price=current_price,
+            price=_get_current_price(price_data),
             reason="No consensus: bullish={}, bearish={}".format(
                 len(factors["bullish"]), len(factors["bearish"])
             ),
@@ -346,7 +351,7 @@ class SectorAdaptiveStrategy(BaseStrategy):
         total = len(factors["bullish"]) + len(factors["bearish"])
         if total == 0:
             return SignalResult(
-                signal="HOLD", confidence=0.5, price=current_price,
+                signal="HOLD", confidence=0.5, price=_get_current_price(price_data),
                 reason="No data", metadata={"sector": self.sector_type}
             )
         
@@ -356,19 +361,19 @@ class SectorAdaptiveStrategy(BaseStrategy):
         # 生成信號
         if bullish_pct >= self.min_agreement:
             return SignalResult(
-                signal="LONG", confidence=bullish_pct, price=current_price,
+                signal="LONG", confidence=bullish_pct, price=_get_current_price(price_data),
                 reason="LONG: " + ",".join(factors["bullish"]),
                 indicators={"sector": self.sector_type, "adx": adx_value}
             )
         elif bearish_pct >= self.min_agreement:
             return SignalResult(
-                signal="SHORT", confidence=bearish_pct, price=current_price,
+                signal="SHORT", confidence=bearish_pct, price=_get_current_price(price_data),
                 reason="SHORT: " + ",".join(factors["bearish"]),
                 indicators={"sector": self.sector_type, "adx": adx_value}
             )
         
         return SignalResult(
-            signal="HOLD", confidence=0.5, price=current_price,
+            signal="HOLD", confidence=0.5, price=_get_current_price(price_data),
             reason=f"No consensus ({self.sector_type})",
             indicators={"sector": self.sector_type, "adx": adx_value}
         )

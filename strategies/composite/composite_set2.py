@@ -39,10 +39,10 @@ class VolumePriceConfirmation(BaseStrategy):
         
         if vr > self.vol_threshold:
             if price_up and rsi_val > 50:
-                return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Volume confirmation with RSI bullish", metadata={"type": "volume_confirmation_up"})
+                return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Volume confirmation with RSI bullish", metadata={"type": "volume_confirmation_up"})
             elif not price_up and rsi_val < 50:
-                return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Volume confirmation with RSI bearish", metadata={"type": "volume_confirmation_down"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"vol_ratio": vr})
+                return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Volume confirmation with RSI bearish", metadata={"type": "volume_confirmation_down"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"vol_ratio": vr})
 
 
 @strategy(name="OBV_Trend_Follow", type="composite",
@@ -71,10 +71,10 @@ class OBVTrendFollow(BaseStrategy):
         
         if obv_trend == price_trend:
             if obv_trend:
-                return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="OBV confirmed uptrend", metadata={"type": "confirmed_uptrend"})
+                return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="OBV confirmed uptrend", metadata={"type": "confirmed_uptrend"})
             else:
-                return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="OBV confirmed downtrend", metadata={"type": "confirmed_downtrend"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"obv_trend": obv_trend, "price_trend": price_trend})
+                return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="OBV confirmed downtrend", metadata={"type": "confirmed_downtrend"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"obv_trend": obv_trend, "price_trend": price_trend})
 
 
 @strategy(name="VWAP_Reversal", type="composite",
@@ -95,10 +95,10 @@ class VWAPReversal(BaseStrategy):
         current_price = _get_current_price(data)
         
         if dev_val < -self.deviation_threshold and rsi_val < 35:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="VWAP oversold with RSI", metadata={"type": "vwap_oversold"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="VWAP oversold with RSI", metadata={"type": "vwap_oversold"})
         elif dev_val > self.deviation_threshold and rsi_val > 65:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="VWAP overbought with RSI", metadata={"type": "vwap_overbought"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"deviation": dev_val, "rsi": rsi_val})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="VWAP overbought with RSI", metadata={"type": "vwap_overbought"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"deviation": dev_val, "rsi": rsi_val})
 
 
 @strategy(name="AD_Accumulation", type="composite",
@@ -126,10 +126,10 @@ class ADAccumulation(BaseStrategy):
         macd_bullish = macd_val > sig_val
         
         if ad_trend and macd_bullish:
-            return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="A/D accumulation with MACD bullish", metadata={"type": "accumulation"})
+            return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="A/D accumulation with MACD bullish", metadata={"type": "accumulation"})
         elif not ad_trend and not macd_bullish:
-            return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="A/D distribution with MACD bearish", metadata={"type": "distribution"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={})
+            return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="A/D distribution with MACD bearish", metadata={"type": "distribution"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={})
 
 
 @strategy(name="Chaikin_Volume_Oscillator", type="composite",
@@ -152,10 +152,10 @@ class ChaikinVolumeOscillator(BaseStrategy):
         current_price = _get_current_price(data)
         
         if osc_val > sig_val and rsi_val > 50:
-            return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="Chaikin bullish flow", metadata={"type": "bullish_flow"})
+            return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="Chaikin bullish flow", metadata={"type": "bullish_flow"})
         elif osc_val < sig_val and rsi_val < 50:
-            return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="Chaikin bearish flow", metadata={"type": "bearish_flow"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"osc": osc_val})
+            return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="Chaikin bearish flow", metadata={"type": "bearish_flow"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"osc": osc_val})
 
 
 # ========== 策略 21-25: Volatility 系列 ==========
@@ -181,10 +181,10 @@ class ATRTrendConfirmation(BaseStrategy):
         
         if adx_val > 25:
             if plus_di.iloc[-1] > minus_di.iloc[-1]:
-                return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Strong uptrend with ATR confirmation", metadata={"type": "strong_trend", "atr": float(atr_val)})
+                return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Strong uptrend with ATR confirmation", metadata={"type": "strong_trend", "atr": float(atr_val)})
             else:
-                return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Strong downtrend with ATR confirmation", metadata={"type": "strong_trend", "atr": float(atr_val)})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"adx": float(adx_val)})
+                return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Strong downtrend with ATR confirmation", metadata={"type": "strong_trend", "atr": float(atr_val)})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"adx": float(adx_val)})
 
 
 @strategy(name="BollingerWidth_Expansion", type="composite",
@@ -213,10 +213,10 @@ class BollingerWidthExpansion(BaseStrategy):
         
         if width > self.width_threshold and vr > 1.3:
             if price_up:
-                return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="BB breakout upward", metadata={"type": "breakout_up"})
+                return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="BB breakout upward", metadata={"type": "breakout_up"})
             else:
-                return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="BB breakout downward", metadata={"type": "breakout_down"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"width": width, "vol": vr})
+                return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="BB breakout downward", metadata={"type": "breakout_down"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"width": width, "vol": vr})
 
 
 @strategy(name="Keltner_Bollinger_Squeeze", type="composite",
@@ -246,10 +246,10 @@ class KeltnerBollingerSqueeze(BaseStrategy):
         
         if ratio < self.squeeze_threshold:
             if close > k_middle:
-                return SignalResult(signal="LONG", confidence=0.75, price=current_price, reason="BB squeeze bullish", metadata={"type": "squeeze_long", "ratio": ratio})
+                return SignalResult(signal="LONG", confidence=0.75, price=_get_current_price(data), reason="BB squeeze bullish", metadata={"type": "squeeze_long", "ratio": ratio})
             else:
-                return SignalResult(signal="SHORT", confidence=0.75, price=current_price, reason="BB squeeze bearish", metadata={"type": "squeeze_short", "ratio": ratio})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"ratio": ratio})
+                return SignalResult(signal="SHORT", confidence=0.75, price=_get_current_price(data), reason="BB squeeze bearish", metadata={"type": "squeeze_short", "ratio": ratio})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"ratio": ratio})
 
 
 @strategy(name="HistoricalVolatility_Range", type="composite",
@@ -274,10 +274,10 @@ class HistoricalVolatilityRange(BaseStrategy):
         current_price = _get_current_price(data)
         
         if percentile > self.hv_percentile_high and rsi_val > 65:
-            return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="High volatility with overbought RSI", metadata={"type": "high_vol_sell"})
+            return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="High volatility with overbought RSI", metadata={"type": "high_vol_sell"})
         elif percentile < self.hv_percentile_low and rsi_val < 35:
-            return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="Low volatility with oversold RSI", metadata={"type": "low_vol_buy"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"hv_percentile": percentile})
+            return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="Low volatility with oversold RSI", metadata={"type": "low_vol_buy"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"hv_percentile": percentile})
 
 
 @strategy(name="VolatilityRatio_Trend", type="composite",
@@ -301,10 +301,10 @@ class VolatilityRatioTrend(BaseStrategy):
         
         if adx_val > 25:
             if plus_di.iloc[-1] > minus_di.iloc[-1] and vr > 0.8:
-                return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Trending expansion upward", metadata={"type": "trending_expansion"})
+                return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Trending expansion upward", metadata={"type": "trending_expansion"})
             elif minus_di.iloc[-1] > plus_di.iloc[-1] and vr > 0.8:
-                return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Trending expansion downward", metadata={"type": "trending_expansion"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"vol_ratio": vr, "adx": adx_val})
+                return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Trending expansion downward", metadata={"type": "trending_expansion"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"vol_ratio": vr, "adx": adx_val})
 
 
 # ========== 策略 26-30: Momentum 系列 ==========
@@ -327,10 +327,10 @@ class MomentumROC(BaseStrategy):
         current_price = _get_current_price(data)
         
         if mom_val > self.threshold and roc_val > self.threshold:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Strong positive momentum", metadata={"type": "strong_momentum_up"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Strong positive momentum", metadata={"type": "strong_momentum_up"})
         elif mom_val < -self.threshold and roc_val < -self.threshold:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Strong negative momentum", metadata={"type": "strong_momentum_down"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"momentum": float(mom_val), "roc": float(roc_val)})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Strong negative momentum", metadata={"type": "strong_momentum_down"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"momentum": float(mom_val), "roc": float(roc_val)})
 
 
 @strategy(name="Momentum_ADX_Strength", type="composite",
@@ -354,10 +354,10 @@ class MomentumADXStrength(BaseStrategy):
         
         if adx_val > self.adx_threshold:
             if plus_di.iloc[-1] > minus_di.iloc[-1] and mom_val > 0:
-                return SignalResult(signal="LONG", confidence=0.9, price=current_price, reason="Strong up momentum with ADX confirmation", metadata={"type": "strong_up_momentum"})
+                return SignalResult(signal="LONG", confidence=0.9, price=_get_current_price(data), reason="Strong up momentum with ADX confirmation", metadata={"type": "strong_up_momentum"})
             elif minus_di.iloc[-1] > plus_di.iloc[-1] and mom_val < 0:
-                return SignalResult(signal="SHORT", confidence=0.9, price=current_price, reason="Strong down momentum with ADX confirmation", metadata={"type": "strong_down_momentum"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"momentum": float(mom_val), "adx": adx_val})
+                return SignalResult(signal="SHORT", confidence=0.9, price=_get_current_price(data), reason="Strong down momentum with ADX confirmation", metadata={"type": "strong_down_momentum"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"momentum": float(mom_val), "adx": adx_val})
 
 
 @strategy(name="Momentum_Volume_Rally", type="composite",
@@ -379,10 +379,10 @@ class MomentumVolumeRally(BaseStrategy):
         current_price = _get_current_price(data)
         
         if mom_val > self.mom_threshold and vr > self.vol_threshold:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Momentum rally with volume confirmation", metadata={"type": "volume_rally"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Momentum rally with volume confirmation", metadata={"type": "volume_rally"})
         elif mom_val < -self.mom_threshold and vr > self.vol_threshold:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Momentum selloff with volume confirmation", metadata={"type": "volume_selloff"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"momentum": float(mom_val), "vol_ratio": vr})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Momentum selloff with volume confirmation", metadata={"type": "volume_selloff"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"momentum": float(mom_val), "vol_ratio": vr})
 
 
 @strategy(name="Stochastic_Momentum", type="composite",
@@ -409,10 +409,10 @@ class StochasticMomentumCombo(BaseStrategy):
         k_below_d = k_val < d_val
         
         if k_above_d and mom_val > 0 and k_val < 80:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Stochastic bullish with momentum", metadata={"type": "stoch_bullish"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Stochastic bullish with momentum", metadata={"type": "stoch_bullish"})
         elif k_below_d and mom_val < 0 and k_val > 20:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Stochastic bearish with momentum", metadata={"type": "stoch_bearish"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"k": k_val, "d": d_val, "mom": float(mom_val)})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Stochastic bearish with momentum", metadata={"type": "stoch_bearish"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"k": k_val, "d": d_val, "mom": float(mom_val)})
 
 
 @strategy(name="WilliamsR_Momentum", type="composite",
@@ -434,7 +434,7 @@ class WilliamsRMomentum(BaseStrategy):
         current_price = _get_current_price(data)
         
         if w_val < self.williams_oversold and mom_val > 0:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Williams %R oversold with positive momentum", metadata={"type": "oversold_recovery"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Williams %R oversold with positive momentum", metadata={"type": "oversold_recovery"})
         elif w_val > self.williams_overbought and mom_val < 0:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Williams %R overbought with negative momentum", metadata={"type": "overbought_decline"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"williams": float(w_val), "momentum": float(mom_val)})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Williams %R overbought with negative momentum", metadata={"type": "overbought_decline"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"williams": float(w_val), "momentum": float(mom_val)})

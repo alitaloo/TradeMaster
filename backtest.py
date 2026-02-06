@@ -65,7 +65,11 @@ def calculate_indicators(data: pd.DataFrame) -> dict:
     }
     
     # SMA
-    indicators["SMA"] = {"sma": close.rolling(window=50).mean()}
+    sma50 = close.rolling(window=50).mean()
+    indicators["SMA"] = {
+        "sma": sma50,
+        "price_vs_sma": (close - sma50) / sma50.replace(0, 1)
+    }
     
     # EMA
     indicators["EMA"] = {"ema": close.ewm(span=50, adjust=False).mean()}
@@ -114,12 +118,103 @@ def calculate_indicators(data: pd.DataFrame) -> dict:
     
     # OBV
     obv = (np.sign(close.diff()) * volume).cumsum()
-    indicators["OBV"] = {"obv": obv}
+    indicators["OBV"] = {
+        "obv": obv,
+        "obv_sma": obv.rolling(window=20).mean()
+    }
     
     # VWAP (如果可用)
     if "Volume" in data.columns:
         vwap = (close * volume).cumsum() / volume.cumsum()
-        indicators["VWAP"] = {"vwap": vwap}
+        indicators["VWAP"] = {
+            "vwap": vwap,
+            "vwap_deviation": (close - vwap) / vwap.replace(0, 1)
+        }
+    
+    # Ichimoku Cloud
+    tenkan_period = 9
+    kijun_period = 26
+    senkou_period = 52
+    tenkan = (high.rolling(window=tenkan_period).max() + low.rolling(window=tenkan_period).min()) / 2
+    kijun = (high.rolling(window=kijun_period).max() + low.rolling(window=kijun_period).min()) / 2
+    senkou_a = ((tenkan + kijun) / 2).shift(kijun_period)
+    senkou_b = ((high.rolling(window=senkou_period).max() + low.rolling(window=senkou_period).min()) / 2).shift(kijun_period)
+    chikou = close.shift(-kijun_period)
+    indicators["IchimokuCloud"] = {
+        "tenkan": tenkan,
+        "kijun": kijun,
+        "senkou_a": senkou_a,
+        "senkou_b": senkou_b,
+        "chikou": chikou,
+        "cloud_top": senkou_a.combine(senkou_b, lambda a, b: max(a, b) if pd.notna(a) and pd.notna(b) else a),
+        "cloud_bottom": senkou_a.combine(senkou_b, lambda a, b: min(a, b) if pd.notna(a) and pd.notna(b) else a)
+    }
+    
+    # Parabolic SAR
+    af = 0.02
+    af_max = 0.2
+    sar = np.zeros(len(close))
+    trend = np.ones(len(close))
+    sar[0] = low.iloc[0]
+    
+    for i in range(1, len(close)):
+        sar[i] = sar[i-1] + af * (high.iloc[i-1] - sar[i-1]) if trend[i-1] == 1 else sar[i-1] - af * (sar[i-1] - low.iloc[i-1])
+        if trend[i-1] == 1:
+            if high.iloc[i] > sar[i]:
+                trend[i] = 1
+                af = min(af + 0.02, af_max)
+            else:
+                trend[i] = -1
+                sar[i] = high.iloc[i-1]
+                af = 0.02
+        else:
+            if low.iloc[i] < sar[i]:
+                trend[i] = -1
+                af = min(af + 0.02, af_max)
+            else:
+                trend[i] = 1
+                sar[i] = low.iloc[i-1]
+                af = 0.02
+    indicators["ParabolicSAR"] = {
+        "sar": pd.Series(sar, index=close.index),
+        "trend_direction": pd.Series(trend, index=close.index)
+    }
+    
+    # Accumulation/Distribution
+    mfm = ((close - low) - (high - close)) / (high - low).replace(0, 1)
+    indicators["AccumulationDistribution"] = {
+        "ad": (mfm * volume).cumsum(),
+        "ad_ema": (mfm * volume).cumsum().ewm(span=10, adjust=False).mean()
+    }
+    
+    # Chaikin Oscillator
+    ad = (mfm * volume).cumsum()
+    ad_ema3 = ad.ewm(span=3, adjust=False).mean()
+    ad_ema10 = ad.ewm(span=10, adjust=False).mean()
+    indicators["ChaikinOscillator"] = {"chaikin": ad_ema3 - ad_ema10}
+    
+    # Historical Volatility
+    log_returns = np.log(close / close.shift(1))
+    hv_values = log_returns.rolling(window=20).std() * np.sqrt(252)
+    indicators["HistoricalVolatility"] = {
+        "hv": hv_values,
+        "hv_percentile": hv_values.rolling(window=252).apply(lambda x: pd.Series(x).rank(pct=True).iloc[-1] if len(x.dropna()) > 0 else 50, raw=False).fillna(50)
+    }
+    
+    # Keltner Channel
+    ema20 = close.ewm(span=20, adjust=False).mean()
+    atr_kc = (high - low).rolling(window=20).mean()
+    indicators["KeltnerChannel"] = {
+        "upper": ema20 + 2 * atr_kc,
+        "middle": ema20,
+        "lower": ema20 - 2 * atr_kc
+    }
+    
+    # Rate of Change
+    indicators["RateOfChange"] = {"roc": ((close - close.shift(10)) / close.shift(10).replace(0, np.nan)) * 100}
+    
+    # Volatility Ratio
+    indicators["VolatilityRatio"] = {"vr": atr / atr.shift(10).replace(0, np.nan)}
     
     return indicators
 
@@ -418,9 +513,9 @@ class BacktestEngine:
                 # 使用凱利倉位比例做空
                 position_capital = capital * kelly_position
                 shares = int(position_capital / current_price)
-                entry_price = current_price * (1 - self.slippage)  # 做空時是賣出價格
+                entry_price = current_price * (1 + self.slippage)  # 做空時是賣出價格
                 entry_date = current_date
-                capital -= shares * entry_price  # 賣出獲得資金
+                capital += shares * entry_price  # 做空獲得資金
                 position = PositionType.SHORT
 
             # 更新權益
@@ -429,7 +524,7 @@ class BacktestEngine:
             elif position == PositionType.SHORT:
                 # 做空：平倉時獲得 entry_price，買回時支付 current_price
                 unrealized_pnl = (entry_price - current_price) * shares
-                equity.append(capital + unrealized_pnl + shares * entry_price)
+                equity.append(capital + unrealized_pnl)
             else:
                 equity.append(capital)
 

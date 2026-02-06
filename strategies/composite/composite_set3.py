@@ -41,10 +41,10 @@ class TripleIndicatorConfirm(BaseStrategy):
         short_confirm = (rsi_val < 50) and (macd_val < sig_val) and (stoch_val < 50)
         
         if long_confirm:
-            return SignalResult(signal="LONG", confidence=0.9, price=current_price, reason="Triple indicator bullish confirmation", metadata={"type": "triple_confirm_up"})
+            return SignalResult(signal="LONG", confidence=0.9, price=_get_current_price(data), reason="Triple indicator bullish confirmation", metadata={"type": "triple_confirm_up"})
         elif short_confirm:
-            return SignalResult(signal="SHORT", confidence=0.9, price=current_price, reason="Triple indicator bearish confirmation", metadata={"type": "triple_confirm_down"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"rsi": rsi_val, "stoch": stoch_val})
+            return SignalResult(signal="SHORT", confidence=0.9, price=_get_current_price(data), reason="Triple indicator bearish confirmation", metadata={"type": "triple_confirm_down"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"rsi": rsi_val, "stoch": stoch_val})
 
 
 @strategy(name="Trend_Volume_Alignment", type="composite",
@@ -71,10 +71,10 @@ class TrendVolumeAlignment(BaseStrategy):
         down_trend = (sma_val < ema_val) and (close < ema_val)
         
         if trend_aligned and vr > 1.1:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Trend aligned upward with volume", metadata={"type": "aligned_uptrend"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Trend aligned upward with volume", metadata={"type": "aligned_uptrend"})
         elif down_trend and vr > 1.1:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Trend aligned downward with volume", metadata={"type": "aligned_downtrend"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"vol_ratio": vr})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Trend aligned downward with volume", metadata={"type": "aligned_downtrend"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"vol_ratio": vr})
 
 
 @strategy(name="Oversold_Bounce", type="composite",
@@ -105,8 +105,8 @@ class OversoldBounce(BaseStrategy):
         if cci_val < -100: oversold_count += 1
         
         if oversold_count >= 2:
-            return SignalResult(signal="LONG", confidence=0.7 + oversold_count * 0.1, price=current_price, reason="Multiple oversold indicators", metadata={"oversold_count": oversold_count})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"oversold_count": oversold_count})
+            return SignalResult(signal="LONG", confidence=0.7 + oversold_count * 0.1, price=_get_current_price(data), reason="Multiple oversold indicators", metadata={"oversold_count": oversold_count})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"oversold_count": oversold_count})
 
 
 @strategy(name="Overbought_Decline", type="composite",
@@ -137,8 +137,8 @@ class OverboughtDecline(BaseStrategy):
         if cci_val > 100: overbought_count += 1
         
         if overbought_count >= 2:
-            return SignalResult(signal="SHORT", confidence=0.7 + overbought_count * 0.1, price=current_price, reason="Multiple overbought indicators", metadata={"overbought_count": overbought_count})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"overbought_count": overbought_count})
+            return SignalResult(signal="SHORT", confidence=0.7 + overbought_count * 0.1, price=_get_current_price(data), reason="Multiple overbought indicators", metadata={"overbought_count": overbought_count})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"overbought_count": overbought_count})
 
 
 @strategy(name="ADX_DI_Crossover", type="composite",
@@ -164,10 +164,10 @@ class ADXDI(BaseStrategy):
         
         if adx_val > self.adx_threshold:
             if di_plus > di_minus and stoch_val < 70:
-                return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="DI+ crossing above DI-", metadata={"type": "di_plus_up"})
+                return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="DI+ crossing above DI-", metadata={"type": "di_plus_up"})
             elif di_minus > di_plus and stoch_val > 30:
-                return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="DI- crossing above DI+", metadata={"type": "di_minus_down"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"adx": adx_val, "stoch": stoch_val})
+                return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="DI- crossing above DI+", metadata={"type": "di_minus_down"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"adx": adx_val, "stoch": stoch_val})
 
 
 @strategy(name="Bollinger_Mean_Reversion", type="composite",
@@ -189,10 +189,10 @@ class BollingerMeanReversion(BaseStrategy):
         current_price = _get_current_price(data)
         
         if bb_pct < 0.1 and cci_val < -100:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="BB oversold with CCI confirmation", metadata={"type": "bb_oversold_cci"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="BB oversold with CCI confirmation", metadata={"type": "bb_oversold_cci"})
         elif bb_pct > 0.9 and cci_val > 100:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="BB overbought with CCI confirmation", metadata={"type": "bb_overbought_cci"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"bb_percent": bb_pct, "cci": cci_val})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="BB overbought with CCI confirmation", metadata={"type": "bb_overbought_cci"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"bb_percent": bb_pct, "cci": cci_val})
 
 
 @strategy(name="MACD_Zero_Cross", type="composite",
@@ -219,10 +219,10 @@ class MACDZeroCross(BaseStrategy):
         zero_cross_down = (macd_prev > 0) and (macd_val < 0)
         
         if zero_cross_up and vr > 1.2:
-            return SignalResult(signal="LONG", confidence=0.9, price=current_price, reason="MACD zero line bullish cross", metadata={"type": "zero_cross_up"})
+            return SignalResult(signal="LONG", confidence=0.9, price=_get_current_price(data), reason="MACD zero line bullish cross", metadata={"type": "zero_cross_up"})
         elif zero_cross_down and vr > 1.2:
-            return SignalResult(signal="SHORT", confidence=0.9, price=current_price, reason="MACD zero line bearish cross", metadata={"type": "zero_cross_down"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"macd": macd_val, "vol": vr})
+            return SignalResult(signal="SHORT", confidence=0.9, price=_get_current_price(data), reason="MACD zero line bearish cross", metadata={"type": "zero_cross_down"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"macd": macd_val, "vol": vr})
 
 
 @strategy(name="Stochastic_RSI_Oscillator", type="composite",
@@ -243,10 +243,10 @@ class StochasticRSIOscillator(BaseStrategy):
         current_price = _get_current_price(data)
         
         if stoch_val < 20 and rsi_val < 30:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Both Stochastic and RSI oversold", metadata={"type": "double_oversold"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Both Stochastic and RSI oversold", metadata={"type": "double_oversold"})
         elif stoch_val > 80 and rsi_val > 70:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Both Stochastic and RSI overbought", metadata={"type": "double_overbought"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"stoch": stoch_val, "rsi": rsi_val})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Both Stochastic and RSI overbought", metadata={"type": "double_overbought"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"stoch": stoch_val, "rsi": rsi_val})
 
 
 @strategy(name="Trend_Filter_RSI", type="composite",
@@ -271,14 +271,14 @@ class TrendFilterRSI(BaseStrategy):
         below_sma = close < sma_val
         
         if above_sma and rsi_val < 50:
-            return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="Pullback buy in uptrend", metadata={"type": "pullback_buy"})
+            return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="Pullback buy in uptrend", metadata={"type": "pullback_buy"})
         elif below_sma and rsi_val > 50:
-            return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="Pullback sell in downtrend", metadata={"type": "pullback_sell"})
+            return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="Pullback sell in downtrend", metadata={"type": "pullback_sell"})
         elif above_sma and rsi_val > 70:
-            return SignalResult(signal="LONG", confidence=0.7, price=current_price, reason="Trend continuation bullish", metadata={"type": "trend_continuation"})
+            return SignalResult(signal="LONG", confidence=0.7, price=_get_current_price(data), reason="Trend continuation bullish", metadata={"type": "trend_continuation"})
         elif below_sma and rsi_val < 30:
-            return SignalResult(signal="SHORT", confidence=0.7, price=current_price, reason="Trend continuation bearish", metadata={"type": "trend_continuation"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"above_sma": above_sma, "rsi": rsi_val})
+            return SignalResult(signal="SHORT", confidence=0.7, price=_get_current_price(data), reason="Trend continuation bearish", metadata={"type": "trend_continuation"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"above_sma": above_sma, "rsi": rsi_val})
 
 
 @strategy(name="Volume_Trend_Divergence", type="composite",
@@ -304,10 +304,10 @@ class VolumeTrendDivergence(BaseStrategy):
         price_up = close > close_prev
         
         if vr > 1.3 and hist < hist_prev and price_up:
-            return SignalResult(signal="SHORT", confidence=0.75, price=current_price, reason="Volume increase with weakening momentum", metadata={"type": "weakening_up"})
+            return SignalResult(signal="SHORT", confidence=0.75, price=_get_current_price(data), reason="Volume increase with weakening momentum", metadata={"type": "weakening_up"})
         elif vr > 1.3 and hist > hist_prev and not price_up:
-            return SignalResult(signal="LONG", confidence=0.75, price=current_price, reason="Volume increase with weakening downside momentum", metadata={"type": "weakening_down"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"vol_ratio": vr})
+            return SignalResult(signal="LONG", confidence=0.75, price=_get_current_price(data), reason="Volume increase with weakening downside momentum", metadata={"type": "weakening_down"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"vol_ratio": vr})
 
 
 # ========== 策略 41-50: Specialized Strategies ==========
@@ -330,10 +330,10 @@ class OpeningGap(BaseStrategy):
         current_price = _get_current_price(data)
         
         if rsi_val < 30 and vr > 1.5:
-            return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="Gap fill opportunity oversold", metadata={"type": "gap_fill"})
+            return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="Gap fill opportunity oversold", metadata={"type": "gap_fill"})
         elif rsi_val > 70 and vr > 1.5:
-            return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="Gap fill opportunity overbought", metadata={"type": "gap_fill"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"rsi": rsi_val})
+            return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="Gap fill opportunity overbought", metadata={"type": "gap_fill"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"rsi": rsi_val})
 
 
 @strategy(name="End_of_Day_Reversion", type="composite",
@@ -354,10 +354,10 @@ class EndOfDayReversion(BaseStrategy):
         current_price = _get_current_price(data)
         
         if rsi_val < 25 and stoch_val < 15:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="EOD oversold bounce", metadata={"type": "eod_oversold"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="EOD oversold bounce", metadata={"type": "eod_oversold"})
         elif rsi_val > 75 and stoch_val > 85:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="EOD overbought decline", metadata={"type": "eod_overbought"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"rsi": rsi_val, "stoch": stoch_val})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="EOD overbought decline", metadata={"type": "eod_overbought"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"rsi": rsi_val, "stoch": stoch_val})
 
 
 @strategy(name="Trend_Pullback", type="composite",
@@ -381,10 +381,10 @@ class TrendPullback(BaseStrategy):
         
         if adx_val > self.adx_threshold:
             if plus_di.iloc[-1] > minus_di.iloc[-1] and rsi_val < 45:
-                return SignalResult(signal="LONG", confidence=0.9, price=current_price, reason="Uptrend pullback buy", metadata={"type": "uptrend_pullback"})
+                return SignalResult(signal="LONG", confidence=0.9, price=_get_current_price(data), reason="Uptrend pullback buy", metadata={"type": "uptrend_pullback"})
             elif minus_di.iloc[-1] > plus_di.iloc[-1] and rsi_val > 55:
-                return SignalResult(signal="SHORT", confidence=0.9, price=current_price, reason="Downtrend pullback sell", metadata={"type": "downtrend_pullback"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"adx": adx_val, "rsi": rsi_val})
+                return SignalResult(signal="SHORT", confidence=0.9, price=_get_current_price(data), reason="Downtrend pullback sell", metadata={"type": "downtrend_pullback"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"adx": adx_val, "rsi": rsi_val})
 
 
 @strategy(name="Momentum_Exhaustion", type="composite",
@@ -408,10 +408,10 @@ class MomentumExhaustion(BaseStrategy):
         mom_fading = abs(mom_val) < abs(mom_prev)
         
         if rsi_val > 70 and mom_fading and mom_val > 0:
-            return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="Bullish momentum exhaustion", metadata={"type": "bullish_exhaustion"})
+            return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="Bullish momentum exhaustion", metadata={"type": "bullish_exhaustion"})
         elif rsi_val < 30 and mom_fading and mom_val < 0:
-            return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="Bearish momentum exhaustion", metadata={"type": "bearish_exhaustion"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"momentum": float(mom_val), "rsi": rsi_val})
+            return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="Bearish momentum exhaustion", metadata={"type": "bearish_exhaustion"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"momentum": float(mom_val), "rsi": rsi_val})
 
 
 @strategy(name="Volatility_Contraction", type="composite",
@@ -438,10 +438,10 @@ class VolatilityContraction(BaseStrategy):
         
         if bb_width < self.bb_width_threshold and vr < 0.8:
             if close > middle.iloc[-1]:
-                return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="Volatility contraction breakout up", metadata={"type": "contraction_breakout"})
+                return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="Volatility contraction breakout up", metadata={"type": "contraction_breakout"})
             else:
-                return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="Volatility contraction breakdown", metadata={"type": "contraction_breakdown"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"bb_width": bb_width, "vol_ratio": vr})
+                return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="Volatility contraction breakdown", metadata={"type": "contraction_breakdown"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"bb_width": bb_width, "vol_ratio": vr})
 
 
 @strategy(name="RSI_Divergence", type="composite",
@@ -469,10 +469,10 @@ class RSIDivergence(BaseStrategy):
         rsi_not_new_low = rsi_val > rsi_prev
         
         if price_new_high and rsi_not_new_high:
-            return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="Bearish divergence detected", metadata={"type": "bearish_divergence"})
+            return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="Bearish divergence detected", metadata={"type": "bearish_divergence"})
         elif price_new_low and rsi_not_new_low:
-            return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="Bullish divergence detected", metadata={"type": "bullish_divergence"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"rsi": rsi_val})
+            return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="Bullish divergence detected", metadata={"type": "bullish_divergence"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"rsi": rsi_val})
 
 
 @strategy(name="Dual_Moving_Average_Crossover", type="composite",
@@ -500,10 +500,10 @@ class DualMACrossover(BaseStrategy):
         death_cross = (short_prev >= long_prev) and (short_val < long_val)
         
         if golden_cross:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Golden cross detected", metadata={"type": "golden_cross"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Golden cross detected", metadata={"type": "golden_cross"})
         elif death_cross:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Death cross detected", metadata={"type": "death_cross"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"above": short_val > long_val})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Death cross detected", metadata={"type": "death_cross"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"above": short_val > long_val})
 
 
 @strategy(name="Three_MA_Trend", type="composite",
@@ -528,10 +528,10 @@ class ThreeMATrend(BaseStrategy):
         aligned_down = (ma_short < ma_mid) and (ma_mid < ma_long)
         
         if aligned_up:
-            return SignalResult(signal="LONG", confidence=0.9, price=current_price, reason="Triple MA aligned upward", metadata={"type": "aligned_up"})
+            return SignalResult(signal="LONG", confidence=0.9, price=_get_current_price(data), reason="Triple MA aligned upward", metadata={"type": "aligned_up"})
         elif aligned_down:
-            return SignalResult(signal="SHORT", confidence=0.9, price=current_price, reason="Triple MA aligned downward", metadata={"type": "aligned_down"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"aligned": aligned_up or aligned_down})
+            return SignalResult(signal="SHORT", confidence=0.9, price=_get_current_price(data), reason="Triple MA aligned downward", metadata={"type": "aligned_down"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"aligned": aligned_up or aligned_down})
 
 
 @strategy(name="RSI_SMA_Strategy", type="composite",
@@ -556,10 +556,10 @@ class RSISMAStrategy(BaseStrategy):
         above_sma = close > sma_val
         
         if above_sma and rsi_val < 40:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Above SMA with oversold RSI", metadata={"type": "above_sma_oversold"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Above SMA with oversold RSI", metadata={"type": "above_sma_oversold"})
         elif not above_sma and rsi_val > 60:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Below SMA with overbought RSI", metadata={"type": "below_sma_overbought"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"above_sma": above_sma, "rsi": rsi_val})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Below SMA with overbought RSI", metadata={"type": "below_sma_overbought"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"above_sma": above_sma, "rsi": rsi_val})
 
 
 @strategy(name="CCI_Mean_Reversion", type="composite",
@@ -584,7 +584,7 @@ class CCIMeanReversion(BaseStrategy):
         
         below_sma = close < sma_val
         if cci_val < -100 and below_sma:
-            return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="CCI oversold with price below SMA", metadata={"type": "cci_oversold"})
+            return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="CCI oversold with price below SMA", metadata={"type": "cci_oversold"})
         elif cci_val > 100 and above_sma:
-            return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="CCI overbought with price above SMA", metadata={"type": "cci_overbought"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, reason="Hold position", metadata={"cci": cci_val, "sma": sma_val})
+            return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="CCI overbought with price above SMA", metadata={"type": "cci_overbought"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"cci": cci_val, "sma": sma_val})
