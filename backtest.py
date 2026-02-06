@@ -1,5 +1,6 @@
 # Backtest engine - 歷史回測 + Monte Carlo + Walk-Forward + 多策略對沖
 # 修復日期: 2026-02-05
+# 2026-02-06: 添加指標計算功能
 
 import pandas as pd
 import numpy as np
@@ -17,6 +18,110 @@ class PositionType(Enum):
     NONE = "none"
     LONG = "long"
     SHORT = "short"
+
+
+def calculate_indicators(data: pd.DataFrame) -> dict:
+    """從價格數據計算常用技術指標"""
+    close = data["Close"]
+    high = data["High"]
+    low = data["Low"]
+    volume = data.get("Volume", pd.Series([1000000] * len(close)))
+    
+    indicators = {}
+    
+    # RSI
+    delta = close.diff()
+    gain = delta.where(delta > 0, 0).rolling(window=14).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
+    rs = gain / loss.replace(0, np.nan)
+    indicators["RSI"] = {"rsi": rs.fillna(50)}
+    
+    # MACD
+    ema12 = close.ewm(span=12, adjust=False).mean()
+    ema26 = close.ewm(span=26, adjust=False).mean()
+    macd_line = ema12 - ema26
+    signal_line = macd_line.ewm(span=9, adjust=False).mean()
+    indicators["MACD"] = {
+        "macd": macd_line,
+        "signal": signal_line,
+        "histogram": macd_line - signal_line
+    }
+    
+    # ADX
+    period = 14
+    plus_dm = high.diff()
+    minus_dm = -low.diff()
+    plus_dm[plus_dm < 0] = 0
+    minus_dm[minus_dm < 0] = 0
+    atr = (high - low).rolling(window=period).mean()
+    plus_di = 100 * (plus_dm.rolling(window=period).mean() / atr)
+    minus_di = 100 * (minus_dm.rolling(window=period).mean() / atr)
+    dx = 100 * abs(plus_di - minus_di) / (plus_di + minus_di).replace(0, np.nan)
+    adx = dx.rolling(window=period).mean()
+    indicators["ADX"] = {
+        "adx": adx.fillna(15),
+        "plus_di": plus_di.fillna(20),
+        "minus_di": minus_di.fillna(20)
+    }
+    
+    # SMA
+    indicators["SMA"] = {"sma": close.rolling(window=50).mean()}
+    
+    # EMA
+    indicators["EMA"] = {"ema": close.ewm(span=50, adjust=False).mean()}
+    
+    # Bollinger Bands
+    sma20 = close.rolling(window=20).mean()
+    std20 = close.rolling(window=20).std()
+    indicators["BollingerBands"] = {
+        "upper": sma20 + 2 * std20,
+        "middle": sma20,
+        "lower": sma20 - 2 * std20,
+        "percent": (close - (sma20 - 2 * std20)) / (4 * std20).replace(0, 0.5)
+    }
+    
+    # Stochastic
+    lowest14 = low.rolling(window=14).min()
+    highest14 = high.rolling(window=14).max()
+    stoch_k = 100 * (close - lowest14) / (highest14 - lowest14).replace(0, np.nan)
+    stoch_d = stoch_k.rolling(window=3).mean()
+    indicators["Stochastic"] = {
+        "stoch_k": stoch_k.fillna(50),
+        "stoch_d": stoch_d.fillna(50)
+    }
+    
+    # Williams %R
+    indicators["WilliamsR"] = {
+        "williams_r": -100 * (highest14 - close) / (highest14 - lowest14).replace(0, 1)
+    }
+    
+    # CCI
+    typical_price = (high + low + close) / 3
+    sma_tp = typical_price.rolling(window=20).mean()
+    mad = typical_price.rolling(window=20).apply(lambda x: np.abs(x - x.mean()).mean())
+    indicators["CCI"] = {
+        "cci": (typical_price - sma_tp) / (0.015 * mad).replace(0, 1)
+    }
+    
+    # Momentum
+    indicators["Momentum"] = {"momentum": close - close.shift(10)}
+    
+    # ATR
+    indicators["ATR"] = {"atr": atr.fillna(atr.mean() if len(atr.dropna()) > 0 else 1)}
+    
+    # Volume EMA
+    indicators["VolumeEMA"] = {"volume_ratio": volume / volume.ewm(span=20, adjust=False).mean()}
+    
+    # OBV
+    obv = (np.sign(close.diff()) * volume).cumsum()
+    indicators["OBV"] = {"obv": obv}
+    
+    # VWAP (如果可用)
+    if "Volume" in data.columns:
+        vwap = (close * volume).cumsum() / volume.cumsum()
+        indicators["VWAP"] = {"vwap": vwap}
+    
+    return indicators
 
 
 @dataclass
@@ -135,7 +240,9 @@ class BacktestEngine:
             shares = 0
 
             for i in range(len(data) - 1):
-                signal = signal = strategy.generate_signal({}, data.iloc[:i+1])
+                # 計算當前指標
+                ind = calculate_indicators(data.iloc[:i+1])
+                signal = strategy.generate_signal(ind, data.iloc[:i+1])
                 current_price = data["Close"].iloc[i]
 
                 if signal.signal == "LONG" and position != PositionType.LONG:
@@ -215,7 +322,9 @@ class BacktestEngine:
         for i in range(len(df) - 1):
             current_price = df["Close"].iloc[i]
             current_date = df.index[i]
-            signal = strategy.generate_signal({}, df.iloc[:i+1])
+            # 計算當前指標
+            ind = calculate_indicators(df.iloc[:i+1])
+            signal = strategy.generate_signal(ind, df.iloc[:i+1])
 
             if signal.signal == "LONG" and position != PositionType.LONG:
                 if position == PositionType.SHORT:
