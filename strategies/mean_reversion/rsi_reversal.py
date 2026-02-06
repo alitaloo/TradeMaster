@@ -5,6 +5,12 @@ from core.decorators import strategy
 from core.base_classes import BaseStrategy, SignalResult
 
 
+def _get_current_price(data):
+    """獲取當前價格"""
+    close = data["Close"]
+    return close.iloc[-1] if len(close) > 0 else 0.0
+
+
 @strategy(
     name="RSI_Reversal",
     type="mean_reversion",
@@ -23,9 +29,10 @@ class RSIReversalStrategy(BaseStrategy):
     def generate_signal(self, indicators: dict, data) -> SignalResult:
         """生成交易信號"""
         rsi = indicators.get("RSI", {}).get("rsi", data["Close"] * 0 + 50)
+        current_price = _get_current_price(data)
         
         if len(rsi) < self.period:
-            return SignalResult(signal="HOLD", confidence=0.0, price=0.0, reason="Hold position", metadata={})
+            return SignalResult(signal="HOLD", confidence=0.0, price=current_price, reason="Hold position", metadata={})
         
         latest_rsi = rsi.iloc[-1]
         prev_rsi = rsi.iloc[-2] if len(rsi) > 1 else latest_rsi
@@ -37,6 +44,8 @@ class RSIReversalStrategy(BaseStrategy):
             return SignalResult(
                 signal="LONG",
                 confidence=confidence,
+                price=current_price,
+                reason="RSI oversold with reversal signal",
                 metadata={"rsi": latest_rsi, "reason": "oversold_reversal"}
             )
         
@@ -46,7 +55,9 @@ class RSIReversalStrategy(BaseStrategy):
             return SignalResult(
                 signal="SHORT",
                 confidence=confidence,
+                price=current_price,
+                reason="RSI overbought with reversal signal",
                 metadata={"rsi": latest_rsi, "reason": "overbought_reversal"}
             )
         
-        return SignalResult(signal="HOLD", confidence=0.0, price=0.0, reason="Hold position", metadata={"rsi": latest_rsi})
+        return SignalResult(signal="HOLD", confidence=0.0, price=current_price, reason="Hold position", metadata={"rsi": latest_rsi})

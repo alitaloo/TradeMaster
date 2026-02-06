@@ -33,7 +33,7 @@ def calculate_indicators(data: pd.DataFrame) -> dict:
     delta = close.diff()
     gain = delta.where(delta > 0, 0).rolling(window=14).mean()
     loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
-    rs = gain / loss.replace(0, np.nan)
+    rs = 100 - (100 / (1 + gain / loss.replace(0, np.nan)))
     indicators["RSI"] = {"rsi": rs.fillna(50)}
     
     # MACD

@@ -3,6 +3,13 @@
 
 from core.decorators import strategy
 from core.base_classes import BaseStrategy, SignalResult
+import pandas as pd
+
+
+def _get_current_price(data):
+    """獲取當前價格"""
+    close = data["Close"]
+    return close.iloc[-1] if len(close) > 0 else 0.0
 
 
 @strategy(
@@ -24,9 +31,10 @@ class ADXTrendStrategy(BaseStrategy):
         adx = indicators.get("ADX", {}).get("adx", data["Close"] * 0 + 15)
         plus_di = indicators.get("ADX", {}).get("plus_di", data["Close"] * 0 + 20)
         minus_di = indicators.get("ADX", {}).get("minus_di", data["Close"] * 0 + 20)
+        current_price = _get_current_price(data)
         
         if len(adx) < self.period:
-            return SignalResult(signal="HOLD", confidence=0.0, price=0.0, reason="Hold position", metadata={})
+            return SignalResult(signal="HOLD", confidence=0.0, price=current_price, reason="Hold position", metadata={})
         
         latest_adx = adx.iloc[-1]
         latest_plus = plus_di.iloc[-1]
@@ -34,8 +42,7 @@ class ADXTrendStrategy(BaseStrategy):
         
         # ADX 低於閾值，趨勢不明確
         if latest_adx < self.adx_threshold:
-            return SignalResult(signal="HOLD", confidence=latest_adx / self.adx_threshold, price=0.0, reason="Hold position", metadata={"adx": latest_adx, "reason": "weak_trend"}
-            )
+            return SignalResult(signal="HOLD", confidence=latest_adx / self.adx_threshold, price=current_price, reason="Hold position", metadata={"adx": latest_adx, "reason": "weak_trend"})
         
         # 趨勢強度
         trend_strength = min((latest_adx - self.adx_threshold) / (50 - self.adx_threshold), 1.0)
@@ -45,6 +52,8 @@ class ADXTrendStrategy(BaseStrategy):
             return SignalResult(
                 signal="LONG",
                 confidence=trend_strength,
+                price=current_price,
+                reason="+DI above -DI indicates uptrend",
                 metadata={
                     "adx": latest_adx,
                     "plus_di": latest_plus,
@@ -58,6 +67,8 @@ class ADXTrendStrategy(BaseStrategy):
             return SignalResult(
                 signal="SHORT",
                 confidence=trend_strength,
+                price=current_price,
+                reason="-DI above +DI indicates downtrend",
                 metadata={
                     "adx": latest_adx,
                     "plus_di": latest_plus,
@@ -66,4 +77,4 @@ class ADXTrendStrategy(BaseStrategy):
                 }
             )
         
-        return SignalResult(signal="HOLD", confidence=0.0, price=0.0, reason="Hold position", metadata={"adx": latest_adx})
+        return SignalResult(signal="HOLD", confidence=0.0, price=current_price, reason="Hold position", metadata={"adx": latest_adx})
