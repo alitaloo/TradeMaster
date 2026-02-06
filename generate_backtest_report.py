@@ -29,11 +29,8 @@ from core import PluginRegistry
 from data import DataEngine
 
 
-# 股票清單 - 完整回測
-STOCKS = [
-    "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA",
-    "TSM", "AMD", "INTC", "AVGO", "UBER", "ORCL", "WDC", "MU", "COIN", "RKLB"
-]
+# 股票清單 - 測試版本（2 檔股票）
+STOCKS = ["AAPL", "TSLA"]
 
 
 def get_available_strategies():
@@ -352,7 +349,23 @@ def main():
         action="store_true",
         help="執行完整回測（含 Walk-Forward 分析，較慢）"
     )
+    parser.add_argument(
+        "--years",
+        type=str,
+        default="2024-2025",
+        help="數據年份範圍，例如: 2024-2025 (預設), 2023-2024, 2020-2025"
+    )
     args = parser.parse_args()
+    
+    # 解析年份範圍
+    try:
+        start_year, end_year = map(int, args.years.split('-'))
+        start_date = f"{start_year}-01-01"
+        end_date = f"{end_year}-12-31"
+    except:
+        start_date = "2024-01-01"
+        end_date = "2025-12-31"
+        print(f"   ⚠️ 無效年份格式，使用預設: 2024-2025")
     
     print("=" * 80)
     print("           TradeMaster v2 - 回測報告生成器")
@@ -406,6 +419,13 @@ def main():
         if data is None:
             print(f"   ⚠️ 無法獲取 {symbol} 數據")
             continue
+        
+        # 過濾日期範圍
+        if start_date and end_date:
+            data = data[(data.index >= start_date) & (data.index <= end_date)]
+            print(f"   📅 {symbol}: {len(data)} 天 ({start_date} ~ {end_date})")
+        else:
+            print(f"   📅 {symbol}: {len(data)} 天 (全部)")
         
         for strategy_info in strategies:
             current += 1

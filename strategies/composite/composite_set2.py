@@ -257,10 +257,18 @@ class KeltnerBollingerSqueeze(BaseStrategy):
     signals=["LONG", "SHORT", "HOLD"],
     market_regimes=["volatile"])
 class HistoricalVolatilityRange(BaseStrategy):
-    """歷史波動率範圍"""
-    def __init__(self, hv_percentile_high: float = 80, hv_percentile_low: float = 20):
+    """歷史波動率範圍 - 添加止盈止損和持倉限制"""
+    def __init__(self, 
+                 hv_percentile_high: float = 80, 
+                 hv_percentile_low: float = 20,
+                 take_profit: float = 0.15,    # 15% 止盈
+                 stop_loss: float = 0.10,      # 10% 止損
+                 max_holding_days: int = 20):   # 最多持倉 20 天
         self.hv_percentile_high = hv_percentile_high
         self.hv_percentile_low = hv_percentile_low
+        self.take_profit = take_profit
+        self.stop_loss = stop_loss
+        self.max_holding_days = max_holding_days
     
     def generate_signal(self, ind, data):
         hv = ind.get("HistoricalVolatility", {})
@@ -273,11 +281,49 @@ class HistoricalVolatilityRange(BaseStrategy):
         rsi_val = rsi.iloc[-1] if len(rsi) > 0 else 50
         current_price = _get_current_price(data)
         
+        # 獲取最近價格計算持倉
+        close = data["Close"]
+        prices = close.iloc[-self.max_holding_days:].tolist() if len(close) >= self.max_holding_days else close.tolist()
+        
+        # 檢查是否需要止盈止損或時間退出
+        if len(prices) >= 2:
+            entry_price = prices[0]
+            price_change = (current_price - entry_price) / entry_price
+            
+            # 持倉天數
+            holding_days = len(prices) - 1
+            
+            # 止盈檢查（LONG）
+            if price_change >= self.take_profit:
+                return SignalResult(signal="HOLD", confidence=0.5, price=current_price, 
+                    reason=f"Take profit LONG (+{price_change*100:.1f}%)", 
+                    metadata={"type": "take_profit", "return": price_change})
+            
+            # 止損檢查（LONG）
+            if price_change <= -self.stop_loss:
+                return SignalResult(signal="HOLD", confidence=0.5, price=current_price,
+                    reason=f"Stop loss LONG ({price_change*100:.1f}%)",
+                    metadata={"type": "stop_loss", "return": price_change})
+            
+            # 時間退出
+            if holding_days >= self.max_holding_days:
+                return SignalResult(signal="HOLD", confidence=0.5, price=current_price,
+                    reason=f"Time exit ({holding_days} days)",
+                    metadata={"type": "time_exit", "holding_days": holding_days})
+        
+        # 原始入場訊號邏輯
         if percentile > self.hv_percentile_high and rsi_val > 65:
-            return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="High volatility with overbought RSI", metadata={"type": "high_vol_sell"})
+            return SignalResult(signal="SHORT", confidence=0.8, price=current_price, 
+                reason="High volatility with overbought RSI", 
+                metadata={"type": "high_vol_sell", "hv_percentile": percentile, "rsi": rsi_val})
         elif percentile < self.hv_percentile_low and rsi_val < 35:
-            return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="Low volatility with oversold RSI", metadata={"type": "low_vol_buy"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"hv_percentile": percentile})
+            return SignalResult(signal="LONG", confidence=0.8, price=current_price,
+                reason="Low volatility with oversold RSI",
+                metadata={"type": "low_vol_buy", "hv_percentile": percentile, "rsi": rsi_val})
+        
+        return SignalResult(signal="HOLD", confidence=0.3, price=current_price, 
+            reason="Hold position", 
+            metadata={"hv_percentile": percentile, "rsi": rsi_val, "hv_value": float(hv_value)})
 
 
 @strategy(name="VolatilityRatio_Trend", type="composite",

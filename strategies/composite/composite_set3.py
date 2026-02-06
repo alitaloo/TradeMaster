@@ -82,9 +82,14 @@ class TrendVolumeAlignment(BaseStrategy):
     signals=["LONG", "HOLD"],
     market_regimes=["neutral", "volatile"])
 class OversoldBounce(BaseStrategy):
-    """超賣反彈策略"""
-    def __init__(self):
-        pass
+    """超賣反彈策略 - 添加止盈止損"""
+    def __init__(self, 
+                 take_profit: float = 0.12,      # 12% 止盈
+                 stop_loss: float = 0.08,        # 8% 止損
+                 max_holding_days: int = 15):     # 最多持倉 15 天
+        self.take_profit = take_profit
+        self.stop_loss = stop_loss
+        self.max_holding_days = max_holding_days
     
     def generate_signal(self, ind, data):
         rsi = ind.get("RSI", {}).get("rsi", pd.Series([50]))
@@ -98,6 +103,31 @@ class OversoldBounce(BaseStrategy):
         cci_val = cci.iloc[-1] if len(cci) > 0 else 0
         current_price = _get_current_price(data)
         
+        # 持倉檢查
+        close = data["Close"]
+        prices = close.iloc[-self.max_holding_days:].tolist() if len(close) >= self.max_holding_days else close.tolist()
+        
+        if len(prices) >= 2:
+            entry_price = prices[0]
+            price_change = (current_price - entry_price) / entry_price
+            holding_days = len(prices) - 1
+            
+            # 止盈檢查
+            if price_change >= self.take_profit:
+                return SignalResult(signal="HOLD", confidence=0.5, price=current_price,
+                    reason=f"Take profit (+{price_change*100:.1f}%)", metadata={"type": "take_profit"})
+            
+            # 止損檢查
+            if price_change <= -self.stop_loss:
+                return SignalResult(signal="HOLD", confidence=0.5, price=current_price,
+                    reason=f"Stop loss ({price_change*100:.1f}%)", metadata={"type": "stop_loss"})
+            
+            # 時間退出
+            if holding_days >= self.max_holding_days:
+                return SignalResult(signal="HOLD", confidence=0.5, price=current_price,
+                    reason=f"Time exit ({holding_days} days)", metadata={"type": "time_exit"})
+        
+        # 入場訊號
         oversold_count = 0
         if rsi_val < 30: oversold_count += 1
         if stoch_val < 20: oversold_count += 1
@@ -105,8 +135,11 @@ class OversoldBounce(BaseStrategy):
         if cci_val < -100: oversold_count += 1
         
         if oversold_count >= 2:
-            return SignalResult(signal="LONG", confidence=0.7 + oversold_count * 0.1, price=_get_current_price(data), reason="Multiple oversold indicators", metadata={"oversold_count": oversold_count})
-        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"oversold_count": oversold_count})
+            return SignalResult(signal="LONG", confidence=0.7 + oversold_count * 0.1, price=current_price,
+                reason=f"Multiple oversold indicators ({oversold_count})", metadata={"oversold_count": oversold_count})
+        
+        return SignalResult(signal="HOLD", confidence=0.3, price=current_price,
+            reason="Hold position", metadata={"oversold_count": oversold_count})
 
 
 @strategy(name="Overbought_Decline", type="composite",
@@ -114,15 +147,64 @@ class OversoldBounce(BaseStrategy):
     signals=["SHORT", "HOLD"],
     market_regimes=["neutral", "volatile"])
 class OverboughtDecline(BaseStrategy):
-    """超買回落策略"""
-    def __init__(self):
-        pass
+    """超買回落策略 - 添加止盈止損"""
+    def __init__(self,
+                 take_profit: float = 0.12,      # 12% 止盈
+                 stop_loss: float = 0.08,        # 8% 止損
+                 max_holding_days: int = 15):     # 最多持倉 15 天
+        self.take_profit = take_profit
+        self.stop_loss = stop_loss
+        self.max_holding_days = max_holding_days
     
     def generate_signal(self, ind, data):
         rsi = ind.get("RSI", {}).get("rsi", pd.Series([50]))
         stoch_k = ind.get("Stochastic", {}).get("stoch_k", pd.Series([50]))
         williams = ind.get("WilliamsR", {}).get("williams_r", pd.Series([-50]))
         cci = ind.get("CCI", {}).get("cci", pd.Series([0]))
+        
+        rsi_val = rsi.iloc[-1] if len(rsi) > 0 else 50
+        stoch_val = stoch_k.iloc[-1] if len(stoch_k) > 0 else 50
+        w_val = williams.iloc[-1] if len(williams) > 0 else -50
+        cci_val = cci.iloc[-1] if len(cci) > 0 else 0
+        current_price = _get_current_price(data)
+        
+        # 持倉檢查
+        close = data["Close"]
+        prices = close.iloc[-self.max_holding_days:].tolist() if len(close) >= self.max_holding_days else close.tolist()
+        
+        if len(prices) >= 2:
+            entry_price = prices[0]
+            price_change = (current_price - entry_price) / entry_price
+            holding_days = len(prices) - 1
+            
+            # 做空止盈（價格下跌 = 獲利）
+            if price_change <= -self.take_profit:
+                return SignalResult(signal="HOLD", confidence=0.5, price=current_price,
+                    reason=f"Take profit SHORT ({price_change*100:.1f}%)", metadata={"type": "take_profit"})
+            
+            # 做空止損（價格上漲 = 虧損）
+            if price_change >= self.stop_loss:
+                return SignalResult(signal="HOLD", confidence=0.5, price=current_price,
+                    reason=f"Stop loss SHORT ({price_change*100:.1f}%)", metadata={"type": "stop_loss"})
+            
+            # 時間退出
+            if holding_days >= self.max_holding_days:
+                return SignalResult(signal="HOLD", confidence=0.5, price=current_price,
+                    reason=f"Time exit ({holding_days} days)", metadata={"type": "time_exit"})
+        
+        # 入場訊號
+        overbought_count = 0
+        if rsi_val > 70: overbought_count += 1
+        if stoch_val > 80: overbought_count += 1
+        if w_val > -20: overbought_count += 1
+        if cci_val > 100: overbought_count += 1
+        
+        if overbought_count >= 2:
+            return SignalResult(signal="SHORT", confidence=0.7 + overbought_count * 0.1, price=current_price,
+                reason=f"Multiple overbought indicators ({overbought_count})", metadata={"overbought_count": overbought_count})
+        
+        return SignalResult(signal="HOLD", confidence=0.3, price=current_price,
+            reason="Hold position", metadata={"overbought_count": overbought_count})
         
         rsi_val = rsi.iloc[-1] if len(rsi) > 0 else 50
         stoch_val = stoch_k.iloc[-1] if len(stoch_k) > 0 else 50
