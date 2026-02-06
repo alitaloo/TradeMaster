@@ -25,29 +25,32 @@ class BacktestResult:
     symbol: str
     strategy: str
     period: str
-    
+
     # 基本指標
     total_return: float = 0.0
     annualized_return: float = 0.0
     max_drawdown: float = 0.0
     volatility: float = 0.0
-    
+
     # 交易指標
     total_trades: int = 0
     winning_trades: int = 0
     losing_trades: int = 0
     win_rate: float = 0.0
-    
+
     # 盈虧指標
     gross_profit: float = 0.0
     gross_loss: float = 0.0
     profit_factor: float = 0.0
     average_win: float = 0.0
     average_loss: float = 0.0
-    
+
+    # 凱利倉位
+    kelly_position: float = 0.20
+
     # 交易列表
     trades: List[Dict] = field(default_factory=list)
-    
+
     # 權益曲線
     equity_curve: pd.Series = None
     
@@ -64,7 +67,8 @@ class BacktestResult:
             "win_rate": f"{self.win_rate:.2%}",
             "profit_factor": f"{self.profit_factor:.2f}",
             "average_win": f"${self.average_win:,.2f}",
-            "average_loss": f"${self.average_loss:,.2f}"
+            "average_loss": f"${self.average_loss:,.2f}",
+            "kelly_position": f"{self.kelly_position:.1%}"
         }
 
 
@@ -98,52 +102,145 @@ class BacktestValidator:
 
 
 class BacktestEngine:
-    """標準回測引擎"""
-    
-    def __init__(self, initial_capital: float = 100000, commission: float = 0.001, slippage: float = 0.001):
+    """標準回測引擎 - 使用凱利公式計算倉位"""
+
+    def __init__(self, initial_capital: float = 100000, commission: float = 0.001, slippage: float = 0.001, kelly_fraction: float = 0.5):
         self.initial_capital = initial_capital
         self.commission = commission
         self.slippage = slippage
-    
+        self.kelly_fraction = kelly_fraction  # 半凱利係數（預設 0.5，避免過度槓桿）
+
+    def _calculate_kelly_position(self, strategy, data: pd.DataFrame, position_type: PositionType) -> float:
+        """
+        根據凱利公式計算倉位比例
+        Kelly Formula: f* = p - (q / b)
+        - p = 勝率
+        - q = 虧損率 = 1 - p
+        - b = 盈虧比（平均獲利 / 平均虧損）
+        """
+        try:
+            # 收集策略歷史交易計算統計
+            trades = []
+            capital = self.initial_capital
+            position = PositionType.NONE
+            entry_price = 0
+            shares = 0
+
+            for i in range(len(data) - 1):
+                signal = signal = strategy.generate_signal({}, data.iloc[:i+1])
+                current_price = data["Close"].iloc[i]
+
+                if signal.signal == "LONG" and position != PositionType.LONG:
+                    if position == PositionType.SHORT:
+                        exit_price = current_price * (1 - self.slippage)
+                        pnl = (entry_price - exit_price) * shares
+                        trades.append(pnl)
+                    shares = int(capital / current_price)
+                    entry_price = current_price * (1 + self.slippage)
+                    capital -= shares * entry_price
+                    position = PositionType.LONG
+
+                elif signal.signal == "SHORT" and position != PositionType.SHORT:
+                    if position == PositionType.LONG:
+                        exit_price = current_price * (1 - self.slippage)
+                        pnl = (exit_price - entry_price) * shares
+                        trades.append(pnl)
+                    shares = int(capital / current_price)
+                    entry_price = current_price * (1 + self.slippage)
+                    capital -= shares * entry_price  # 做空也需要保證金
+                    position = PositionType.SHORT
+
+                # 更新權益
+                if position == PositionType.LONG:
+                    capital = capital + shares * current_price
+                elif position == PositionType.SHORT:
+                    capital = capital + (entry_price - current_price) * shares
+
+            # 計算凱利參數
+            if not trades or len(trades) < 5:
+                return 0.20  # 預設 20% 倉位
+
+            wins = [t for t in trades if t > 0]
+            losses = [t for t in trades if t <= 0]
+
+            if not wins or not losses:
+                return 0.20
+
+            p = len(wins) / len(trades)  # 勝率
+            avg_win = sum(wins) / len(wins)
+            avg_loss = abs(sum(losses) / len(losses))  # 取絕對值
+
+            if avg_loss == 0:
+                return 0.20
+
+            b = avg_win / avg_loss  # 盈虧比
+            q = 1 - p
+
+            # 凱利公式
+            kelly_pct = p - (q / b)
+
+            # 半凱利，避免過度槓桿
+            kelly_pct = kelly_pct * self.kelly_fraction
+
+            # 限制在 5% - 40% 之間
+            kelly_pct = max(0.05, min(0.40, kelly_pct))
+
+            return kelly_pct
+
+        except Exception:
+            return 0.20  # 預設 20%
+
     def run(self, symbol: str, strategy, data: pd.DataFrame, strategy_name: str = "Unknown") -> BacktestResult:
         df = self._prepare_data(data.copy())
+
+        # 先計算凱利倉位比例
+        kelly_position = self._calculate_kelly_position(strategy, df, PositionType.LONG)
+
         capital = self.initial_capital
         position = PositionType.NONE
         entry_price = 0
         shares = 0
         trades = []
         equity = [self.initial_capital]
-        
+
         for i in range(len(df) - 1):
             current_price = df["Close"].iloc[i]
             signal = strategy.generate_signal({}, df.iloc[:i+1])
-            
+
             if signal.signal == "LONG" and position != PositionType.LONG:
                 if position == PositionType.SHORT:
                     exit_price = current_price * (1 - self.slippage)
                     pnl = (entry_price - exit_price) * shares
                     trades.append({"type": "SHORT", "entry": entry_price, "exit": exit_price, "pnl": pnl})
                     capital += pnl
-                
-                shares = int(capital / current_price)
+
+                # 使用凱利倉位比例
+                position_capital = capital * kelly_position
+                shares = int(position_capital / current_price)
                 entry_price = current_price * (1 + self.slippage)
                 capital -= shares * entry_price
                 position = PositionType.LONG
-            
+
             elif signal.signal == "SHORT" and position != PositionType.SHORT:
                 if position == PositionType.LONG:
                     exit_price = current_price * (1 - self.slippage)
                     pnl = (exit_price - entry_price) * shares
                     trades.append({"type": "LONG", "entry": entry_price, "exit": exit_price, "pnl": pnl})
                     capital += pnl
-                
-                shares = int(capital / current_price)
+
+                # 使用凱利倉位比例
+                position_capital = capital * kelly_position
+                shares = int(position_capital / current_price)
                 entry_price = current_price * (1 + self.slippage)
+                capital -= shares * entry_price
                 position = PositionType.SHORT
-            
+
             equity.append(capital + shares * current_price if position == PositionType.LONG else capital)
-        
-        return self._calculate_result(symbol, strategy_name, df, trades, equity)
+
+        result = self._calculate_result(symbol, strategy_name, df, trades, equity)
+        result.kelly_position = kelly_position  # 記錄凱利倉位比例
+
+        return result
     
     def _prepare_data(self, df: pd.DataFrame) -> pd.DataFrame:
         for col in ["Open", "High", "Low", "Close", "Volume"]:
@@ -489,6 +586,9 @@ def print_backtest_result(result: BacktestResult):
 ║   盈虧比:     {result.profit_factor:>10.2f}                              ║
 ║   平均獲利:   ${result.average_win:>10,.2f}                           ║
 ║   平均虧損:   ${result.average_loss:>10,.2f}                           ║
+╠══════════════════════════════════════════════════════════════════════╣
+║ 🎯 凱利倉位                                                    ║
+║   建議倉位:   {result.kelly_position:>10.1%}                              ║
 ╚════════════════════════════════════════════════════════════════════╝
 """)
 
