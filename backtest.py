@@ -53,6 +53,11 @@ class BacktestResult:
 
     # 權益曲線
     equity_curve: pd.Series = None
+
+    # 平均交易指標
+    average_holding_days: float = 0.0
+    average_commission: float = 0.0
+    average_slippage: float = 0.0
     
     def to_dict(self) -> dict:
         return {
@@ -68,7 +73,10 @@ class BacktestResult:
             "profit_factor": f"{self.profit_factor:.2f}",
             "average_win": f"${self.average_win:,.2f}",
             "average_loss": f"${self.average_loss:,.2f}",
-            "kelly_position": f"{self.kelly_position:.1%}"
+            "kelly_position": f"{self.kelly_position:.1%}",
+            "average_holding_days": f"{self.average_holding_days:.1f}",
+            "average_commission": f"${self.average_commission:,.2f}",
+            "average_slippage": f"${self.average_slippage:,.2f}"
         }
 
 
@@ -182,8 +190,8 @@ class BacktestEngine:
             # 半凱利，避免過度槓桿
             kelly_pct = kelly_pct * self.kelly_fraction
 
-            # 限制在 5% - 40% 之間
-            kelly_pct = max(0.05, min(0.40, kelly_pct))
+            # 限制在 5% - 100% 之間
+            kelly_pct = max(0.05, min(1.00, kelly_pct))
 
             return kelly_pct
 
@@ -199,25 +207,49 @@ class BacktestEngine:
         capital = self.initial_capital
         position = PositionType.NONE
         entry_price = 0
+        entry_date = None
         shares = 0
         trades = []
         equity = [self.initial_capital]
 
         for i in range(len(df) - 1):
             current_price = df["Close"].iloc[i]
+            current_date = df.index[i]
             signal = strategy.generate_signal({}, df.iloc[:i+1])
 
             if signal.signal == "LONG" and position != PositionType.LONG:
                 if position == PositionType.SHORT:
                     exit_price = current_price * (1 - self.slippage)
                     pnl = (entry_price - exit_price) * shares
-                    trades.append({"type": "SHORT", "entry": entry_price, "exit": exit_price, "pnl": pnl})
-                    capital += pnl
+                    commission = (entry_price * shares + exit_price * shares) * self.commission
+                    slippage_cost = abs(exit_price - current_price) * shares * self.slippage
+                    return_pct = (exit_price - entry_price) / entry_price * 100
+                    holding_days = (current_date - entry_date).days if entry_date else 0
 
-                # 使用凱利倉位比例
+                    trades.append({
+                        "type": "SHORT",
+                        "entry_price": round(entry_price, 2),
+                        "entry_date": str(entry_date.date()) if entry_date else None,
+                        "exit_price": round(exit_price, 2),
+                        "exit_date": str(current_date.date()),
+                        "shares": shares,
+                        "entry_capital_used": round(shares * entry_price, 2),
+                        "gross_pnl": round(pnl, 2),
+                        "commission": round(commission, 2),
+                        "slippage_cost": round(slippage_cost, 2),
+                        "net_pnl": round(pnl - commission - slippage_cost, 2),
+                        "return_pct": round(return_pct, 2),
+                        "holding_days": holding_days,
+                        "capital_at_entry": round(capital, 2),
+                        "capital_at_exit": round(capital + pnl - commission - slippage_cost, 2)
+                    })
+                    capital += pnl - commission - slippage_cost
+
+                # 使用凱利倉位比例買入
                 position_capital = capital * kelly_position
                 shares = int(position_capital / current_price)
                 entry_price = current_price * (1 + self.slippage)
+                entry_date = current_date
                 capital -= shares * entry_price
                 position = PositionType.LONG
 
@@ -225,20 +257,42 @@ class BacktestEngine:
                 if position == PositionType.LONG:
                     exit_price = current_price * (1 - self.slippage)
                     pnl = (exit_price - entry_price) * shares
-                    trades.append({"type": "LONG", "entry": entry_price, "exit": exit_price, "pnl": pnl})
-                    capital += pnl
+                    commission = (entry_price * shares + exit_price * shares) * self.commission
+                    slippage_cost = abs(exit_price - current_price) * shares * self.slippage
+                    return_pct = (exit_price - entry_price) / entry_price * 100
+                    holding_days = (current_date - entry_date).days if entry_date else 0
 
-                # 使用凱利倉位比例
+                    trades.append({
+                        "type": "LONG",
+                        "entry_price": round(entry_price, 2),
+                        "entry_date": str(entry_date.date()) if entry_date else None,
+                        "exit_price": round(exit_price, 2),
+                        "exit_date": str(current_date.date()),
+                        "shares": shares,
+                        "entry_capital_used": round(shares * entry_price, 2),
+                        "gross_pnl": round(pnl, 2),
+                        "commission": round(commission, 2),
+                        "slippage_cost": round(slippage_cost, 2),
+                        "net_pnl": round(pnl - commission - slippage_cost, 2),
+                        "return_pct": round(return_pct, 2),
+                        "holding_days": holding_days,
+                        "capital_at_entry": round(capital, 2),
+                        "capital_at_exit": round(capital + pnl - commission - slippage_cost, 2)
+                    })
+                    capital += pnl - commission - slippage_cost
+
+                # 使用凱利倉位比例做空
                 position_capital = capital * kelly_position
                 shares = int(position_capital / current_price)
                 entry_price = current_price * (1 + self.slippage)
+                entry_date = current_date
                 capital -= shares * entry_price
                 position = PositionType.SHORT
 
             equity.append(capital + shares * current_price if position == PositionType.LONG else capital)
 
         result = self._calculate_result(symbol, strategy_name, df, trades, equity)
-        result.kelly_position = kelly_position  # 記錄凱利倉位比例
+        result.kelly_position = kelly_position
 
         return result
     
@@ -255,33 +309,59 @@ class BacktestEngine:
             period=f"{df.index[0].date()} to {df.index[-1].date()}",
             equity_curve=equity_series
         )
-        
+
         result.total_return = (equity[-1] - self.initial_capital) / self.initial_capital
         days = (df.index[-1] - df.index[0]).days
         if days > 0:
             result.annualized_return = ((1 + result.total_return) ** (365 / days)) - 1
-        
+
         rolling_max = equity_series.expanding().max()
         drawdown = (equity_series - rolling_max) / rolling_max
         result.max_drawdown = abs(drawdown.min())
-        
+
         returns = equity_series.pct_change().dropna()
         result.volatility = returns.std() * np.sqrt(252) if len(returns) > 0 else 0
-        
+
+        # 安全處理 trades - 檢查每個欄位是否存在
+        def get_pnl(t):
+            return t.get("net_pnl", t.get("pnl", 0))
+
+        def get_commission(t):
+            return t.get("commission", 0)
+
+        def get_slippage(t):
+            return t.get("slippage_cost", 0)
+
+        def get_holding_days(t):
+            return t.get("holding_days", 0)
+
         result.total_trades = len(trades)
-        result.winning_trades = len([t for t in trades if t["pnl"] > 0])
-        result.losing_trades = len([t for t in trades if t["pnl"] <= 0])
+        result.winning_trades = len([t for t in trades if get_pnl(t) > 0])
+        result.losing_trades = len([t for t in trades if get_pnl(t) <= 0])
         result.win_rate = result.winning_trades / result.total_trades if result.total_trades > 0 else 0
-        
-        wins = [t["pnl"] for t in trades if t["pnl"] > 0]
-        losses = [abs(t["pnl"]) for t in trades if t["pnl"] <= 0]
-        result.gross_profit = sum(wins)
-        result.gross_loss = sum(losses)
+
+        # 詳細盈虧計算
+        wins = [get_pnl(t) for t in trades if get_pnl(t) > 0]
+        losses = [abs(get_pnl(t)) for t in trades if get_pnl(t) <= 0]
+
+        result.gross_profit = sum(wins) if wins else 0
+        result.gross_loss = sum(losses) if losses else 0
         result.profit_factor = result.gross_profit / result.gross_loss if result.gross_loss > 0 else (float('inf') if result.gross_profit > 0 else 0)
         result.average_win = np.mean(wins) if wins else 0
         result.average_loss = np.mean(losses) if losses else 0
+
+        # 平均持有天數
+        holding_days = [get_holding_days(t) for t in trades]
+        result.average_holding_days = np.mean(holding_days) if holding_days else 0
+
+        # 平均手續費和滑點
+        commissions = [get_commission(t) for t in trades]
+        result.average_commission = np.mean(commissions) if commissions else 0
+        slippage_costs = [get_slippage(t) for t in trades]
+        result.average_slippage = np.mean(slippage_costs) if slippage_costs else 0
+
         result.trades = trades
-        
+
         return result
 
 
@@ -579,6 +659,7 @@ def print_backtest_result(result: BacktestResult):
 ║   獲勝次數:   {result.winning_trades:>10d}                              ║
 ║   虧損次數:   {result.losing_trades:>10d}                              ║
 ║   勝率:       {result.win_rate:>10.2%}                              ║
+║   平均持倉天數: {result.average_holding_days:>10.1f}                              ║
 ╠══════════════════════════════════════════════════════════════════════╣
 ║ 💰 盈虧分析                                                    ║
 ║   總利潤:     ${result.gross_profit:>10,.2f}                           ║
@@ -589,6 +670,10 @@ def print_backtest_result(result: BacktestResult):
 ╠══════════════════════════════════════════════════════════════════════╣
 ║ 🎯 凱利倉位                                                    ║
 ║   建議倉位:   {result.kelly_position:>10.1%}                              ║
+╠══════════════════════════════════════════════════════════════════════╣
+║ 💸 交易成本                                                    ║
+║   平均手續費: ${result.average_commission:>10,.2f}                           ║
+║   平均滑點:   ${result.average_slippage:>10,.2f}                           ║
 ╚════════════════════════════════════════════════════════════════════╝
 """)
 
