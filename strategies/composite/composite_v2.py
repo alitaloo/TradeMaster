@@ -66,7 +66,7 @@ class MultiFactorStrategyV2(BaseStrategy):
         if self.use_volatility_filter:
             bb_data = indicator_values.get("BollingerBands")
             if bb_data:
-                bb_percent = bb_data.last_value.get("percent", 0.5)
+                bb_percent = bb_data.get("percent", 0.5)
                 # 價格在布林帶中間區域才交易
                 if bb_percent > self.bb_percent_high or bb_percent < self.bb_percent_low:
                     volatility_filtered = True
@@ -80,7 +80,7 @@ class MultiFactorStrategyV2(BaseStrategy):
         # ===== RSI 分析 =====
         rsi_data = indicator_values.get("RSI")
         if rsi_data:
-            rsi = rsi_data.last_value.get("rsi", 50)
+            rsi = rsi_data.get("rsi", 50)
             if rsi < self.rsi_oversold:
                 factors["bullish"].append(f"RSI({rsi:.1f}) oversold")
             elif rsi > self.rsi_overbought:
@@ -89,7 +89,7 @@ class MultiFactorStrategyV2(BaseStrategy):
         # ===== MACD 分析 =====
         macd_data = indicator_values.get("MACD")
         if macd_data:
-            histogram = macd_data.last_value.get("histogram", 0)
+            histogram = macd_data.get("histogram", 0)
             if histogram > 0:
                 factors["bullish"].append("MACD histogram positive")
             elif histogram < 0:
@@ -99,9 +99,9 @@ class MultiFactorStrategyV2(BaseStrategy):
         adx_data = indicator_values.get("ADX")
         adx_value = 0
         if adx_data:
-            adx_value = adx_data.last_value.get("adx", 0)
-            plus_di = adx_data.last_value.get("plus_di", 0)
-            minus_di = adx_data.last_value.get("minus_di", 0)
+            adx_value = adx_data.get("adx", 0)
+            plus_di = adx_data.get("plus_di", 0)
+            minus_di = adx_data.get("minus_di", 0)
             
             if adx_value >= self.adx_threshold:
                 if plus_di > minus_di:
@@ -114,8 +114,8 @@ class MultiFactorStrategyV2(BaseStrategy):
         # ===== SMA 分析 =====
         sma_data = indicator_values.get("SMA")
         if sma_data:
-            sma = sma_data.last_value.get("sma", current_price)
-            price_vs_sma = sma_data.last_value.get("price_vs_sma", 0)
+            sma = sma_data.get("sma", current_price)
+            price_vs_sma = sma_data.get("price_vs_sma", 0)
             
             if price_vs_sma > 0.02:
                 factors["bullish"].append(f"Price above SMA ({price_vs_sma:.1%})")
@@ -295,7 +295,7 @@ class SectorAdaptiveStrategy(BaseStrategy):
         if self.volatility_filter:
             bb_data = indicator_values.get("BollingerBands")
             if bb_data:
-                bb_percent = bb_data.last_value.get("percent", 0.5)
+                bb_percent = bb_data.get("percent", 0.5)
                 if bb_percent > self.bb_high or bb_percent < self.bb_low:
                     volatility_filtered = True
         
@@ -305,7 +305,7 @@ class SectorAdaptiveStrategy(BaseStrategy):
         # RSI
         rsi_data = indicator_values.get("RSI")
         if rsi_data:
-            rsi = rsi_data.last_value.get("rsi", 50)
+            rsi = rsi_data.get("rsi", 50)
             if rsi < self.rsi_oversold:
                 factors["bullish"].append(f"RSI({rsi:.1f})")
             elif rsi > self.rsi_overbought:
@@ -314,7 +314,7 @@ class SectorAdaptiveStrategy(BaseStrategy):
         # MACD
         macd_data = indicator_values.get("MACD")
         if macd_data:
-            histogram = macd_data.last_value.get("histogram", 0)
+            histogram = macd_data.get("histogram", 0)
             if histogram > 0:
                 factors["bullish"].append("MACD+")
             elif histogram < 0:
@@ -323,9 +323,9 @@ class SectorAdaptiveStrategy(BaseStrategy):
         # ADX
         adx_data = indicator_values.get("ADX")
         if adx_data:
-            adx_value = adx_data.last_value.get("adx", 0)
-            plus_di = adx_data.last_value.get("plus_di", 0)
-            minus_di = adx_data.last_value.get("minus_di", 0)
+            adx_value = adx_data.get("adx", 0)
+            plus_di = adx_data.get("plus_di", 0)
+            minus_di = adx_data.get("minus_di", 0)
             
             if adx_value >= self.adx_threshold:
                 if plus_di > minus_di:
@@ -336,7 +336,7 @@ class SectorAdaptiveStrategy(BaseStrategy):
         # SMA
         sma_data = indicator_values.get("SMA")
         if sma_data:
-            price_vs_sma = sma_data.last_value.get("price_vs_sma", 0)
+            price_vs_sma = sma_data.get("price_vs_sma", 0)
             if price_vs_sma > 0.02:
                 factors["bullish"].append("Price>SMA")
             elif price_vs_sma < -0.02:
