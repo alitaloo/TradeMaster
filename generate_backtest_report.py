@@ -29,8 +29,11 @@ from core import PluginRegistry
 from data import DataEngine
 
 
-# 股票清單 - 單股票測試
-STOCKS = ["TSLA"]
+# 股票清單 - 完整回測
+STOCKS = [
+    "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA",
+    "TSM", "AMD", "INTC", "AVGO", "UBER", "ORCL", "WDC", "MU", "COIN", "RKLB"
+]
 
 
 def get_available_strategies():
@@ -254,12 +257,66 @@ def generate_markdown_report(results: dict, strategies: list, filename: str, ful
         report += "* 無低夏普策略 *\n"
     
     # 結論
+    # 策略有效性過濾
+    print("\n🔍 過濾策略...")
+    filter_result = engine.filter_strategies(results)
+    print(f"   分析: {filter_result['summary']['total_analyzed']} 個策略-股票組合")
+    print(f"   通過: {filter_result['summary']['passed']} 個")
+    print(f"   失敗: {filter_result['summary']['failed']} 個")
+    print(f"   通過率: {filter_result['summary']['pass_rate']:.1%}")
+
+    # 過濾後的有效策略
+    valid_results = list(filter_result['valid'].values())
+    valid_results.sort(key=lambda x: x.get('sharpe', 0), reverse=True)
+    
     report += """
 ---
 
-## 📝 結論與建議
+## ✅ 策略有效性過濾結果
 
-### 推薦使用的策略組合
+| 指標 | 值 |
+|------|-----|
+| 總分析數 | {total} |
+| 通過數 | {passed} |
+| 失敗數 | {failed} |
+| 通過率 | {rate:.1%} |
+| 最小交易樣本 | {min_trades} 筆 |
+| 夏普門檻 | >= {sharpe:.1f} |
+
+### 通過過濾的策略（按夏普排序）：
+
+""".format(
+        total=filter_result['summary']['total_analyzed'],
+        passed=filter_result['summary']['passed'],
+        failed=filter_result['summary']['failed'],
+        rate=filter_result['summary']['pass_rate'],
+        min_trades=engine.MIN_TRADES_THRESHOLD,
+        sharpe=engine.MIN_SHARPE_THRESHOLD
+    )
+
+    if valid_results:
+        report += "| 排名 | 股票 | 策略 | 夏普 | 報酬 | 最大回撤 | 勝率 | 交易次數 |\n"
+        report += "|------|------|------|------|------|---------|------|---------|\n"
+        for i, r in enumerate(valid_results[:15], 1):
+            report += f"| {i} | {r['symbol']} | {r['strategy']} | {r.get('sharpe', 0):.2f} | {r.get('total_return', 0):.2%} | {r.get('max_drawdown', 0):.2%} | {r.get('win_rate', 0):.2%} | {r.get('total_trades', 0)} |\n"
+    else:
+        report += "* 無策略通過有效性過濾 *\n"
+
+    # Monte Carlo 模擬摘要（如果有執行）
+    if 'monte_carlo' in locals():
+        mc_result = monte_carlo.run(symbol, strategy, data, strategy_name)
+        report += f"""
+
+---
+
+## 🎲 Monte Carlo 模擬結果
+
+| 指標 | 基準 | 平均 | 5% 分位 | 95% 分位 |
+|------|------|------|---------|---------|
+| 報酬 | {mc_result['base_return']:.2%} | {mc_result['return_mean']:.2%} | {mc_result['return_5pct']:.2%} | {mc_result['return_95pct']:.2%} |
+| 最大回撤 | {mc_result['base_max_dd']:.2%} | {mc_result['dd_mean']:.2%} | {mc_result['dd_5pct']:.2%} | - |
+
+**獲利機率:** {mc_result['probability_of_profit']:.1%}
 
 """
     

@@ -310,13 +310,22 @@ class BacktestValidator:
 
 
 class BacktestEngine:
-    """標準回測引擎 - 使用凱利公式計算倉位"""
+    """標準回測引擎 - 使用凱利公式計算倉位 + 真實成本模型"""
 
-    def __init__(self, initial_capital: float = 100000, commission: float = 0.001, slippage: float = 0.001, kelly_fraction: float = 0.5):
+    # 真實成本預設值
+    DEFAULT_COMMISSION = 0.0015   # 來回 0.15%（美股券商 typical）
+    DEFAULT_SLIPPAGE = 0.001      # 滑價 0.1%
+    MIN_TRADES_THRESHOLD = 50     # 最小交易樣本門檻
+    MIN_SHARPE_THRESHOLD = 0.0     # 夏普門檻（>= 0 才算有效）
+
+    def __init__(self, initial_capital: float = 100000, 
+                 commission: float = None, 
+                 slippage: float = None, 
+                 kelly_fraction: float = 0.25):  # 預設 1/4 凱利，更保守
         self.initial_capital = initial_capital
-        self.commission = commission
-        self.slippage = slippage
-        self.kelly_fraction = kelly_fraction  # 半凱利係數（預設 0.5，避免過度槓桿）
+        self.commission = commission or self.DEFAULT_COMMISSION
+        self.slippage = slippage or self.DEFAULT_SLIPPAGE
+        self.kelly_fraction = kelly_fraction  # 預設 1/4 凱利
 
     def _calculate_kelly_position(self, strategy, data: pd.DataFrame, position_type: PositionType) -> float:
         """
@@ -682,8 +691,72 @@ class BacktestEngine:
         result.average_slippage = np.mean(slippage_costs) if slippage_costs else 0
 
         result.trades = trades
-
+        
+        # === 策略有效性檢查 ===
+        # 1. 檢查交易樣本數量
+        result.is_statistically_valid = result.total_trades >= self.MIN_TRADES_THRESHOLD
+        
+        # 2. 檢查夏普門檻
+        if result.total_trades > 0 and result.volatility > 0:
+            # 年化報酬 / 年化波動率
+            estimated_sharpe = result.annualized_return / result.volatility if result.volatility else 0
+            result.meets_sharpe_threshold = estimated_sharpe >= self.MIN_SHARPE_THRESHOLD
+        else:
+            result.meets_sharpe_threshold = False
+        
         return result
+
+    def filter_strategies(self, results: Dict) -> Dict:
+        """
+        過濾策略，只保留有效的策略
+        - 交易樣本 >= 50 筆
+        - 夏普比率 >= 0
+        """
+        filtered = {}
+        rejected = {}
+        
+        for symbol, strategies in results.items():
+            for strategy_name, data in strategies.items():
+                if not data or 'backtest' not in data:
+                    continue
+                    
+                backtest = data['backtest']
+                total_trades = backtest.get('total_trades', 0)
+                sharpe = backtest.get('sharpe', -999)
+                
+                # 檢查有效性
+                is_valid = (total_trades >= self.MIN_TRADES_THRESHOLD and 
+                           sharpe >= self.MIN_SHARPE_THRESHOLD)
+                
+                if is_valid:
+                    filtered[f"{symbol}_{strategy_name}"] = {
+                        'symbol': symbol,
+                        'strategy': strategy_name,
+                        **backtest,
+                        'validation': 'passed'
+                    }
+                else:
+                    rejected[f"{symbol}_{strategy_name}"] = {
+                        'symbol': symbol,
+                        'strategy': strategy_name,
+                        'total_trades': total_trades,
+                        'sharpe': sharpe,
+                        'rejection_reason': (
+                            'insufficient_trades' if total_trades < self.MIN_TRADES_THRESHOLD 
+                            else 'negative_sharpe'
+                        )
+                    }
+        
+        return {
+            'valid': filtered,
+            'rejected': rejected,
+            'summary': {
+                'total_analyzed': len(filtered) + len(rejected),
+                'passed': len(filtered),
+                'failed': len(rejected),
+                'pass_rate': len(filtered) / max(1, len(filtered) + len(rejected))
+            }
+        }
 
 
 class MonteCarloBacktest:
