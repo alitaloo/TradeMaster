@@ -238,10 +238,21 @@ class BacktestEngine:
             position = PositionType.NONE
             entry_price = 0
             shares = 0
+            
+            # 預先計算指標
+            all_indicators = calculate_indicators(data)
 
             for i in range(len(data) - 1):
-                # 計算當前指標
-                ind = calculate_indicators(data.iloc[:i+1])
+                # 快速獲取當前指標值（保留為 Series）
+                ind = {}
+                for ind_name, ind_values in all_indicators.items():
+                    ind[ind_name] = {}
+                    for key, series in ind_values.items():
+                        if hasattr(series, 'iloc'):
+                            ind[ind_name][key] = series.iloc[:i+1].reset_index(drop=True)
+                        else:
+                            ind[ind_name][key] = series
+                
                 signal = strategy.generate_signal(ind, data.iloc[:i+1])
                 current_price = data["Close"].iloc[i]
 
@@ -307,6 +318,9 @@ class BacktestEngine:
 
     def run(self, symbol: str, strategy, data: pd.DataFrame, strategy_name: str = "Unknown") -> BacktestResult:
         df = self._prepare_data(data.copy())
+        
+        # 預先計算所有指標（只計算一次）
+        all_indicators = calculate_indicators(df)
 
         # 先計算凱利倉位比例
         kelly_position = self._calculate_kelly_position(strategy, df, PositionType.LONG)
@@ -322,8 +336,17 @@ class BacktestEngine:
         for i in range(len(df) - 1):
             current_price = df["Close"].iloc[i]
             current_date = df.index[i]
-            # 計算當前指標
-            ind = calculate_indicators(df.iloc[:i+1])
+            # 快速獲取當前指標值（保留為 Series）
+            ind = {}
+            for ind_name, ind_values in all_indicators.items():
+                ind[ind_name] = {}
+                for key, series in ind_values.items():
+                    if hasattr(series, 'iloc'):
+                        # 取到當前位置為止的 series
+                        ind[ind_name][key] = series.iloc[:i+1].reset_index(drop=True)
+                    else:
+                        ind[ind_name][key] = series
+            
             signal = strategy.generate_signal(ind, df.iloc[:i+1])
 
             if signal.signal == "LONG" and position != PositionType.LONG:
