@@ -439,12 +439,10 @@ def main():
             print(f"   ⚠️ 無法獲取 {symbol} 數據")
             continue
         
-        # 過濾日期範圍
-        if start_date is not None and end_date is not None:
-            data = data[(data.index >= start_date) & (data.index <= end_date)]
-            print(f"   📅 {symbol}: {len(data)} 天 ({date_range_note})")
-        else:
-            print(f"   📅 {symbol}: {len(data)} 天 (全部)")
+        # 使用最近 500 天數據
+        if len(data) > 500:
+            data = data[-500:]
+        print(f"   📅 {symbol}: {len(data)} 天 (最近)")
         
         for strategy_info in strategies:
             current += 1
