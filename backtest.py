@@ -547,6 +547,62 @@ class BacktestEngine:
             else:
                 equity.append(capital)
 
+        # === 強制平倉：將未實現盈餘轉為已實現 ===
+        final_price = df["Close"].iloc[-1]
+        final_date = df.index[-1]
+
+        if position == PositionType.LONG and shares > 0:
+            # 平多倉
+            exit_price = final_price * (1 - self.slippage)
+            pnl = (exit_price - entry_price) * shares
+            commission = (entry_price * shares + exit_price * shares) * self.commission
+            slippage_cost = abs(exit_price - final_price) * shares * self.slippage
+            holding_days = (final_date - entry_date).days if entry_date else 0
+
+            trades.append({
+                "type": "LONG_EXIT",
+                "entry_price": round(entry_price, 2),
+                "entry_date": str(entry_date.date()) if entry_date else None,
+                "exit_price": round(exit_price, 2),
+                "exit_date": str(final_date.date()),
+                "shares": shares,
+                "entry_capital_used": round(shares * entry_price, 2),
+                "gross_pnl": round(pnl, 2),
+                "commission": round(commission, 2),
+                "slippage_cost": round(slippage_cost, 2),
+                "net_pnl": round(pnl - commission - slippage_cost, 2),
+                "return_pct": round((exit_price - entry_price) / entry_price * 100, 2),
+                "holding_days": holding_days,
+                "capital_at_entry": round(capital, 2),
+                "capital_at_exit": round(capital + pnl - commission - slippage_cost, 2)
+            })
+
+        elif position == PositionType.SHORT and shares > 0:
+            # 平空倉
+            exit_price = final_price * (1 + self.slippage)
+            pnl = (entry_price - exit_price) * shares
+            commission = (entry_price * shares + exit_price * shares) * self.commission
+            slippage_cost = abs(exit_price - final_price) * shares * self.slippage
+            holding_days = (final_date - entry_date).days if entry_date else 0
+
+            trades.append({
+                "type": "SHORT_EXIT",
+                "entry_price": round(entry_price, 2),
+                "entry_date": str(entry_date.date()) if entry_date else None,
+                "exit_price": round(exit_price, 2),
+                "exit_date": str(final_date.date()),
+                "shares": shares,
+                "entry_capital_used": round(shares * entry_price, 2),
+                "gross_pnl": round(pnl, 2),
+                "commission": round(commission, 2),
+                "slippage_cost": round(slippage_cost, 2),
+                "net_pnl": round(pnl - commission - slippage_cost, 2),
+                "return_pct": round((entry_price - exit_price) / entry_price * 100, 2),
+                "holding_days": holding_days,
+                "capital_at_entry": round(capital, 2),
+                "capital_at_exit": round(capital + pnl - commission - slippage_cost, 2)
+            })
+
         result = self._calculate_result(symbol, strategy_name, df, trades, equity)
         result.kelly_position = kelly_position
 
