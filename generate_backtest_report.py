@@ -29,11 +29,8 @@ from core import PluginRegistry
 from data import DataEngine
 
 
-# 股票清單
-STOCKS = [
-    "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA",
-    "TSM", "AMD", "INTC", "AVGO", "UBER", "ORCL", "WDC", "MU", "COIN", "RKLB"
-]
+# 股票清單 - 單股票測試
+STOCKS = ["TSLA"]
 
 
 def get_available_strategies():

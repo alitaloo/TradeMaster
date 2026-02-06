@@ -356,28 +356,24 @@ class BacktestEngine:
                         exit_price = current_price * (1 - self.slippage)
                         pnl = (entry_price - exit_price) * shares
                         trades.append(pnl)
+                    # 做多：計算 shares
                     shares = int(capital / current_price)
                     entry_price = current_price * (1 + self.slippage)
-                    capital -= shares * entry_price
                     position = PositionType.LONG
+                    # 注意：不做 capital -= shares * entry_price，只記錄
 
                 elif signal.signal == "SHORT" and position != PositionType.SHORT:
                     if position == PositionType.LONG:
                         exit_price = current_price * (1 - self.slippage)
                         pnl = (exit_price - entry_price) * shares
                         trades.append(pnl)
-                    # 做空：賣出股票，獲得資金
-                    shares = int(capital * kelly_position / current_price)
+                    # 做空：計算 shares
+                    shares = int(capital * self.kelly_fraction / current_price)
                     entry_price = current_price * (1 + self.slippage)
-                    capital -= shares * entry_price  # 買入成本
                     position = PositionType.SHORT
+                    # 注意：不做 capital += shares * entry_price，只記錄
 
-                # 更新權益
-                if position == PositionType.LONG:
-                    capital = capital + shares * current_price
-                elif position == PositionType.SHORT:
-                    # 做空：價格下跌賺錢，上漲虧錢
-                    capital = capital + (entry_price - current_price) * shares
+            # 注意：不應該在每次迭代時更新 capital，只記錄交易 PnL
 
             # 計算凱利參數
             if not trades or len(trades) < 5:
@@ -419,8 +415,10 @@ class BacktestEngine:
         # 預先計算所有指標（只計算一次）
         all_indicators = calculate_indicators(df)
 
-        # 先計算凱利倉位比例
-        kelly_position = self._calculate_kelly_position(strategy, df, PositionType.LONG)
+        # 先計算凱利倉位比例（拷貝策略避免狀態污染）
+        import copy
+        temp_strategy = copy.copy(strategy)
+        kelly_position = self._calculate_kelly_position(temp_strategy, df, PositionType.LONG)
 
         capital = self.initial_capital
         position = PositionType.NONE
@@ -439,7 +437,6 @@ class BacktestEngine:
                 ind[ind_name] = {}
                 for key, series in ind_values.items():
                     if hasattr(series, 'iloc'):
-                        # 取到當前位置為止的 series
                         ind[ind_name][key] = series.iloc[:i+1].reset_index(drop=True)
                     else:
                         ind[ind_name][key] = series
@@ -448,6 +445,7 @@ class BacktestEngine:
 
             if signal.signal == "LONG" and position != PositionType.LONG:
                 if position == PositionType.SHORT:
+                    # 平倉 SHORT
                     exit_price = current_price * (1 - self.slippage)
                     pnl = (entry_price - exit_price) * shares
                     commission = (entry_price * shares + exit_price * shares) * self.commission
@@ -474,16 +472,26 @@ class BacktestEngine:
                     })
                     capital += pnl - commission - slippage_cost
 
-                # 使用凱利倉位比例買入
+                # 買入 - 記錄入場交易
                 position_capital = capital * kelly_position
                 shares = int(position_capital / current_price)
                 entry_price = current_price * (1 + self.slippage)
                 entry_date = current_date
                 capital -= shares * entry_price
                 position = PositionType.LONG
+                
+                trades.append({
+                    "type": "LONG_ENTRY",
+                    "entry_price": round(entry_price, 2),
+                    "entry_date": str(entry_date.date()) if entry_date else None,
+                    "shares": shares,
+                    "entry_capital_used": round(shares * entry_price, 2),
+                    "capital_at_entry": round(capital + shares * entry_price, 2)
+                })
 
             elif signal.signal == "SHORT" and position != PositionType.SHORT:
                 if position == PositionType.LONG:
+                    # 平倉 LONG
                     exit_price = current_price * (1 - self.slippage)
                     pnl = (exit_price - entry_price) * shares
                     commission = (entry_price * shares + exit_price * shares) * self.commission
@@ -510,20 +518,31 @@ class BacktestEngine:
                     })
                     capital += pnl - commission - slippage_cost
 
-                # 使用凱利倉位比例做空
+                # 做空 - 記錄入場交易
                 position_capital = capital * kelly_position
                 shares = int(position_capital / current_price)
-                entry_price = current_price * (1 + self.slippage)  # 做空時是賣出價格
+                entry_price = current_price * (1 - self.slippage)
                 entry_date = current_date
-                capital += shares * entry_price  # 做空獲得資金
+                capital += shares * entry_price
                 position = PositionType.SHORT
+                
+                trades.append({
+                    "type": "SHORT_ENTRY",
+                    "entry_price": round(entry_price, 2),
+                    "entry_date": str(entry_date.date()) if entry_date else None,
+                    "shares": shares,
+                    "entry_capital_used": round(shares * entry_price, 2),
+                    "capital_at_entry": round(capital - shares * entry_price, 2)
+                })
 
             # 更新權益
             if position == PositionType.LONG:
+                # 權益 = 剩餘資金 + 持股市值
                 equity.append(capital + shares * current_price)
             elif position == PositionType.SHORT:
-                # 做空：平倉時獲得 entry_price，買回時支付 current_price
-                unrealized_pnl = (entry_price - current_price) * shares
+                # 做空：capital 是賣出獲得的資金
+                # 未實現盈虧 = shares × (賣出價 - 買入價)
+                unrealized_pnl = shares * (entry_price - current_price)
                 equity.append(capital + unrealized_pnl)
             else:
                 equity.append(capital)
