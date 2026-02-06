@@ -566,17 +566,26 @@ class BacktestEngine:
             equity_curve=equity_series
         )
 
-        result.total_return = (equity[-1] - self.initial_capital) / self.initial_capital
+        # 處理負值 equity：報酬不能低於 -100%
+        final_equity = max(0, equity[-1])  # 權益不能為負
+        result.total_return = (final_equity - self.initial_capital) / self.initial_capital
+        
         days = (df.index[-1] - df.index[0]).days
-        if days > 0:
+        if days > 0 and final_equity > 0:
             result.annualized_return = ((1 + result.total_return) ** (365 / days)) - 1
+        else:
+            result.annualized_return = -1.0  # 破產
 
-        rolling_max = equity_series.expanding().max()
-        drawdown = (equity_series - rolling_max) / rolling_max
-        result.max_drawdown = abs(drawdown.min())
+        # 處理最大回撤：當 equity 為負時，最大回撤應該是 100%
+        equity_safe = equity_series.clip(lower=0)  # 確保不低於 0
+        rolling_max = equity_safe.expanding().max()
+        drawdown = (equity_safe - rolling_max) / rolling_max.replace(0, 1)  # 避免除以零
+        result.max_drawdown = min(abs(drawdown.min()), 1.0)  # 最大回撤不超過 100%
 
-        returns = equity_series.pct_change().dropna()
-        result.volatility = returns.std() * np.sqrt(252) if len(returns) > 0 else 0
+        # 處理波動率
+        returns = equity_safe.pct_change().dropna()
+        valid_returns = returns[returns.abs() < 10]  # 過濾極端值
+        result.volatility = valid_returns.std() * np.sqrt(252) if len(valid_returns) > 0 else 0
 
         # 安全處理 trades - 檢查每個欄位是否存在
         def get_pnl(t):
