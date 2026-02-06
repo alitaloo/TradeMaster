@@ -7,6 +7,15 @@ import pandas as pd
 import numpy as np
 
 
+def _get_current_price(data):
+    """獲取當前價格"""
+    close = data["Close"]
+    return close.iloc[-1] if len(close) > 0 else 0.0
+
+
+import numpy as np
+
+
 # ========== 策略 1-5: RSI 系列 ==========
 
 @strategy(name="RSI_BB_Squeeze", type="composite",
@@ -27,10 +36,10 @@ class RSIBBSqueeze(BaseStrategy):
         bb_val = bb_percent.iloc[-1] if len(bb_percent) > 0 else 0.5
         
         if bb_val < 0.1 and rsi_val < 35:
-            return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="Bullish signal detected", metadata={"type": "squeeze_long"})
+            return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "squeeze_long"})
         elif bb_val > 0.9 and rsi_val > 65:
-            return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="Bearish signal detected", metadata={"type": "squeeze_short"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=0.0, reason="Hold position", metadata={"bb": bb_val, "rsi": rsi_val})
+            return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "squeeze_short"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"bb": bb_val, "rsi": rsi_val})
 
 
 @strategy(name="RSI_MACD_Divergence", type="composite",
@@ -55,10 +64,10 @@ class RSIMACDDivergence(BaseStrategy):
         
         # 簡化背離檢測
         if rsi_val < 30 and rsi_val > prev_rsi and price_val < prev_price:
-            return SignalResult(signal="LONG", confidence=0.75, price=current_price, reason="Bullish signal detected", metadata={"type": "bullish_divergence"})
+            return SignalResult(signal="LONG", confidence=0.75, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "bullish_divergence"})
         elif rsi_val > 70 and rsi_val < prev_rsi and price_val > prev_price:
-            return SignalResult(signal="SHORT", confidence=0.75, price=current_price, reason="Bearish signal detected", metadata={"type": "bearish_divergence"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=0.0, reason="Hold position", metadata={"rsi": rsi_val})
+            return SignalResult(signal="SHORT", confidence=0.75, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "bearish_divergence"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"rsi": rsi_val})
 
 
 @strategy(name="RSI_ADX_TrendConfirm", type="composite",
@@ -82,10 +91,10 @@ class RSIADXTrendConfirm(BaseStrategy):
         
         if adx_val > self.adx_threshold:
             if plus_di.iloc[-1] > minus_di.iloc[-1] and rsi_val > 50:
-                return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Bullish signal detected", metadata={"type": "uptrend_confirm"})
+                return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "uptrend_confirm"})
             elif minus_di.iloc[-1] > plus_di.iloc[-1] and rsi_val < 50:
-                return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Bearish signal detected", metadata={"type": "downtrend_confirm"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=0.0, reason="Hold position", metadata={"adx": adx_val, "rsi": rsi_val})
+                return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "downtrend_confirm"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"adx": adx_val, "rsi": rsi_val})
 
 
 @strategy(name="RSI_Stochastic_Oversold", type="composite",
@@ -106,10 +115,10 @@ class RSIStochasticOversold(BaseStrategy):
         stoch_val = stoch_k.iloc[-1] if len(stoch_k) > 0 else 50
         
         if rsi_val < 30 and stoch_val < 20:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Bullish signal detected", metadata={"type": "double_oversold"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "double_oversold"})
         elif rsi_val > 70 and stoch_val > 80:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Bearish signal detected", metadata={"type": "double_overbought"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=0.0, reason="Hold position", metadata={"rsi": rsi_val, "stoch": stoch_val})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "double_overbought"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"rsi": rsi_val, "stoch": stoch_val})
 
 
 @strategy(name="RSI_Volume_Confirmation", type="composite",
@@ -129,10 +138,10 @@ class RSIVolumeConfirmation(BaseStrategy):
         vr = vol_ratio.iloc[-1] if len(vol_ratio) > 0 else 1.0
         
         if rsi_val < 30 and vr > 1.5:
-            return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="Bullish signal detected", metadata={"type": "high_volume_bottom"})
+            return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "high_volume_bottom"})
         elif rsi_val > 70 and vr > 1.5:
-            return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="Bearish signal detected", metadata={"type": "high_volume_top"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=0.0, reason="Hold position", metadata={"rsi": rsi_val, "vol_ratio": vr})
+            return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "high_volume_top"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"rsi": rsi_val, "vol_ratio": vr})
 
 
 # ========== 策略 6-10: MACD 系列 ==========
@@ -157,10 +166,10 @@ class MACDADXTrendRide(BaseStrategy):
         
         if adx_val > self.adx_threshold:
             if macd_val > sig_val and macd_val > 0:
-                return SignalResult(signal="LONG", confidence=0.9, price=current_price, reason="Bullish signal detected", metadata={"type": "strong_uptrend"})
+                return SignalResult(signal="LONG", confidence=0.9, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "strong_uptrend"})
             elif macd_val < sig_val and macd_val < 0:
-                return SignalResult(signal="SHORT", confidence=0.9, price=current_price, reason="Bearish signal detected", metadata={"type": "strong_downtrend"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=0.0, reason="Hold position", metadata={"adx": adx_val})
+                return SignalResult(signal="SHORT", confidence=0.9, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "strong_downtrend"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"adx": adx_val})
 
 
 @strategy(name="MACD_BB_Breakout", type="composite",
@@ -182,10 +191,10 @@ class MACDBBBreakout(BaseStrategy):
         
         # MACD 穿越零軸 + BB 突破
         if prev_macd < 0 and macd_val > 0 and bb_val > 0.8:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Bullish signal detected", metadata={"type": "bullish_breakout"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "bullish_breakout"})
         elif prev_macd > 0 and macd_val < 0 and bb_val < 0.2:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Bearish signal detected", metadata={"type": "bearish_breakout"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=0.0, reason="Hold position", metadata={"macd": macd_val, "bb": bb_val})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "bearish_breakout"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"macd": macd_val, "bb": bb_val})
 
 
 @strategy(name="MACD_RSI_Crossover", type="composite",
@@ -210,10 +219,10 @@ class MACDRSICrossover(BaseStrategy):
         
         # MACD 金叉/死叉 + RSI 確認
         if prev_macd <= prev_sig and macd_val > sig_val and rsi_val > 50:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Bullish signal detected", metadata={"type": "golden_cross"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "golden_cross"})
         elif prev_macd >= prev_sig and macd_val < sig_val and rsi_val < 50:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Bearish signal detected", metadata={"type": "death_cross"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=0.0, reason="Hold position", metadata={"rsi": rsi_val})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "death_cross"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"rsi": rsi_val})
 
 
 @strategy(name="MACD_Volume_Trend", type="composite",
@@ -234,10 +243,10 @@ class MACDVolumeTrend(BaseStrategy):
         vr = vol_ratio.iloc[-1] if len(vol_ratio) > 0 else 1.0
         
         if hist_val > 0 and hist_val > hist_prev and vr > 1.2:
-            return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Bullish signal detected", metadata={"type": "volume_confirmed_up"})
+            return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "volume_confirmed_up"})
         elif hist_val < 0 and hist_val < hist_prev and vr > 1.2:
-            return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Bearish signal detected", metadata={"type": "volume_confirmed_down"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=0.0, reason="Hold position", metadata={"hist": hist_val, "vol": vr})
+            return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "volume_confirmed_down"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"hist": hist_val, "vol": vr})
 
 
 @strategy(name="MACD_SMA_Crossover", type="composite",
@@ -261,10 +270,10 @@ class MACDSMACrossover(BaseStrategy):
         price_val = close.iloc[-1] if len(close) > 0 else 0
         
         if macd_val > sig_val and price_val > sma_val:
-            return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="Bullish signal detected", metadata={"type": "trend_aligned"})
+            return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "trend_aligned"})
         elif macd_val < sig_val and price_val < sma_val:
-            return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="Bearish signal detected", metadata={"type": "trend_aligned"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=0.0, reason="Hold position", metadata={"above_sma": price_val > sma_val})
+            return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "trend_aligned"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"above_sma": price_val > sma_val})
 
 
 # ========== 策略 11-15: ADX 系列 ==========
@@ -290,12 +299,12 @@ class ADXTrendStrength(BaseStrategy):
         
         if adx_val > self.adx_strong:
             if plus_di.iloc[-1] > minus_di.iloc[-1]:
-                return SignalResult(signal="LONG", confidence=0.9, price=current_price, reason="Bullish signal detected", metadata={"type": "strong_trend_up"})
+                return SignalResult(signal="LONG", confidence=0.9, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "strong_trend_up"})
             else:
-                return SignalResult(signal="SHORT", confidence=0.9, price=current_price, reason="Bearish signal detected", metadata={"type": "strong_trend_down"})
+                return SignalResult(signal="SHORT", confidence=0.9, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "strong_trend_down"})
         elif adx_val < self.adx_weak:
-            return SignalResult(signal="HOLD", confidence=0.5, price=0.0, reason="Hold position", metadata={"type": "weak_trend"})
-        return SignalResult(signal="HOLD", confidence=0.4, price=0.0, reason="Hold position", metadata={"adx": adx_val, "rsi": rsi_val})
+            return SignalResult(signal="HOLD", confidence=0.5, price=_get_current_price(data), reason="Hold position", metadata={"type": "weak_trend"})
+        return SignalResult(signal="HOLD", confidence=0.4, price=_get_current_price(data), reason="Hold position", metadata={"adx": adx_val, "rsi": rsi_val})
 
 
 @strategy(name="ADX_Volatility_Expansion", type="composite",
@@ -320,10 +329,10 @@ class ADXVolatilityExpansion(BaseStrategy):
         
         if adx_val > self.adx_threshold and atr_change > 0.2:
             if plus_di.iloc[-1] > minus_di.iloc[-1]:
-                return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Bullish signal detected", metadata={"type": "volatility_expansion_up"})
+                return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "volatility_expansion_up"})
             else:
-                return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Bearish signal detected", metadata={"type": "volatility_expansion_down"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=0.0, reason="Hold position", metadata={"adx": adx_val, "atr_change": atr_change})
+                return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "volatility_expansion_down"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"adx": adx_val, "atr_change": atr_change})
 
 
 @strategy(name="ADX_Stochastic_Momentum", type="composite",
@@ -346,10 +355,10 @@ class ADXStochasticMomentum(BaseStrategy):
         
         if adx_val > self.adx_threshold:
             if plus_di.iloc[-1] > minus_di.iloc[-1] and stoch_val < 80:
-                return SignalResult(signal="LONG", confidence=0.8, price=current_price, reason="Bullish signal detected", metadata={"type": "uptrend_momentum"})
+                return SignalResult(signal="LONG", confidence=0.8, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "uptrend_momentum"})
             elif minus_di.iloc[-1] > plus_di.iloc[-1] and stoch_val > 20:
-                return SignalResult(signal="SHORT", confidence=0.8, price=current_price, reason="Bearish signal detected", metadata={"type": "downtrend_momentum"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=0.0, reason="Hold position", metadata={"adx": adx_val, "stoch": stoch_val})
+                return SignalResult(signal="SHORT", confidence=0.8, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "downtrend_momentum"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"adx": adx_val, "stoch": stoch_val})
 
 
 @strategy(name="ADX_ParabolicSAR_Stop", type="composite",
@@ -374,10 +383,10 @@ class ADXParabolicSARStop(BaseStrategy):
         
         if adx_val > self.adx_threshold:
             if trend_val == 1 and price_val > sar_val:
-                return SignalResult(signal="LONG", confidence=0.9, price=current_price, reason="Bullish signal detected", metadata={"type": "sar_below_price"})
+                return SignalResult(signal="LONG", confidence=0.9, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "sar_below_price"})
             elif trend_val == -1 and price_val < sar_val:
-                return SignalResult(signal="SHORT", confidence=0.9, price=current_price, reason="Bearish signal detected", metadata={"type": "sar_above_price"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=0.0, reason="Hold position", metadata={"adx": adx_val})
+                return SignalResult(signal="SHORT", confidence=0.9, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "sar_above_price"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"adx": adx_val})
 
 
 @strategy(name="ADX_Ichimoku_Cloud", type="composite",
@@ -405,7 +414,7 @@ class ADXIchimokuCloud(BaseStrategy):
         if adx_val > self.adx_threshold:
             # 價格在雲上方 + 趨勢確認
             if close > cloud_top.iloc[-1] and tenkan_val > kijun_val:
-                return SignalResult(signal="LONG", confidence=0.85, price=current_price, reason="Bullish signal detected", metadata={"type": "above_cloud"})
+                return SignalResult(signal="LONG", confidence=0.85, price=_get_current_price(data), reason="Bullish signal detected", metadata={"type": "above_cloud"})
             elif close < cloud_bottom.iloc[-1] and tenkan_val < kijun_val:
-                return SignalResult(signal="SHORT", confidence=0.85, price=current_price, reason="Bearish signal detected", metadata={"type": "below_cloud"})
-        return SignalResult(signal="HOLD", confidence=0.3, price=0.0, reason="Hold position", metadata={"adx": adx_val})
+                return SignalResult(signal="SHORT", confidence=0.85, price=_get_current_price(data), reason="Bearish signal detected", metadata={"type": "below_cloud"})
+        return SignalResult(signal="HOLD", confidence=0.3, price=_get_current_price(data), reason="Hold position", metadata={"adx": adx_val})
