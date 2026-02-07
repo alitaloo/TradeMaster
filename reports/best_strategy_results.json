@@ -1,0 +1,26 @@
+[
+  {
+    "symbol": "AAPL",
+    "total_return": -0.006613804947564694,
+    "annualized_return": -0.0011052246994604131,
+    "volatility": 0.2871094227200799,
+    "sharpe_ratio": -0.0038494894698665556,
+    "max_drawdown": 0.24168409779218442,
+    "total_trades": 26,
+    "win_rate": 0.5769230769230769,
+    "profit_factor": 1.5796060325495849,
+    "params": "RSI(14/32/74) SL=5.8% TP=15%"
+  },
+  {
+    "symbol": "TSLA",
+    "total_return": 0.16221330128614908,
+    "annualized_return": 0.027107262549144275,
+    "volatility": 0.501257501581826,
+    "sharpe_ratio": 0.0540785174558016,
+    "max_drawdown": 0.3377867827728595,
+    "total_trades": 52,
+    "win_rate": 0.3269230769230769,
+    "profit_factor": 0.891016456432016,
+    "params": "RSI(14/32/74) SL=5.8% TP=15%"
+  }
+]
