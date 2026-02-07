@@ -2,11 +2,21 @@
 
 量化交易回測系統 - RSI 均值回歸策略優化平台
 
+---
+
+## 🎯 項目目標
+
+**目標**：找到 Sharpe > 1.5、報酬率 > 20%、最大回撤 < 30% 的可交易策略
+
+**口號**：規範才有整齊的步伐，讓項目快速迭代 🚀
+
+---
+
 ## 📁 項目結構規範
 
 ```
 TradeMaster_v2/
-├── README.md                    # 項目說明文檔
+├── README.md                    # 項目說明文檔 (重要！)
 ├── requirements.txt             # Python 依賴
 ├── .git/                        # Git 版本控制
 │
@@ -63,13 +73,16 @@ TradeMaster_v2/
 │   ├── quick_backtest_*.py      # 快速回測腳本
 │   ├── quick_optimize.py        # 快速優化
 │   ├── final_strategy_test.py   # 最終策略測試
+│   ├── run_top10_backtest.py    # Top10 策略回測
 │   └── debug_*.py              # 調試腳本
 │
-├── reports/                     # 回測報告 (最終版本)
+├── reports/                     # 回測報告
 │   ├── FINAL_REPORT.md          # 最終綜合報告
 │   ├── QUALIFIED_STRATEGY_REPORT.md  # 達標策略報告
 │   ├── BEST_STRATEGY_BACKTEST.md     # 最佳策略驗證報告
-│   └── best_strategy_results.json     # 最佳策略JSON結果
+│   ├── TOP10_STRATEGY_REPORT.md      # Top10 策略回測報告
+│   ├── *_RESULTS.md             # 策略結果報告
+│   └── *_RESULTS.json           # 策略結果 JSON
 │
 ├── docs/                        # 開發文檔和技術文檔
 │   ├── TECHNICAL_SPEC.md        # 技術規格
@@ -89,8 +102,8 @@ TradeMaster_v2/
 │
 ├── signals/                     # 信號生成模組
 ├── api/                         # API 服務
-├── config/                     # 配置
-├── risk_rules/                 # 風險規則
+├── config/                      # 配置
+├── risk_rules/                  # 風險規則
 ├── security/                   # 安全模組
 ├── tools/                      # 工具腳本
 ├── memory/                     # 會話記憶
@@ -102,51 +115,125 @@ TradeMaster_v2/
 
 ---
 
-## 📋 文件命名規範
+## 📋 配置股票清單
 
-### 回測腳本 (backtests/)
-- `backtest_<strategy_name>.py` - 主要回測腳本
-- `run_backtest_<purpose>.py` - 特定目的回測
-- `quick_backtest_<purpose>.py` - 快速測試
-- `debug_<component>.py` - 調試腳本
+### 🔬 實驗回測
+**目的**：快速驗證策略有效性
+- AAPL (蘋果)
+- TSLA (特斯拉)
 
-### 報告 (reports/)
-- `FINAL_REPORT.md` - 最終報告
-- `QUALIFIED_STRATEGY_REPORT.md` - 達標策略報告
-- `BEST_STRATEGY_BACKTEST.md` - 最佳策略驗證
-- `*_REPORT.md` - 其他主題報告
-
-### 數據 (data/backtest_results/)
-- `<strategy_name>_results.csv` - 策略結果
-- `stooq_v2_results.csv` - Stooq V2 數據
+### 🎯 正式回測
+**目的**：找出可實際交易的策略
+| # | 股票代碼 | 公司名稱 |
+|---|---------|----------|
+| 1 | TSLA | Tesla (特斯拉) |
+| 2 | AAPL | Apple (蘋果) |
+| 3 | AMZN | Amazon (亞馬遜) |
+| 4 | NVDA | NVIDIA (英偉達) |
+| 5 | META | Meta (Facebook) |
+| 6 | MSFT | Microsoft (微軟) |
+| 7 | UBER | Uber (優步) |
+| 8 | INTC | Intel (英特爾) |
+| 9 | AMD | AMD |
+| 10 | RKLB | Rocket Lab (火箭實驗室) |
+| 11 | WDC | Western Digital (西部數據) |
+| 12 | MU | Micron (美光) |
+| 13 | TSM | TSMC (台積電) |
+| 14 | ORCL | Oracle (甲骨文) |
+| 15 | DELL | Dell (戴爾) |
 
 ---
 
-## 🚀 快速開始
+## 📋 文件命名規範
 
-### 環境設置
-```bash
-cd TradeMaster_v2
-pip install -r requirements.txt
+### 回測腳本 (backtests/)
+| 前綴 | 用途 | 示例 |
+|------|------|------|
+| `backtest_` | 主要回測腳本 | `backtest_rsi2.py` |
+| `run_` | 特定目的回測 | `run_top10_backtest.py` |
+| `quick_` | 快速測試 | `quick_backtest.py` |
+| `final_` | 最終驗證 | `final_strategy_test.py` |
+| `debug_` | 調試腳本 | `debug_*.py` |
+
+### 數據文件 (data/backtest_results/)
+| 格式 | 用途 | 示例 |
+|------|------|------|
+| `<strategy>_results.csv` | 策略回測結果 | `rsi2_results.csv` |
+| `stooq_v2_results.csv` | Stooq V2 數據 | - |
+| `trend_filtered_results.csv` | 趨勢過濾結果 | - |
+
+### 報告文件 (reports/)
+| 類型 | 命名格式 | 示例 |
+|------|----------|------|
+| **調研報告** | `RESEARCH_<topic>_YYYYMMDD.md` | `RESEARCH_RSI_20260207.md` |
+| **測試報告** | `TEST_<purpose>_YYYYMMDD.md` | `TEST_QUALIFIED_20260207.md` |
+| **Top10報告** | `TOP10_STRATEGY_REPORT.md` | - |
+| **達標報告** | `QUALIFIED_STRATEGY_REPORT.md` | - |
+| **最佳策略報告** | `BEST_STRATEGY_BACKTEST.md` | - |
+| **最終報告** | `FINAL_REPORT.md` | - |
+| **結果JSON** | `<type>_results.json` | `top10_results.json` |
+
+---
+
+## 🔄 工作流程規範
+
+### 完整流程（必須嚴格遵守）
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        完整工作流程                               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1️⃣ 調研 (Research)                                             │
+│     ├── 閱讀現有文檔和報告                                       │
+│     ├── 研究市場上量化機構常用策略                               │
+│     ├── 生成調研報告 → docs/RESEARCH_*.md                       │
+│     └── 輸出：策略想法、參數範圍                                 │
+│                                                                 │
+│  2️⃣ 開發 (Development)                                         │
+│     ├── 在 strategies/ 實現新策略                               │
+│     ├── 在 indicators/ 添加必要指標                             │
+│     ├── 更新 core/registry.py 註冊策略                           │
+│     └── 遵循代碼規範                                             │
+│                                                                 │
+│  3️⃣ 實驗回測 (Experiment Backtest)                              │
+│     ├── 對象：AAPL, TSLA                                       │
+│     ├── 腳本：quick_*.py 或 debug_*.py                          │
+│     ├── 數據：data/backtest_results/*.csv                       │
+│     └── 輸出：docs/TEST_*.md                                    │
+│                                                                 │
+│  4️⃣ 正式回測 (Production Backtest)                              │
+│     ├── 對象：15 隻正式股票清單                                  │
+│     ├── 腳本：run_*.py 或 final_*.py                             │
+│     ├── 數據：data/backtest_results/*.csv                       │
+│     └── 輸出：reports/TOP10_*.md 或 QUALIFIED_*.md               │
+│                                                                 │
+│  5️⃣ 數據下載 (Data Download)                                     │
+│     ├── 腳本：download_data.py                                  │
+│     ├── 目標：補齊缺失股票的歷史數據                             │
+│     └── 數據存放：data/historical/daily/                        │
+│                                                                 │
+│  6️⃣ 報告生成 (Report Generation)                                │
+│     ├── 調研報告 → docs/RESEARCH_*.md                          │
+│     ├── 測試報告 → docs/TEST_*.md                               │
+│     ├── 回測報告 → reports/TOP10_*.md                            │
+│     └── 遵循報告命名規範                                         │
+│                                                                 │
+│  7️⃣ Git 提交 (Commit & Push)                                   │
+│     ├── commit 前確保代碼可運行                                  │
+│     ├── 提交信息清晰描述改動                                     │
+│     └── push 到 dev 分支                                        │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### 運行回測
-```bash
-# RSI 策略回測
-python backtests/backtest_rsi2.py
+### 每次操作前檢查清單
 
-# 最佳策略驗證
-python backtests/backtest_best_strategy.py
-
-# 達標策略測試
-python backtests/backtest_qualified.py
-```
-
-### 查看報告
-```bash
-cat reports/FINAL_REPORT.md
-cat reports/QUALIFIED_STRATEGY_REPORT.md
-```
+- [ ] 閱讀 README.md（必須！）
+- [ ] 確認使用的股票清單（實驗 vs 正式）
+- [ ] 確認輸出目錄（docs vs reports）
+- [ ] 遵循文件命名規範
+- [ ] 確認工作流程順序
 
 ---
 
@@ -170,6 +257,37 @@ cat reports/QUALIFIED_STRATEGY_REPORT.md
 
 ---
 
+## 🚀 快速開始
+
+### 環境設置
+```bash
+cd TradeMaster_v2
+pip install -r requirements.txt
+```
+
+### 運行回測
+```bash
+# 實驗回測 (AAPL, TSLA)
+python backtests/quick_backtest.py
+
+# Top10 策略回測
+python backtests/run_top10_backtest.py
+
+# 最佳策略驗證
+python backtests/backtest_best_strategy.py
+```
+
+### 查看報告
+```bash
+# Top10 報告
+cat reports/TOP10_STRATEGY_REPORT.md
+
+# 達標策略報告
+cat reports/QUALIFIED_STRATEGY_REPORT.md
+```
+
+---
+
 ## 📝 開發規範
 
 ### 添加新策略
@@ -178,16 +296,12 @@ cat reports/QUALIFIED_STRATEGY_REPORT.md
 3. 在 `core/registry.py` 中註冊策略
 4. 在 `backtests/` 創建回測腳本
 5. 結果保存到 `data/backtest_results/`
-6. 報告生成到 `reports/`
+6. 報告生成到對應目錄（docs/ 或 reports/）
 
-### 回測結果命名
-```
-<策略名稱>_results_YYYYMMDD.csv
-```
-
-### 報告命名
-```
-<TITLE>_YYYYMMDD_HHMM.md
+### 數據覆蓋檢查
+```bash
+# 檢查現有數據覆蓋的股票
+cut -d',' -f1 data/backtest_results/*.csv | sort | uniq
 ```
 
 ---
@@ -196,3 +310,8 @@ cat reports/QUALIFIED_STRATEGY_REPORT.md
 
 - Repository: https://github.com/alitaloo/TradeMaster.git
 - Branch: dev
+
+---
+
+*Updated: 2026-02-07*
+*規範創造效率，流程保證質量*
