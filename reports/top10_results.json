@@ -93,6 +93,16 @@
       "params": "RSI(7/35/80) SL=8% TP=10%"
     },
     {
+      "strategy_rank": 4,
+      "base_symbol": "AAPL",
+      "applied_symbol": "AAPL",
+      "sharpe": 1.0918,
+      "annual_return_pct": 33.1,
+      "max_dd_pct": 15.92,
+      "total_trades": 224,
+      "params": "RSI(14/35/65) SL=15% TP=30%"
+    },
+    {
       "strategy_rank": 2,
       "base_symbol": "AAPL",
       "applied_symbol": "AAPL",
@@ -111,26 +121,6 @@
       "max_dd_pct": 15.92,
       "total_trades": 224,
       "params": "RSI(14/35/65) SL=15% TP=25%"
-    },
-    {
-      "strategy_rank": 4,
-      "base_symbol": "AAPL",
-      "applied_symbol": "AAPL",
-      "sharpe": 1.0918,
-      "annual_return_pct": 33.1,
-      "max_dd_pct": 15.92,
-      "total_trades": 224,
-      "params": "RSI(14/35/65) SL=15% TP=30%"
-    },
-    {
-      "strategy_rank": 5,
-      "base_symbol": "SPY",
-      "applied_symbol": "SPY",
-      "sharpe": 0.9859,
-      "annual_return_pct": 19.55,
-      "max_dd_pct": 7.38,
-      "total_trades": 0,
-      "params": "RSI(7/40/75) SMA(50/200) SL=5% TP=8%"
     },
     {
       "strategy_rank": 8,
@@ -183,16 +173,6 @@
       "params": "RSI(10/40/75) SL=8% TP=10%"
     },
     {
-      "strategy_rank": 10,
-      "base_symbol": "AAPL",
-      "applied_symbol": "SPY",
-      "sharpe": 0.5534,
-      "annual_return_pct": 12.74,
-      "max_dd_pct": 29.87,
-      "total_trades": 289,
-      "params": "RSI(10/40/75) SL=8% TP=10%"
-    },
-    {
       "strategy_rank": 5,
       "base_symbol": "SPY",
       "applied_symbol": "AAPL",
@@ -203,91 +183,111 @@
       "params": "RSI(7/40/75) SMA(50/200) SL=5% TP=8%"
     },
     {
-      "strategy_rank": 1,
+      "strategy_rank": 8,
       "base_symbol": "AAPL",
-      "applied_symbol": "SPY",
-      "sharpe": 0.154,
-      "annual_return_pct": 3.67,
-      "max_dd_pct": 40.23,
-      "total_trades": 267,
-      "params": "RSI(7/35/80) SL=8% TP=10%"
-    },
-    {
-      "strategy_rank": 4,
-      "base_symbol": "AAPL",
-      "applied_symbol": "SPY",
-      "sharpe": 0.1452,
-      "annual_return_pct": 3.83,
-      "max_dd_pct": 33.92,
-      "total_trades": 160,
-      "params": "RSI(14/35/65) SL=15% TP=30%"
-    },
-    {
-      "strategy_rank": 3,
-      "base_symbol": "AAPL",
-      "applied_symbol": "SPY",
-      "sharpe": 0.1452,
-      "annual_return_pct": 3.83,
-      "max_dd_pct": 33.92,
-      "total_trades": 160,
-      "params": "RSI(14/35/65) SL=15% TP=25%"
-    },
-    {
-      "strategy_rank": 2,
-      "base_symbol": "AAPL",
-      "applied_symbol": "SPY",
-      "sharpe": 0.1452,
-      "annual_return_pct": 3.83,
-      "max_dd_pct": 33.92,
-      "total_trades": 160,
-      "params": "RSI(14/35/65) SL=15% TP=20%"
+      "applied_symbol": "TSLA",
+      "sharpe": 0.0631,
+      "annual_return_pct": 4.61,
+      "max_dd_pct": 72.26,
+      "total_trades": 263,
+      "params": "RSI(14/35/65) SL=10% TP=30%"
     },
     {
       "strategy_rank": 6,
       "base_symbol": "AAPL",
-      "applied_symbol": "SPY",
-      "sharpe": 0.0605,
-      "annual_return_pct": 1.99,
-      "max_dd_pct": 32.81,
-      "total_trades": 160,
+      "applied_symbol": "TSLA",
+      "sharpe": 0.0609,
+      "annual_return_pct": 4.55,
+      "max_dd_pct": 72.29,
+      "total_trades": 263,
       "params": "RSI(14/35/65) SL=10% TP=20%"
     },
     {
       "strategy_rank": 7,
       "base_symbol": "AAPL",
-      "applied_symbol": "SPY",
-      "sharpe": 0.0605,
-      "annual_return_pct": 1.99,
-      "max_dd_pct": 32.81,
-      "total_trades": 160,
+      "applied_symbol": "TSLA",
+      "sharpe": 0.0592,
+      "annual_return_pct": 4.34,
+      "max_dd_pct": 72.29,
+      "total_trades": 263,
       "params": "RSI(14/35/65) SL=10% TP=25%"
     },
     {
-      "strategy_rank": 8,
+      "strategy_rank": 10,
       "base_symbol": "AAPL",
-      "applied_symbol": "SPY",
-      "sharpe": 0.0605,
-      "annual_return_pct": 1.99,
-      "max_dd_pct": 32.81,
-      "total_trades": 160,
-      "params": "RSI(14/35/65) SL=10% TP=30%"
+      "applied_symbol": "TSLA",
+      "sharpe": 0.006,
+      "annual_return_pct": 0.42,
+      "max_dd_pct": 73.28,
+      "total_trades": 422,
+      "params": "RSI(10/40/75) SL=8% TP=10%"
     },
     {
       "strategy_rank": 9,
       "base_symbol": "AAPL",
-      "applied_symbol": "SPY",
-      "sharpe": 0.0353,
-      "annual_return_pct": 1.1,
-      "max_dd_pct": 32.81,
-      "total_trades": 160,
+      "applied_symbol": "TSLA",
+      "sharpe": -0.0389,
+      "annual_return_pct": -2.76,
+      "max_dd_pct": 69.72,
+      "total_trades": 263,
       "params": "RSI(14/35/65) SL=10% TP=15%"
+    },
+    {
+      "strategy_rank": 1,
+      "base_symbol": "AAPL",
+      "applied_symbol": "TSLA",
+      "sharpe": -0.0535,
+      "annual_return_pct": -3.67,
+      "max_dd_pct": 78.66,
+      "total_trades": 370,
+      "params": "RSI(7/35/80) SL=8% TP=10%"
+    },
+    {
+      "strategy_rank": 5,
+      "base_symbol": "SPY",
+      "applied_symbol": "TSLA",
+      "sharpe": -0.0659,
+      "annual_return_pct": -4.51,
+      "max_dd_pct": 55.11,
+      "total_trades": 0,
+      "params": "RSI(7/40/75) SMA(50/200) SL=5% TP=8%"
+    },
+    {
+      "strategy_rank": 4,
+      "base_symbol": "AAPL",
+      "applied_symbol": "TSLA",
+      "sharpe": -0.0862,
+      "annual_return_pct": -6.41,
+      "max_dd_pct": 79.65,
+      "total_trades": 263,
+      "params": "RSI(14/35/65) SL=15% TP=30%"
+    },
+    {
+      "strategy_rank": 2,
+      "base_symbol": "AAPL",
+      "applied_symbol": "TSLA",
+      "sharpe": -0.0884,
+      "annual_return_pct": -6.79,
+      "max_dd_pct": 77.53,
+      "total_trades": 263,
+      "params": "RSI(14/35/65) SL=15% TP=20%"
+    },
+    {
+      "strategy_rank": 3,
+      "base_symbol": "AAPL",
+      "applied_symbol": "TSLA",
+      "sharpe": -0.0897,
+      "annual_return_pct": -6.77,
+      "max_dd_pct": 78.62,
+      "total_trades": 263,
+      "params": "RSI(14/35/65) SL=15% TP=25%"
     }
   ],
   "summary": {
     "total_combinations": 20,
-    "avg_sharpe": 0.5869,
-    "avg_return": 17.89,
-    "avg_maxdd": 25.63,
+    "avg_sharpe": 0.458,
+    "avg_return": 14.32,
+    "avg_maxdd": 46.58,
     "qualified_count": 0
   }
 }
