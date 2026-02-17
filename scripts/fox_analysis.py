@@ -564,22 +564,80 @@ def get_multi_timeframe_signals(symbol: str) -> Dict:
     if s5m is None or s1h is None or s1d is None:
         signals['consensus'] = None
         signals['reason'] = '數據不足'
+        signals['method'] = 'none'
         return signals
     
-    # 三個週期都買入
+    # 檢查市場波動性 (VIX)
+    market_volatility = check_market_volatility()
+    signals['market_volatile'] = market_volatility
+    
+    # ====== 三週期共振邏輯 ======
+    # 優先：必須三個週期都同意
+    # 備用：市場波動大時，允許 2/3 週期同意
+    
+    # 三個週期都買入 (優先)
     if s5m == 1 and s1h == 1 and s1d == 1:
         signals['consensus'] = 1
         signals['reason'] = '三週期共振買入'
-    # 三個週期都賣出
+        signals['method'] = '3/3'
+    # 三個週期都賣出 (優先)
     elif s5m == -1 and s1h == -1 and s1d == -1:
         signals['consensus'] = -1
         signals['reason'] = '三週期共振賣出'
-    # 信號不一致
+        signals['method'] = '3/3'
+    # 2/3 週期同意 (市場波動時)
+    elif market_volatility:
+        # 檢查 2/3 組合
+        buy_count = sum(1 for s in [s5m, s1h, s1d] if s == 1)
+        sell_count = sum(1 for s in [s5m, s1h, s1d] if s == -1)
+        
+        if buy_count >= 2:
+            signals['consensus'] = 1
+            signals['reason'] = f'2/3週期共振買入 (市場波動放寬)'
+            signals['method'] = '2/3'
+        elif sell_count >= 2:
+            signals['consensus'] = -1
+            signals['reason'] = f'2/3週期共振賣出 (市場波動放寬)'
+            signals['method'] = '2/3'
+        else:
+            signals['consensus'] = 0
+            signals['reason'] = f'信號不一致 ({s5m}/{s1h}/{s1d})'
+            signals['method'] = 'none'
     else:
         signals['consensus'] = 0
         signals['reason'] = f'信號不一致 ({s5m}/{s1h}/{s1d})'
+        signals['method'] = 'none'
     
     return signals
+
+
+def check_market_volatility() -> bool:
+    """
+    檢查市場波動性
+    當 VIX > 30 或市場近期大跌時返回 True
+    """
+    try:
+        # 嘗試從 API 獲取 VIX
+        result = api_get('/market/vix')
+        if result.get('status') == 'ok':
+            vix = result.get('vix', 0)
+            if vix > 30:
+                logger.info(f"   📈 VIX={vix} > 30，市場波動大")
+                return True
+        
+        # 也可以用標普 500 近期表現判斷
+        result = api_get('/market/index/SPY')
+        if result.get('status') == 'ok':
+            change = result.get('change_percent', 0)
+            # 大跌 > 3% 或 大漲 > 3% 都算波動大
+            if abs(change) > 3:
+                logger.info(f"   📈 SPY 單日漲跌 {change:.2f}%，市場波動大")
+                return True
+        
+    except Exception as e:
+        logger.debug(f"   ⚠️ 無法獲取市場波動性: {e}")
+    
+    return False
 
 
 def api_put(endpoint: str, data: dict) -> dict:
