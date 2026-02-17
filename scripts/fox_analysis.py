@@ -871,8 +871,9 @@ def analyze_position(position: Dict, market_data: Dict) -> Dict:
     consensus = tf_signals.get('consensus')
     reason = tf_signals.get('reason', '未知')
     
-    if consensus is None:
-        logger.info(f"   ⏭️ 跳過: {reason}")
+    # 無共振 → 直接寫入 HOLD，不調用 Agent
+    if consensus is None or consensus == 0:
+        logger.info(f"   ⏭️ 無共振，直接寫入 HOLD: {reason}")
         return {
             'symbol': symbol,
             'signal_type': 'HOLD',
@@ -882,25 +883,16 @@ def analyze_position(position: Dict, market_data: Dict) -> Dict:
             'reason': f'三週期: {reason}',
             'news_weight': 0,
             'position': position,
-            'tf_signals': tf_signals
+            'tf_signals': tf_signals,
+            'agent_analyzed': False
         }
     
-    if consensus == 0:
-        logger.info(f"   ⏭️ 跳過: {reason}")
-        return {
-            'symbol': symbol,
-            'signal_type': 'HOLD',
-            'confidence': 0.5,
-            'news_ok': True,
-            'market_ok': True,
-            'reason': f'三週期: {reason}',
-            'news_weight': 0,
-            'position': position,
-            'tf_signals': tf_signals
-        }
+    # 有共振 → 調用 Fox Agent 分析
+    logger.info(f"   ✅ 三週期共振: {reason}，調用 Fox Agent 分析...")
     
-    # 三週期共振! 繼續分析
-    logger.info(f"   ✅ 三週期共振: {reason}")
+    # 這裡未來會調用 Fox Agent
+    # 目前先用現有邏輯
+    logger.info(f"   (暫時使用現有邏輯，未來會調用 Agent)")
     
     # 1. 獲取新聞權重
     news_data = get_news_weight(symbol)
