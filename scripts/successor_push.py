@@ -270,9 +270,8 @@ def push_signals(dry_run: bool = False) -> List[Dict]:
     """
     執行信號推送 (自動去重)
     """
-    logger.info("=" * 60)
-    logger.info("🚀 Successor Signal Push 開始")
-    logger.info("=" * 60)
+    # 這裡不安靜輸出，避免每次 Cron 都觸發通知
+    # 只有當有 BUY/SELL 信號時才會觸發
     
     # 1. 獲取待推送信號
     signals = get_pending_signals()
