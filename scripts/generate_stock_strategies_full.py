@@ -18,14 +18,17 @@ DB_CONFIG = {
     'database': 'trademaster'
 }
 
-STOCKS = [
-    "US.AAPL", "US.MSFT", "US.NVDA", "US.GOOGL", "US.AMZN",
-    "US.META", "US.TSM", "US.AMD", "US.MU", "US.ORCL",
-    "US.GOOG", "US.NFLX", "US.ADBE", "US.CRM", "US.QCOM",
-    "US.TXN", "US.AVGO", "US.COIN", "US.MSTR", "US.UBER"
-]
-
 TIMEFRAMES = ['5m', '1h', '1d']
+
+
+def get_stocks_from_db():
+    """從數據庫讀取啟用的股票清單"""
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor()
+    cursor.execute("SELECT symbol FROM stocks WHERE enabled=1 ORDER BY symbol")
+    rows = cursor.fetchall()
+    conn.close()
+    return [r[0] for r in rows]
 
 
 def get_data(symbol, tf):
@@ -235,6 +238,10 @@ def main():
                          'Bollinger', 'Stochastic', 'CCI', 'Williams_R']
     composite_strategies = ['RSI+MACD', 'RSI+BB', 'RSI+STOCH', 'MACD+SMA', 
                             'MACD+EMA', 'BB+STOCH', 'CCI+WR', 'RSI+MACD+BB']
+    
+    # 從數據庫讀取股票清單
+    STOCKS = get_stocks_from_db()
+    print(f"📋 從數據庫讀取 {len(STOCKS)} 支股票")
     
     all_results = {}
     
