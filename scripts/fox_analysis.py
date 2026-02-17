@@ -825,9 +825,22 @@ def decide_signal(confidence: float, news_ok: bool, market_ok: bool) -> Tuple[st
 def create_signal(position: Dict, signal_type: str, confidence: float, 
                   news_ok: bool, market_ok: bool, reason: str,
                   stop_loss_pct: float = None) -> Dict:
-    """創建交易信號"""
+    """創建交易信號 (自動去重)"""
     symbol = position.get('symbol')
     current_price = position.get('average_cost', 0) or 0
+    
+    # 去重檢查：檢查最近 1 小時內是否有相同的信號
+    try:
+        result = api_get(f'/signals?symbol={symbol}&limit=5')
+        if result.get('status') == 'ok':
+            recent_signals = result.get('signals', [])
+            for sig in recent_signals:
+                # 檢查是否同樣的信號類型
+                if sig.get('signal_type') == signal_type:
+                    logger.info(f"   ⏭️ 跳過: {symbol} 已有相同信號 {signal_type} (不重複寫入)")
+                    return {'status': 'ok', 'message': 'duplicate', 'signal_id': sig.get('id')}
+    except Exception as e:
+        logger.warning(f"   ⚠️ 去重檢查失敗: {e}")
     
     # 計算止損價格
     if stop_loss_pct is None:
