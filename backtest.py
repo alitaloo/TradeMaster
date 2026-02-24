@@ -310,7 +310,7 @@ class BacktestValidator:
 
 
 class BacktestEngine:
-    """標準回測引擎 - 使用凱利公式計算倉位 + 真實成本模型"""
+    """標準回測引擎 - 使用凱利公式計算倉位 + 真實成本模型 + ATR 動態止損"""
 
     # 真實成本預設值
     DEFAULT_COMMISSION = 0.0015   # 來回 0.15%（美股券商 typical）
@@ -321,11 +321,15 @@ class BacktestEngine:
     def __init__(self, initial_capital: float = 100000, 
                  commission: float = None, 
                  slippage: float = None, 
-                 kelly_fraction: float = 0.25):  # 預設 1/4 凱利，更保守
+                 kelly_fraction: float = 0.25,
+                 use_atr_stop: bool = False,
+                 atr_multiplier: float = 2.0):
         self.initial_capital = initial_capital
         self.commission = commission or self.DEFAULT_COMMISSION
         self.slippage = slippage or self.DEFAULT_SLIPPAGE
-        self.kelly_fraction = kelly_fraction  # 預設 1/4 凱利
+        self.kelly_fraction = kelly_fraction  # 預設 1/4 凱利，更保守
+        self.use_atr_stop = use_atr_stop  # 是否使用 ATR 動態止損
+        self.atr_multiplier = atr_multiplier  # ATR 倍數
 
     def _calculate_kelly_position(self, strategy, data: pd.DataFrame, position_type: PositionType) -> float:
         """
@@ -334,11 +338,14 @@ class BacktestEngine:
         - p = 勝率
         - q = 虧損率 = 1 - p
         - b = 盈虧比（平均獲利 / 平均虧損）
+        
+        使用浮動權益計算倉位：每次開倉使用當前總權益
         """
         try:
             # 收集策略歷史交易計算統計
             trades = []
-            capital = self.initial_capital
+            initial_capital = self.initial_capital
+            current_equity = initial_capital  # 浮動權益
             position = PositionType.NONE
             entry_price = 0
             shares = 0
@@ -365,24 +372,31 @@ class BacktestEngine:
                         exit_price = current_price * (1 - self.slippage)
                         pnl = (entry_price - exit_price) * shares
                         trades.append(pnl)
-                    # 做多：計算 shares
-                    shares = int(capital / current_price)
+                        current_equity += pnl  # 更新浮動權益
+                    # 做多：使用浮動權益計算倉位
+                    shares = int(current_equity * self.kelly_fraction / current_price)
                     entry_price = current_price * (1 + self.slippage)
                     position = PositionType.LONG
-                    # 注意：不做 capital -= shares * entry_price，只記錄
 
                 elif signal.signal == "SHORT" and position != PositionType.SHORT:
                     if position == PositionType.LONG:
                         exit_price = current_price * (1 - self.slippage)
                         pnl = (exit_price - entry_price) * shares
                         trades.append(pnl)
-                    # 做空：計算 shares
-                    shares = int(capital * self.kelly_fraction / current_price)
+                        current_equity += pnl  # 更新浮動權益
+                    # 做空：使用浮動權益計算倉位
+                    shares = int(current_equity * self.kelly_fraction / current_price)
                     entry_price = current_price * (1 + self.slippage)
                     position = PositionType.SHORT
-                    # 注意：不做 capital += shares * entry_price，只記錄
 
-            # 注意：不應該在每次迭代時更新 capital，只記錄交易 PnL
+            # 記錄最終平倉的盈虧
+            if position != PositionType.NONE and shares > 0:
+                final_price = data["Close"].iloc[-1]
+                if position == PositionType.LONG:
+                    pnl = (final_price - entry_price) * shares
+                else:
+                    pnl = (entry_price - final_price) * shares
+                trades.append(pnl)
 
             # 計算凱利參數
             if not trades or len(trades) < 20:
@@ -419,6 +433,11 @@ class BacktestEngine:
             return 0.15  # 預設 15% 倉位
 
     def run(self, symbol: str, strategy, data: pd.DataFrame, strategy_name: str = "Unknown") -> BacktestResult:
+        # Convert string index to datetime if needed
+        data = data.copy()
+        if len(data) > 0 and isinstance(data.index[0], str):
+            data.index = pd.to_datetime(data.index)
+        
         df = self._prepare_data(data.copy())
         
         # 預先計算所有指標（只計算一次）
@@ -451,69 +470,41 @@ class BacktestEngine:
                         ind[ind_name][key] = series
             
             signal = strategy.generate_signal(ind, df.iloc[:i+1])
-
-            if signal.signal == "LONG" and position != PositionType.LONG:
-                if position == PositionType.SHORT:
-                    # 平倉 SHORT
-                    exit_price = current_price * (1 - self.slippage)
-                    pnl = (entry_price - exit_price) * shares
-                    commission = (entry_price * shares + exit_price * shares) * self.commission
-                    slippage_cost = abs(exit_price - current_price) * shares * self.slippage
-                    return_pct = (exit_price - entry_price) / entry_price * 100
-                    holding_days = (current_date - entry_date).days if entry_date else 0
-
-                    trades.append({
-                        "type": "SHORT",
-                        "entry_price": round(entry_price, 2),
-                        "entry_date": str(entry_date.date()) if entry_date else None,
-                        "exit_price": round(exit_price, 2),
-                        "exit_date": str(current_date.date()),
-                        "shares": shares,
-                        "entry_capital_used": round(shares * entry_price, 2),
-                        "gross_pnl": round(pnl, 2),
-                        "commission": round(commission, 2),
-                        "slippage_cost": round(slippage_cost, 2),
-                        "net_pnl": round(pnl - commission - slippage_cost, 2),
-                        "return_pct": round(return_pct, 2),
-                        "holding_days": holding_days,
-                        "capital_at_entry": round(capital, 2),
-                        "capital_at_exit": round(capital + pnl - commission - slippage_cost, 2)
-                    })
-                    capital += pnl - commission - slippage_cost
-
-                # 買入 - 記錄入場交易
-                position_capital = capital * kelly_position
-                shares = int(position_capital / current_price)
-                entry_price = current_price * (1 + self.slippage)
-                entry_date = current_date
-                capital -= shares * entry_price
-                position = PositionType.LONG
+            
+            # === ATR 動態止損檢查 ===
+            atr_stop_triggered = False
+            atr_stop_type = None
+            if self.use_atr_stop and position != PositionType.NONE:
+                atr = all_indicators["ATR"]["atr"].iloc[i]
+                atr_stop_distance = atr * self.atr_multiplier
                 
-                trades.append({
-                    "type": "LONG_ENTRY",
-                    "entry_price": round(entry_price, 2),
-                    "entry_date": str(entry_date.date()) if entry_date else None,
-                    "shares": shares,
-                    "entry_capital_used": round(shares * entry_price, 2),
-                    "capital_at_entry": round(capital + shares * entry_price, 2)
-                })
-
-            elif signal.signal == "SHORT" and position != PositionType.SHORT:
                 if position == PositionType.LONG:
-                    # 平倉 LONG
+                    atr_stop_price = entry_price - atr_stop_distance
+                    if current_price < atr_stop_price:
+                        atr_stop_triggered = True
+                        atr_stop_type = "LONG"
+                elif position == PositionType.SHORT:
+                    atr_stop_price = entry_price + atr_stop_distance
+                    if current_price > atr_stop_price:
+                        atr_stop_triggered = True
+                        atr_stop_type = "SHORT"
+            
+            # 如果觸發 ATR 止損，先平倉
+            if atr_stop_triggered:
+                if position == PositionType.LONG:
                     exit_price = current_price * (1 - self.slippage)
                     pnl = (exit_price - entry_price) * shares
                     commission = (entry_price * shares + exit_price * shares) * self.commission
                     slippage_cost = abs(exit_price - current_price) * shares * self.slippage
                     return_pct = (exit_price - entry_price) / entry_price * 100
-                    holding_days = (current_date - entry_date).days if entry_date else 0
-
+                    holding_days = (current_date - entry_date).days if entry_date and not isinstance(entry_date, str) else 0
+                    
                     trades.append({
-                        "type": "LONG",
+                        "type": "LONG_ATR_STOP",
                         "entry_price": round(entry_price, 2),
-                        "entry_date": str(entry_date.date()) if entry_date else None,
+                        "entry_date": str(entry_date.date() if hasattr(entry_date, "date") else entry_date) if entry_date else None,
                         "exit_price": round(exit_price, 2),
-                        "exit_date": str(current_date.date()),
+                        "exit_date": str(current_date.date() if hasattr(current_date, "date") else current_date),
                         "shares": shares,
                         "entry_capital_used": round(shares * entry_price, 2),
                         "gross_pnl": round(pnl, 2),
@@ -523,27 +514,141 @@ class BacktestEngine:
                         "return_pct": round(return_pct, 2),
                         "holding_days": holding_days,
                         "capital_at_entry": round(capital, 2),
-                        "capital_at_exit": round(capital + pnl - commission - slippage_cost, 2)
+                        "capital_at_exit": round(capital + pnl - commission - slippage_cost, 2),
+                        "stop_reason": f"ATR stop triggered (multiplier={self.atr_multiplier})"
                     })
                     capital += pnl - commission - slippage_cost
+                    position = PositionType.NONE
+                    shares = 0
+                    entry_price = 0
+                    
+                elif position == PositionType.SHORT:
+                    exit_price = current_price * (1 + self.slippage)
+                    pnl = (entry_price - exit_price) * shares
+                    commission = (entry_price * shares + exit_price * shares) * self.commission
+                    slippage_cost = abs(exit_price - current_price) * shares * self.slippage
+                    return_pct = (entry_price - exit_price) / entry_price * 100
+                    holding_days = (current_date - entry_date).days if entry_date and not isinstance(entry_date, str) else 0
+                    
+                    trades.append({
+                        "type": "SHORT_ATR_STOP",
+                        "entry_price": round(entry_price, 2),
+                        "entry_date": str(entry_date.date() if hasattr(entry_date, "date") else entry_date) if entry_date else None,
+                        "exit_price": round(exit_price, 2),
+                        "exit_date": str(current_date.date() if hasattr(current_date, "date") else current_date),
+                        "shares": shares,
+                        "entry_capital_used": round(shares * entry_price, 2),
+                        "gross_pnl": round(pnl, 2),
+                        "commission": round(commission, 2),
+                        "slippage_cost": round(slippage_cost, 2),
+                        "net_pnl": round(pnl - commission - slippage_cost, 2),
+                        "return_pct": round(return_pct, 2),
+                        "holding_days": holding_days,
+                        "capital_at_entry": round(capital, 2),
+                        "capital_at_exit": round(capital + pnl - commission - slippage_cost, 2),
+                        "stop_reason": f"ATR stop triggered (multiplier={self.atr_multiplier})"
+                    })
+                    capital += pnl - commission - slippage_cost
+                    position = PositionType.NONE
+                    shares = 0
+                    entry_price = 0
+            
+            # 原有信號邏輯（只有未觸發止損時才處理）
+            if not atr_stop_triggered:
+                if signal.signal == "LONG" and position != PositionType.LONG:
+                    if position == PositionType.SHORT:
+                        # 平倉 SHORT
+                        exit_price = current_price * (1 - self.slippage)
+                        pnl = (entry_price - exit_price) * shares
+                        commission = (entry_price * shares + exit_price * shares) * self.commission
+                        slippage_cost = abs(exit_price - current_price) * shares * self.slippage
+                        return_pct = (exit_price - entry_price) / entry_price * 100
+                        holding_days = (current_date - entry_date).days if entry_date and not isinstance(entry_date, str) else 0
 
-                # 做空 - 記錄入場交易
-                position_capital = capital * kelly_position
-                shares = int(position_capital / current_price)
-                entry_price = current_price * (1 - self.slippage)
-                entry_date = current_date
-                capital += shares * entry_price
-                position = PositionType.SHORT
-                
-                trades.append({
-                    "type": "SHORT_ENTRY",
-                    "entry_price": round(entry_price, 2),
-                    "entry_date": str(entry_date.date()) if entry_date else None,
-                    "shares": shares,
-                    "entry_capital_used": round(shares * entry_price, 2),
-                    "capital_at_entry": round(capital - shares * entry_price, 2)
-                })
+                        trades.append({
+                            "type": "SHORT",
+                            "entry_price": round(entry_price, 2),
+                            "entry_date": str(entry_date.date() if hasattr(entry_date, "date") else entry_date) if entry_date else None,
+                            "exit_price": round(exit_price, 2),
+                            "exit_date": str(current_date.date() if hasattr(current_date, "date") else current_date),
+                            "shares": shares,
+                            "entry_capital_used": round(shares * entry_price, 2),
+                            "gross_pnl": round(pnl, 2),
+                            "commission": round(commission, 2),
+                            "slippage_cost": round(slippage_cost, 2),
+                            "net_pnl": round(pnl - commission - slippage_cost, 2),
+                            "return_pct": round(return_pct, 2),
+                            "holding_days": holding_days,
+                            "capital_at_entry": round(capital, 2),
+                            "capital_at_exit": round(capital + pnl - commission - slippage_cost, 2)
+                        })
+                        capital += pnl - commission - slippage_cost
 
+                    # 買入 - 使用浮動權益計算倉位
+                    # capital 已經是當前總權益（初始資金 + 累計盈虧）
+                    position_capital = capital * kelly_position
+                    shares = int(position_capital / current_price)
+                    entry_price = current_price * (1 + self.slippage)
+                    entry_date = current_date
+                    capital -= shares * entry_price
+                    position = PositionType.LONG
+                    
+                    trades.append({
+                        "type": "LONG_ENTRY",
+                        "entry_price": round(entry_price, 2),
+                        "entry_date": str(entry_date.date() if hasattr(entry_date, "date") else entry_date) if entry_date else None,
+                        "shares": shares,
+                        "entry_capital_used": round(shares * entry_price, 2),
+                        "capital_at_entry": round(capital + shares * entry_price, 2)
+                    })
+
+                elif signal.signal == "SHORT" and position != PositionType.SHORT:
+                    if position == PositionType.LONG:
+                        # 平倉 LONG
+                        exit_price = current_price * (1 - self.slippage)
+                        pnl = (exit_price - entry_price) * shares
+                        commission = (entry_price * shares + exit_price * shares) * self.commission
+                        slippage_cost = abs(exit_price - current_price) * shares * self.slippage
+                        return_pct = (exit_price - entry_price) / entry_price * 100
+                        holding_days = (current_date - entry_date).days if entry_date and not isinstance(entry_date, str) else 0
+
+                        trades.append({
+                            "type": "LONG",
+                            "entry_price": round(entry_price, 2),
+                            "entry_date": str(entry_date.date() if hasattr(entry_date, "date") else entry_date) if entry_date else None,
+                            "exit_price": round(exit_price, 2),
+                            "exit_date": str(current_date.date() if hasattr(current_date, "date") else current_date),
+                            "shares": shares,
+                            "entry_capital_used": round(shares * entry_price, 2),
+                            "gross_pnl": round(pnl, 2),
+                            "commission": round(commission, 2),
+                            "slippage_cost": round(slippage_cost, 2),
+                            "net_pnl": round(pnl - commission - slippage_cost, 2),
+                            "return_pct": round(return_pct, 2),
+                            "holding_days": holding_days,
+                            "capital_at_entry": round(capital, 2),
+                            "capital_at_exit": round(capital + pnl - commission - slippage_cost, 2)
+                        })
+                        capital += pnl - commission - slippage_cost
+
+                    # 做空 - 使用浮動權益計算倉位
+                    # capital 已經是當前總權益（初始資金 + 累計盈虧）
+                    position_capital = capital * kelly_position
+                    shares = int(position_capital / current_price)
+                    entry_price = current_price * (1 - self.slippage)
+                    entry_date = current_date
+                    capital += shares * entry_price
+                    position = PositionType.SHORT
+                    
+                    trades.append({
+                        "type": "SHORT_ENTRY",
+                        "entry_price": round(entry_price, 2),
+                        "entry_date": str(entry_date.date() if hasattr(entry_date, "date") else entry_date) if entry_date else None,
+                        "shares": shares,
+                        "entry_capital_used": round(shares * entry_price, 2),
+                        "capital_at_entry": round(capital - shares * entry_price, 2)
+                    })
+            
             # 更新權益
             if position == PositionType.LONG:
                 # 權益 = 剩餘資金 + 持股市值
@@ -566,14 +671,14 @@ class BacktestEngine:
             pnl = (exit_price - entry_price) * shares
             commission = (entry_price * shares + exit_price * shares) * self.commission
             slippage_cost = abs(exit_price - final_price) * shares * self.slippage
-            holding_days = (final_date - entry_date).days if entry_date else 0
+            holding_days = (final_date - entry_date).days if entry_date and not isinstance(entry_date, str) else 0
 
             trades.append({
                 "type": "LONG_EXIT",
                 "entry_price": round(entry_price, 2),
-                "entry_date": str(entry_date.date()) if entry_date else None,
+                "entry_date": str(entry_date.date() if hasattr(entry_date, "date") else entry_date) if entry_date else None,
                 "exit_price": round(exit_price, 2),
-                "exit_date": str(final_date.date()),
+                "exit_date": str(final_date.date() if hasattr(final_date, "date") else final_date),
                 "shares": shares,
                 "entry_capital_used": round(shares * entry_price, 2),
                 "gross_pnl": round(pnl, 2),
@@ -592,14 +697,14 @@ class BacktestEngine:
             pnl = (entry_price - exit_price) * shares
             commission = (entry_price * shares + exit_price * shares) * self.commission
             slippage_cost = abs(exit_price - final_price) * shares * self.slippage
-            holding_days = (final_date - entry_date).days if entry_date else 0
+            holding_days = (final_date - entry_date).days if entry_date and not isinstance(entry_date, str) else 0
 
             trades.append({
                 "type": "SHORT_EXIT",
                 "entry_price": round(entry_price, 2),
-                "entry_date": str(entry_date.date()) if entry_date else None,
+                "entry_date": str(entry_date.date() if hasattr(entry_date, "date") else entry_date) if entry_date else None,
                 "exit_price": round(exit_price, 2),
-                "exit_date": str(final_date.date()),
+                "exit_date": str(final_date.date() if hasattr(final_date, "date") else final_date),
                 "shares": shares,
                 "entry_capital_used": round(shares * entry_price, 2),
                 "gross_pnl": round(pnl, 2),
@@ -627,7 +732,7 @@ class BacktestEngine:
         equity_series = pd.Series(equity)
         result = BacktestResult(
             symbol=symbol, strategy=strategy_name,
-            period=f"{df.index[0].date()} to {df.index[-1].date()}",
+            period=f"{df.index[0].date() if hasattr(df.index[0], "date") else df.index[0]} to {df.index[-1].date() if hasattr(df.index[-1], "date") else df.index[-1]}",
             equity_curve=equity_series
         )
 
@@ -880,7 +985,7 @@ class WalkForwardBacktest:
             
             results.append({
                 "fold": fold,
-                "train_period": f"{train_data.index[0].date()} to {train_data.index[-1].date()}",
+                "train_period": f"{train_data.index[0].date() if hasattr(train_data.index[0], "date") else train_data.index[0]} to {train_data.index[-1].date() if hasattr(train_data.index[-1], "date") else train_data.index[-1]}",
                 "test_period": f"{test_data.index[0].date()} to {test_data.index[-1].date()}",
                 "params": best_params,
                 "return": test_result.total_return,

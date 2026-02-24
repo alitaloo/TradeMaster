@@ -2,54 +2,26 @@
 高夏普比率策略 - 最終報告版本
 目標：Sharpe > 1.5, Return > 20%, MaxDD < 20%
 
-結論：雖然在模擬數據上難以同時達到高夏普和高報酬，
-但策略設計原理基於經過驗證的量化方法。
+使用 MySQL 真實歷史數據回測 (stocks 表 + kline_cache 表)
 
-執行日期: 2026-02-07
+執行日期: 2026-02-19
 """
 
 import pandas as pd
 import numpy as np
 import sys
 from datetime import datetime
+import importlib.util
 
 sys.path.insert(0, '/Users/alita/.openclaw/workspace/codes/TradeMaster_v2')
 
-from backtest import BacktestEngine
+# 直接導入 backtest.py 而不是 backtest 目錄
+spec = importlib.util.spec_from_file_location("backtest_engine", "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtest.py")
+backtest_module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(backtest_module)
+BacktestEngine = backtest_module.BacktestEngine
 
-
-def generate_trending_data(symbol: str, days: int = 500) -> pd.DataFrame:
-    """生成強趨勢數據"""
-    np.random.seed(hash(symbol) % 10000)
-    dates = pd.date_range(end=datetime.now(), periods=days, freq='D')
-    
-    start_prices = {'AAPL': 150, 'TSLA': 200, 'SPY': 400, 'MSFT': 300, 'NVDA': 500}
-    price = start_prices.get(symbol, 100)
-    
-    # 模擬強趨勢市場 (年化 ~25%)
-    returns = []
-    for i in range(days):
-        if i % 50 < 35:  # 70% 時間上漲
-            r = np.random.normal(0.0012, 0.008)
-        else:  # 回調
-            r = np.random.normal(-0.0005, 0.012)
-        returns.append(r)
-    
-    returns = np.array(returns)
-    close = np.zeros(days)
-    close[0] = price
-    for i in range(1, days):
-        close[i] = close[i-1] * (1 + returns[i])
-    
-    close_series = pd.Series(close, index=dates)
-    
-    return pd.DataFrame({
-        'Open': close_series * (1 + np.random.normal(0, 0.001, days)),
-        'High': close_series * (1 + np.abs(np.random.normal(0.004, 0.003, days))),
-        'Low': close_series * (1 - np.abs(np.random.normal(0.004, 0.003, days))),
-        'Close': close_series,
-        'Volume': 1000000 + np.random.randint(500000, 2000000, days)
-    })
+from backtests.get_db_symbols import get_trading_symbols, get_kline_data
 
 
 class FastMAStrategy:
@@ -160,7 +132,10 @@ def run_final_backtest():
     print("目標：Sharpe > 1.5, Return > 20%, MaxDD < 20%")
     print("="*70)
     
-    symbols = ['AAPL', 'TSLA', 'SPY', 'MSFT', 'NVDA']
+    # 從資料庫獲取實盤股票
+    from get_db_symbols import get_trading_symbols
+    symbols = get_trading_symbols()
+    # symbols = ['AAPL', 'TSLA', 'SPY', 'MSFT', 'NVDA']  # 備用
     
     strategies = [
         ('FastMA_5_10', FastMAStrategy, {'fast': 5, 'slow': 10, 'stop': 0.03, 'profit': 0.08}),
@@ -184,7 +159,20 @@ def run_final_backtest():
         print(f"📊 {symbol}")
         print(f"{'─'*60}")
         
-        data = generate_trending_data(symbol, days=500)
+        # 從 MySQL kline_cache 獲取真實 K 線數據
+        data = get_kline_data(symbol, days=500)
+        
+        if data is None or data.empty:
+            print(f"  ⚠️ 無法獲取 {symbol} 的 K 線數據，跳過")
+            continue
+        
+        # 確保必要的列存在
+        required_cols = ['Open', 'High', 'Low', 'Close']
+        if not all(col in data.columns for col in required_cols):
+            print(f"  ⚠️ {symbol} 數據格式不完整，跳過")
+            continue
+        
+        print(f"  📈 數據: {len(data)} 天 ({data.index[0].date()} ~ {data.index[-1].date()})")
         
         for name, cls, params in strategies:
             print(f"\n  🔄 {name}...", end=" ", flush=True)

@@ -1,0 +1,458 @@
+2026-02-17 22:11:57.677 | INFO     | modules.prediction.engine:__init__:35 - 預測引擎初始化完成
+2026-02-17 22:11:57.677 | INFO     | modules.prediction.engine:__init__:35 - 預測引擎初始化完成
+ * Serving Flask app 'api_server'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.2.211:8080
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [17/Feb/2026 22:12:02] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:12:04] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:12:30] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:12:42] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:16:30] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:17:32] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:17:33] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:17:33] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:17:40] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:21:19] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:21:24] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:21:24] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:21:33] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:26:16] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:26:16] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:26:23] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:26:35] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:30:21] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:36:15] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:36:15] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:36:17] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:36:37] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:36:41] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:36:53] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:39:05] "GET /api/v1/signals HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:39:22] "GET /api/v1/signals HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:39:33] "GET /api/v1/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:39:40] "[33mGET /api/v1/klines/US.AAPL?timeframe=5m&limit=3 HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Feb/2026 22:39:43] "[33mGET /api/v1/klines?symbol=US.AAPL&timeframe=5m&limit=3 HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Feb/2026 22:39:47] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:41:27] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:41:40] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:41:40] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:41:59] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:46:19] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:46:19] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:46:30] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:46:35] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:47:09] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:51:58] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:51:58] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:52:30] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:55:09] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:57:08] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:57:08] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:57:09] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:57:15] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 22:59:55] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 23:01:36] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 23:03:08] "[33mGET /api/v1/portfolio HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Feb/2026 23:03:11] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 23:03:14] "[33mGET / HTTP/1.1[0m" 404 -
+127.0.0.1 - - [17/Feb/2026 23:03:24] "GET /api/v1/portfolio/positions HTTP/1.1" 200 -
+[2026-02-17 23:04:06,461] ERROR in app: Exception on /api/v1/news [GET]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 58, in get_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:04:06] "[35m[1mGET /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:04:48] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 23:05:01] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:07,689] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:07] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:20] "GET /api/v1/portfolio/positions HTTP/1.1" 200 -
+127.0.0.1 - - [17/Feb/2026 23:05:23] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:23,130] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:23] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:23] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:23,472] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:23] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:23] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:23,797] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:23] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:24] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:24,205] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:24] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:24] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:24,593] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:24] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:25] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:25,004] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:25] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:25] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:25,457] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:25] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:25] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:25,884] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:25] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:26] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:26,320] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:26] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:26] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:26,754] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:26] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:27] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:27,207] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:27] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:27] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:27,569] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:27] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:28] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:28,022] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:28] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:28] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:28,441] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:28] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [17/Feb/2026 23:05:28] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-02-17 23:05:28,894] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:05:28] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+[2026-02-17 23:06:00,516] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 115, in create_news
+    conn = get_db_connection()
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 18, in get_db_connection
+    conn = sqlite3.connect(DB_PATH)
+           ^^^^^^^
+NameError: name 'sqlite3' is not defined. Did you forget to import 'sqlite3'?
+127.0.0.1 - - [17/Feb/2026 23:06:00] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -

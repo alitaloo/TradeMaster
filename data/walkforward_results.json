@@ -1,0 +1,2837 @@
+[
+  {
+    "symbol": "US.AAPL",
+    "indicator": "ATRTrailingStop",
+    "timeframe": "1d",
+    "is_return": -0.0010169526180783578,
+    "oos_return": -0.004512376046239369,
+    "is_sharpe": -0.028348668252873934,
+    "oos_sharpe": -0.17064189955482315
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "MACD_SMA_Crossover",
+    "timeframe": "1d",
+    "is_return": -0.008177505549989873,
+    "oos_return": -0.2674155542961965,
+    "is_sharpe": -0.0392735321080525,
+    "oos_sharpe": -0.05545839880216642
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "VolumePrice_Confirm",
+    "timeframe": "1d",
+    "is_return": 0.004234027860559872,
+    "oos_return": -0.060556156280762226,
+    "is_sharpe": -0.02063682360124412,
+    "oos_sharpe": -0.029002464044994996
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "RSI_BB_Squeeze",
+    "timeframe": "1d",
+    "is_return": 0.09030463075665786,
+    "oos_return": -0.04484049347350112,
+    "is_sharpe": 0.059756613205634225,
+    "oos_sharpe": -0.14722254398366438
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "1d",
+    "is_return": 0.03721899706838871,
+    "oos_return": 0.047073709189015205,
+    "is_sharpe": 0.04344878878752231,
+    "oos_sharpe": 0.13776885410503037
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1h",
+    "is_return": 0.023402594465080473,
+    "oos_return": -0.009012181429605698,
+    "is_sharpe": 0.05400019818982849,
+    "oos_sharpe": -1.0069199201123273
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "is_return": -0.02283473249953924,
+    "oos_return": 0.042991550249475693,
+    "is_sharpe": -0.18233708248183772,
+    "oos_sharpe": 0.5797308279801522
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "VolumeMA_Crossover",
+    "timeframe": "1h",
+    "is_return": -0.02720202602406687,
+    "oos_return": -0.01371973871090464,
+    "is_sharpe": -0.19455142489117278,
+    "oos_sharpe": -1.207023495004567
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "is_return": -0.01484162366731267,
+    "oos_return": -0.048297790582081945,
+    "is_sharpe": -0.1420788364746414,
+    "oos_sharpe": -0.47566377687206446
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "1h",
+    "is_return": 0.0062630628410875215,
+    "oos_return": 0.0008935881291591795,
+    "is_sharpe": -0.028604333879510724,
+    "oos_sharpe": -0.026528648959736854
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "is_return": -0.032672493143082536,
+    "oos_return": 0.04252341596547645,
+    "is_sharpe": -0.734595884169977,
+    "oos_sharpe": 1.8206739562776695
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.07124712714533409,
+    "oos_return": -0.017757803836097447,
+    "is_sharpe": -0.6727644670853318,
+    "oos_sharpe": -0.655048100627952
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": -0.042527542093193337,
+    "oos_return": -0.03599576679012011,
+    "is_sharpe": -0.9119500301919168,
+    "oos_sharpe": -1.1626509778896128
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "Momentum_Volume_Rally",
+    "timeframe": "5m",
+    "is_return": -0.07805628575335169,
+    "oos_return": -0.06250259726201883,
+    "is_sharpe": -1.4069571174877649,
+    "oos_sharpe": -2.5576572985506183
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.0683559224269948,
+    "oos_return": -0.062187452374165,
+    "is_sharpe": -4.811746388348557,
+    "oos_sharpe": -2.5077651473728295
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "MultiFactorV2",
+    "timeframe": "1d",
+    "is_return": 0.04467451338355022,
+    "oos_return": 0.005701829964600183,
+    "is_sharpe": 0.05992440832486755,
+    "oos_sharpe": 0.02215517616819836
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "SectorAdaptive",
+    "timeframe": "1d",
+    "is_return": 0.04467451338355022,
+    "oos_return": 0.005701829964600183,
+    "is_sharpe": 0.05992440832486755,
+    "oos_sharpe": 0.02215517616819836
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "MACDTrend",
+    "timeframe": "1d",
+    "is_return": 0.045329268720649706,
+    "oos_return": 0.0,
+    "is_sharpe": 0.0599876315612067,
+    "oos_sharpe": 0
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "Dual_Moving_Average_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.05010255527209985,
+    "oos_return": 0.29755500267780005,
+    "is_sharpe": 0.05780504160178871,
+    "oos_sharpe": 0.3216039446091874
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "MACD_Volume_Trend",
+    "timeframe": "1d",
+    "is_return": 0.03746353387002484,
+    "oos_return": 0.005535382937699906,
+    "is_sharpe": 0.048180508243109633,
+    "oos_sharpe": 0.03452231482962698
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1h",
+    "is_return": -0.004835061853707739,
+    "oos_return": 0.03776500104705003,
+    "is_sharpe": -0.09875773517785774,
+    "oos_sharpe": 0.5237501846896839
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1h",
+    "is_return": -0.019336887899189022,
+    "oos_return": -0.09193812029360007,
+    "is_sharpe": -0.06190779657319313,
+    "oos_sharpe": -0.5595005958708552
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "1h",
+    "is_return": 0.05517992615030642,
+    "oos_return": -0.24509481315480006,
+    "is_sharpe": 0.19444542603007145,
+    "oos_sharpe": -0.15419025451328988
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "MACD_ADX_TrendRide",
+    "timeframe": "1h",
+    "is_return": 0.02299670474223618,
+    "oos_return": -0.01445903703519245,
+    "is_sharpe": 0.05298462230705331,
+    "oos_sharpe": -0.16838521957371938
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "1h",
+    "is_return": -0.008315423154279997,
+    "oos_return": -0.004659190023849951,
+    "is_sharpe": -0.10158779643609517,
+    "oos_sharpe": -0.8895139282312852
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "is_return": 0.0036656950839246564,
+    "oos_return": 0.04815509910544992,
+    "is_sharpe": -0.2720306877080915,
+    "oos_sharpe": 2.1521832584768807
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.045674401172223295,
+    "oos_return": 0.037854466270455016,
+    "is_sharpe": -0.9343828426040752,
+    "oos_sharpe": 1.6044990360986724
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "is_return": -0.20304330228680323,
+    "oos_return": -0.035950240511599695,
+    "is_sharpe": -1.9404268793886765,
+    "oos_sharpe": -1.1695419686605506
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "5m",
+    "is_return": -0.09639758427563196,
+    "oos_return": -0.026134838424750343,
+    "is_sharpe": -1.689756636865291,
+    "oos_sharpe": -6.596239795263146
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.07377809591874014,
+    "oos_return": -0.03410948980378365,
+    "is_sharpe": -1.804464427796457,
+    "oos_sharpe": -1.1120592587491667
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "Stochastic_Momentum",
+    "timeframe": "1d",
+    "is_return": 0.17185375801575006,
+    "oos_return": 0.0371316792291998,
+    "is_sharpe": 0.14724447261316945,
+    "oos_sharpe": 0.14085654836821399
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "DualMomentum",
+    "timeframe": "1d",
+    "is_return": 0.45097636791197554,
+    "oos_return": -0.016875587216150015,
+    "is_sharpe": 0.21069844549616837,
+    "oos_sharpe": -0.23922821066379465
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "Triple_Indicator_Confirm",
+    "timeframe": "1d",
+    "is_return": 0.2504396018867999,
+    "oos_return": 0.023118389103299705,
+    "is_sharpe": 0.16697302119483107,
+    "oos_sharpe": 0.07735467681700334
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "MACDTrend",
+    "timeframe": "1d",
+    "is_return": 0.07692047015260046,
+    "oos_return": -0.011518260354699886,
+    "is_sharpe": 0.09586442910428175,
+    "oos_sharpe": -0.029425835346168574
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "Momentum_Volume_Rally",
+    "timeframe": "1d",
+    "is_return": 0.06486486027295003,
+    "oos_return": 0.03547372533779984,
+    "is_sharpe": 0.09361463488433955,
+    "oos_sharpe": 0.12753280925236396
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "is_return": 0.0446784896051047,
+    "oos_return": -0.02483745146737434,
+    "is_sharpe": 0.07357684786654514,
+    "oos_sharpe": -0.25646383762101344
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "is_return": 0.03701797151020714,
+    "oos_return": -0.011814434833787964,
+    "is_sharpe": 0.13046174770219965,
+    "oos_sharpe": -0.13013133006525826
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "VolumeMA_Crossover",
+    "timeframe": "1h",
+    "is_return": -0.03103070714056332,
+    "oos_return": -0.013472280836789868,
+    "is_sharpe": -0.20322888253101853,
+    "oos_sharpe": -0.26724281893350244
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "Three_MA_Trend",
+    "timeframe": "1h",
+    "is_return": -0.013263448661149741,
+    "oos_return": -0.005894384236861952,
+    "is_sharpe": -0.12629154765396913,
+    "oos_sharpe": -0.5032714458070587
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "Trend_Volume_Alignment",
+    "timeframe": "1h",
+    "is_return": -0.02657889669560216,
+    "oos_return": 0.1302453079362471,
+    "is_sharpe": -0.24807984454323267,
+    "oos_sharpe": 0.879502621601749
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "is_return": -0.01246372376887375,
+    "oos_return": -0.01400127131736168,
+    "is_sharpe": -0.40019890049884005,
+    "oos_sharpe": -0.5169997644045716
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": 0.03195744942717065,
+    "oos_return": -0.03792254385430133,
+    "is_sharpe": 0.20200419962081034,
+    "oos_sharpe": -1.2011552589368073
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.03283893603067612,
+    "oos_return": -0.005011047360249795,
+    "is_sharpe": -0.9161414291126541,
+    "oos_sharpe": -0.2650282505035723
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.014513625650434988,
+    "oos_return": -0.018081607592974468,
+    "is_sharpe": -0.5860404672321426,
+    "oos_sharpe": -3.2326289141163977
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "5m",
+    "is_return": -0.13169815452381795,
+    "oos_return": -0.07144102288804148,
+    "is_sharpe": -2.051467336618136,
+    "oos_sharpe": -2.6356163632386966
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "ADX_DI_Crossover",
+    "timeframe": "1d",
+    "is_return": -0.00916931170084994,
+    "oos_return": 0.0030752388610003983,
+    "is_sharpe": -0.04053377470260414,
+    "oos_sharpe": -0.04048345122631592
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "Momentum_Exhaustion",
+    "timeframe": "1d",
+    "is_return": 0.0020418795332999436,
+    "oos_return": 0.29571835603520014,
+    "is_sharpe": -0.025363211105754783,
+    "oos_sharpe": 0.31016780033892255
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "Dual_Moving_Average_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.0015095165656002065,
+    "oos_return": 0.2603279683081001,
+    "is_sharpe": -0.01585950262427266,
+    "oos_sharpe": 0.13212505324341686
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "Momentum_ADX_Strength",
+    "timeframe": "1d",
+    "is_return": 0.07073008866600022,
+    "oos_return": -0.000295118977999955,
+    "is_sharpe": 0.056591902306320246,
+    "oos_sharpe": -0.10815161995022286
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1d",
+    "is_return": 0.07398277807079998,
+    "oos_return": 0.27475128335200005,
+    "is_sharpe": 0.07909860392127889,
+    "oos_sharpe": 0.15359055738587685
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "is_return": -0.01119610802175157,
+    "oos_return": 0.0754790378508091,
+    "is_sharpe": -0.12793490073071023,
+    "oos_sharpe": 0.666458783249785
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "1h",
+    "is_return": -0.013784243045674811,
+    "oos_return": -0.06168293013639981,
+    "is_sharpe": -0.11492265526330721,
+    "oos_sharpe": -0.6543499828162764
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "is_return": 0.018515241889425087,
+    "oos_return": -0.05876306584440594,
+    "is_sharpe": 0.01908862373774948,
+    "oos_sharpe": -0.6394626445348913
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "Three_MA_Trend",
+    "timeframe": "1h",
+    "is_return": -0.05020384252112795,
+    "oos_return": 0.11282744878800033,
+    "is_sharpe": -0.30814274256210533,
+    "oos_sharpe": 0.7647655040537982
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "is_return": 0.03517362625527254,
+    "oos_return": -0.0121870222787057,
+    "is_sharpe": 0.07245039945222054,
+    "oos_sharpe": -0.13976861592557513
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "is_return": -0.0702552792336623,
+    "oos_return": -0.05916953540426984,
+    "is_sharpe": -1.2974951965562873,
+    "oos_sharpe": -2.4194463764108463
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": 2.2964217098342486e-05,
+    "oos_return": 0.027669378720992246,
+    "is_sharpe": -0.3414087276356338,
+    "oos_sharpe": 1.0538169128883221
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "is_return": -0.10458654544224658,
+    "oos_return": -0.08746546400823921,
+    "is_sharpe": -1.7954047386302454,
+    "oos_sharpe": -3.3319967360828993
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "Momentum_Volume_Rally",
+    "timeframe": "5m",
+    "is_return": -0.0847411778870465,
+    "oos_return": 0.013454505162177083,
+    "is_sharpe": -1.9782491033927436,
+    "oos_sharpe": 0.39965021468970874
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": -0.11283590669964062,
+    "oos_return": 0.013287364453858318,
+    "is_sharpe": -1.9226038465558966,
+    "oos_sharpe": 0.4087506864461496
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "ATRTrailingStop",
+    "timeframe": "1d",
+    "is_return": 0.18088641928918486,
+    "oos_return": 0.23516021440800003,
+    "is_sharpe": 0.14099082378173153,
+    "oos_sharpe": 0.11982497684432192
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "Trend_Filter_RSI",
+    "timeframe": "1d",
+    "is_return": 0.04549825592378969,
+    "oos_return": 0.2596991854716001,
+    "is_sharpe": 0.02541390374934979,
+    "oos_sharpe": 0.12223072450554802
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "Momentum_Volume_Rally",
+    "timeframe": "1d",
+    "is_return": 0.10998650108782676,
+    "oos_return": -0.0036497066858259494,
+    "is_sharpe": 0.09597126674312788,
+    "oos_sharpe": -0.15776092623049853
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "MACD_SMA_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.172910820263169,
+    "oos_return": 0.23516021440800003,
+    "is_sharpe": 0.14086480689421751,
+    "oos_sharpe": 0.11982497684432192
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "Dual_Moving_Average_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.05395974788626671,
+    "oos_return": 0.0,
+    "is_sharpe": 0.07575011831090422,
+    "oos_sharpe": 0
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "is_return": -0.03577390758962618,
+    "oos_return": -0.15093987500937436,
+    "is_sharpe": -0.2340672127525135,
+    "oos_sharpe": -0.5132590494857233
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "is_return": 0.02863920477223015,
+    "oos_return": -0.035179920890571086,
+    "is_sharpe": 0.08230589618851103,
+    "oos_sharpe": -0.27159761366564267
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1h",
+    "is_return": 0.008580675020998315,
+    "oos_return": 0.027057718371901282,
+    "is_sharpe": -0.03142330052969212,
+    "oos_sharpe": 0.34982836960035596
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1h",
+    "is_return": -0.041293276014997535,
+    "oos_return": 0.05436340508586014,
+    "is_sharpe": -0.26756812076832037,
+    "oos_sharpe": 0.8165482019960352
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1h",
+    "is_return": 0.03972626153999925,
+    "oos_return": 0.029241702416774207,
+    "is_sharpe": 0.1349871006653953,
+    "oos_sharpe": 0.34867995533442925
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.0720313945395223,
+    "oos_return": -0.06281106611827533,
+    "is_sharpe": -1.434099544300506,
+    "oos_sharpe": -2.616654781157596
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "5m",
+    "is_return": -0.06520041887068233,
+    "oos_return": 0.03353357570588705,
+    "is_sharpe": -1.54437895317514,
+    "oos_sharpe": 1.3326186184546818
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.06634467052714245,
+    "oos_return": -0.060237765907432184,
+    "is_sharpe": -3.476777340576954,
+    "oos_sharpe": -2.5373384701135664
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "is_return": -0.0814569103701938,
+    "oos_return": -0.08070407182731229,
+    "is_sharpe": -1.8167093952372968,
+    "oos_sharpe": -3.077529269228606
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "5m",
+    "is_return": -0.12358456449970923,
+    "oos_return": -0.09186247211067311,
+    "is_sharpe": -1.9782456646627855,
+    "oos_sharpe": -3.3471481183598892
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "DualMomentum",
+    "timeframe": "1d",
+    "is_return": 0.12519780166845026,
+    "oos_return": 0.004107846723850089,
+    "is_sharpe": 0.13351894517434332,
+    "oos_sharpe": -0.004857276706537371
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "MACD_SMA_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.06406761041800026,
+    "oos_return": 0.2171661571170001,
+    "is_sharpe": 0.08227120288495637,
+    "oos_sharpe": 0.10462837112966003
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "MACD_Volume_Trend",
+    "timeframe": "1d",
+    "is_return": 0.06763352222454996,
+    "oos_return": 0.046066736844499974,
+    "is_sharpe": 0.09029035343173036,
+    "oos_sharpe": 0.19362868605141034
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1d",
+    "is_return": 0.0920175984427001,
+    "oos_return": 0.0,
+    "is_sharpe": 0.10492453922526787,
+    "oos_sharpe": 0
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "Triple_Indicator_Confirm",
+    "timeframe": "1d",
+    "is_return": 0.09900632159649991,
+    "oos_return": -0.0009437626721501874,
+    "is_sharpe": 0.0961975870334414,
+    "oos_sharpe": -0.08665601711688978
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "Trend_Volume_Alignment",
+    "timeframe": "1h",
+    "is_return": -0.05454176784878873,
+    "oos_return": -0.0632683964071318,
+    "is_sharpe": -0.15097253057609714,
+    "oos_sharpe": -0.10354586181876459
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "is_return": 0.0387412988438271,
+    "oos_return": -0.011478928208215947,
+    "is_sharpe": 0.13575271578127154,
+    "oos_sharpe": -0.7924095905209482
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "is_return": 0.012418380836060096,
+    "oos_return": -0.01531670474959814,
+    "is_sharpe": -0.013123407533835197,
+    "oos_sharpe": -0.1215244547458826
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1h",
+    "is_return": -0.05334884132802166,
+    "oos_return": 0.32821203493780804,
+    "is_sharpe": -0.39284289693439883,
+    "oos_sharpe": 1.8002917473619122
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "Three_MA_Trend",
+    "timeframe": "1h",
+    "is_return": -0.0455939231286454,
+    "oos_return": 0.04912722586135715,
+    "is_sharpe": -0.2665647716602006,
+    "oos_sharpe": 0.646866663489855
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": -0.05068516798038516,
+    "oos_return": 0.3145801707986003,
+    "is_sharpe": -0.9725618917587749,
+    "oos_sharpe": 4.761926580530597
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "is_return": -0.09870493773576788,
+    "oos_return": 0.25651323963579997,
+    "is_sharpe": -2.0865001810144888,
+    "oos_sharpe": 1.4463469389686345
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.09133229074061805,
+    "oos_return": -0.03912330679634964,
+    "is_sharpe": -2.0046971637399427,
+    "oos_sharpe": -0.21672261952242924
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "is_return": -0.1240963031031008,
+    "oos_return": -0.016226449447996418,
+    "is_sharpe": -1.9373214851540352,
+    "oos_sharpe": -2.9396444191525233
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "5m",
+    "is_return": -0.09089813688637573,
+    "oos_return": -0.04550323321572272,
+    "is_sharpe": -1.4758132801845274,
+    "oos_sharpe": -5.251294562763665
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "DualMomentum",
+    "timeframe": "1d",
+    "is_return": 0.035569672631544674,
+    "oos_return": 0.010317415117500058,
+    "is_sharpe": 0.04018545422411155,
+    "oos_sharpe": 0.1652558297797034
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "ADX_Trend_Strength",
+    "timeframe": "1d",
+    "is_return": 0.044894282711270786,
+    "oos_return": 0.0587882497767001,
+    "is_sharpe": 0.059707819313032894,
+    "oos_sharpe": 0.21619344421168782
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "ADXTrend",
+    "timeframe": "1d",
+    "is_return": 0.043477888605690386,
+    "oos_return": 0.0587882497767001,
+    "is_sharpe": 0.057955610873308264,
+    "oos_sharpe": 0.21619344421168782
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "ATR_Trend_Confirmation",
+    "timeframe": "1d",
+    "is_return": 0.043477888605690386,
+    "oos_return": 0.0587882497767001,
+    "is_sharpe": 0.057955610873308264,
+    "oos_sharpe": 0.21619344421168782
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "VolatilityRatio_Trend",
+    "timeframe": "1d",
+    "is_return": 0.043477888605690386,
+    "oos_return": 0.0587882497767001,
+    "is_sharpe": 0.057955610873308264,
+    "oos_sharpe": 0.21619344421168782
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "is_return": -0.02374530020492137,
+    "oos_return": 0.03473784809622637,
+    "is_sharpe": -0.18491969333531402,
+    "oos_sharpe": 0.45341382785769113
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "Three_MA_Trend",
+    "timeframe": "1h",
+    "is_return": -0.027989324407235835,
+    "oos_return": -0.012972570927237394,
+    "is_sharpe": -0.20277172034893154,
+    "oos_sharpe": -1.1086716628071653
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "is_return": -0.06684921354400489,
+    "oos_return": -0.2675999123159249,
+    "is_sharpe": -0.5378627231258901,
+    "oos_sharpe": -0.40012099362379977
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1h",
+    "is_return": -0.011497221261226515,
+    "oos_return": 0.22709436279630404,
+    "is_sharpe": -0.6252522537584577,
+    "oos_sharpe": 0.9718892704588223
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1h",
+    "is_return": -0.0389766916032361,
+    "oos_return": -0.0006835270549751294,
+    "is_sharpe": -0.25531513512116133,
+    "oos_sharpe": -0.04423826244408096
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "is_return": -0.06374389905779186,
+    "oos_return": 0.04593090766681475,
+    "is_sharpe": -1.2059493336808838,
+    "oos_sharpe": 1.874985034096571
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.019353456897592988,
+    "oos_return": -0.13593370456527132,
+    "is_sharpe": -0.7300151376229917,
+    "oos_sharpe": -0.9268017234645167
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.10614754867589407,
+    "oos_return": -0.03362103316058186,
+    "is_sharpe": -1.8029454143154018,
+    "oos_sharpe": -1.0905770915435606
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "is_return": -0.027236558057755027,
+    "oos_return": -0.011260549956916803,
+    "is_sharpe": -0.8909280378626845,
+    "oos_sharpe": -0.6269340446050282
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "5m",
+    "is_return": -0.09226098684809535,
+    "oos_return": 0.0368008111876715,
+    "is_sharpe": -2.1455822286950954,
+    "oos_sharpe": 0.6464815523034547
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "Volume_Price_Confirmation",
+    "timeframe": "1d",
+    "is_return": -0.024002525629512238,
+    "oos_return": 0.26904622573500003,
+    "is_sharpe": -0.0985053604507133,
+    "oos_sharpe": 0.15731824615163212
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "VolumePrice_Confirm",
+    "timeframe": "1d",
+    "is_return": -0.020785797721111013,
+    "oos_return": -0.0009609972030000062,
+    "is_sharpe": -0.09110203174865994,
+    "oos_sharpe": -0.23404736076708815
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "ADX_DI_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.02746547450700251,
+    "oos_return": -0.030703323425249982,
+    "is_sharpe": 0.006932444470990083,
+    "oos_sharpe": -0.08424348331418932
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1d",
+    "is_return": 0.031108160134061473,
+    "oos_return": -0.0030977315527499012,
+    "is_sharpe": 0.022122417524352924,
+    "oos_sharpe": -0.27947864751980406
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "DualMomentum",
+    "timeframe": "1d",
+    "is_return": -0.006032376246778731,
+    "oos_return": -0.045731984049599994,
+    "is_sharpe": -0.038755553686079504,
+    "oos_sharpe": -0.12752285122262647
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "1h",
+    "is_return": -0.03682675502216633,
+    "oos_return": 0.04053565010560051,
+    "is_sharpe": -0.32825134873622347,
+    "oos_sharpe": 0.4748208160994223
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1h",
+    "is_return": 0.016546352832383707,
+    "oos_return": 0.04163284731419306,
+    "is_sharpe": 0.008162780810864245,
+    "oos_sharpe": 0.4243250245618652
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1h",
+    "is_return": 0.0038353006602922686,
+    "oos_return": 0.001513737750764849,
+    "is_sharpe": -0.05482421759569745,
+    "oos_sharpe": -0.022426148400534866
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "MACD_ADX_TrendRide",
+    "timeframe": "1h",
+    "is_return": 0.011333484549796267,
+    "oos_return": -0.003773942901002738,
+    "is_sharpe": -0.025937934643503774,
+    "oos_sharpe": -0.5003139945541787
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "Trend_Volume_Alignment",
+    "timeframe": "1h",
+    "is_return": 0.0004249140318761056,
+    "oos_return": 0.005446699697484146,
+    "is_sharpe": -0.2580882811214047,
+    "oos_sharpe": 0.015654699103743046
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": -0.01772127774707653,
+    "oos_return": -0.005134703347418108,
+    "is_sharpe": -0.5204841590608396,
+    "oos_sharpe": -0.05746328534516257
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.033553795718203765,
+    "oos_return": -0.016243372055201908,
+    "is_sharpe": -1.0316065973236581,
+    "oos_sharpe": -4.276841087897511
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "is_return": -0.06295619277830483,
+    "oos_return": -0.08469004330493073,
+    "is_sharpe": -1.6049003164396551,
+    "oos_sharpe": -3.1932995425643957
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "is_return": -0.10326758666563896,
+    "oos_return": -0.020597605758546852,
+    "is_sharpe": -2.3998001004254323,
+    "oos_sharpe": -0.7140974040889332
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.10453028952599984,
+    "oos_return": -0.02616969362362099,
+    "is_sharpe": -2.4227907040551835,
+    "oos_sharpe": -0.8755246709908396
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "Volume_Price_Confirmation",
+    "timeframe": "1d",
+    "is_return": -0.024679845266516787,
+    "oos_return": 0.268822575735,
+    "is_sharpe": -0.09982644780330018,
+    "oos_sharpe": 0.15726665182455385
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "ADX_DI_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.024916013166854538,
+    "oos_return": -0.030777324381899816,
+    "is_sharpe": 0.007692531555921965,
+    "oos_sharpe": -0.0850858819337989
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "DualMomentum",
+    "timeframe": "1d",
+    "is_return": -0.004171612666795991,
+    "oos_return": -0.04204121100379998,
+    "is_sharpe": -0.03529019060060287,
+    "oos_sharpe": -0.12474884617195504
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1d",
+    "is_return": 0.032173853851147724,
+    "oos_return": -0.003083549800499895,
+    "is_sharpe": 0.024128956244219835,
+    "oos_sharpe": -0.2803718563672564
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "ATRTrailingStop",
+    "timeframe": "1d",
+    "is_return": 0.02596704653910987,
+    "oos_return": -0.005742880100149924,
+    "is_sharpe": 0.012752775486901928,
+    "oos_sharpe": -0.13077296213421022
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "1h",
+    "is_return": -0.04620424333663992,
+    "oos_return": 0.04162825423020229,
+    "is_sharpe": -0.32393383144964044,
+    "oos_sharpe": 0.4909244507037095
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1h",
+    "is_return": 0.013094847252505279,
+    "oos_return": 0.0442728130994513,
+    "is_sharpe": -0.014087188666249615,
+    "oos_sharpe": 0.4595293578291977
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "MACD_ADX_TrendRide",
+    "timeframe": "1h",
+    "is_return": 0.019604320984101795,
+    "oos_return": -0.007035739523442608,
+    "is_sharpe": 0.02737172802614878,
+    "oos_sharpe": -0.660662741561194
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "Trend_Pullback",
+    "timeframe": "1h",
+    "is_return": 0.01751216841188565,
+    "oos_return": -0.03333147380532187,
+    "is_sharpe": 0.01394403719907312,
+    "oos_sharpe": -0.21617217769472996
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1h",
+    "is_return": -0.012190564718097449,
+    "oos_return": 0.0013701825936397653,
+    "is_sharpe": -0.13201018708582957,
+    "oos_sharpe": -0.023911389631535634
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.04365999542811332,
+    "oos_return": -0.0240828261086579,
+    "is_sharpe": -1.2430144436557087,
+    "oos_sharpe": -5.193159131287191
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.09671679078648042,
+    "oos_return": 0.09262314724332449,
+    "is_sharpe": -1.707509007164053,
+    "oos_sharpe": 2.346090940635432
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "is_return": -0.05388632087098406,
+    "oos_return": -0.03918550818239295,
+    "is_sharpe": -1.4309912959389708,
+    "oos_sharpe": -6.336541392566021
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "is_return": -0.10370968161665617,
+    "oos_return": -0.017895435806427266,
+    "is_sharpe": -2.41471493103047,
+    "oos_sharpe": -0.6417114403717845
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "5m",
+    "is_return": -0.1351169075452711,
+    "oos_return": 0.014673193224608548,
+    "is_sharpe": -2.244352981606485,
+    "oos_sharpe": 0.4626483668210941
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "RSI_Volume_Confirmation",
+    "timeframe": "1d",
+    "is_return": 0.014233002970243106,
+    "oos_return": 0.2747799904773,
+    "is_sharpe": -0.0010824988782039632,
+    "oos_sharpe": 0.20253026493478848
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "Opening_Gap",
+    "timeframe": "1d",
+    "is_return": 0.014233002970243106,
+    "oos_return": 0.2747799904773,
+    "is_sharpe": -0.0010824988782039632,
+    "oos_sharpe": 0.20253026493478848
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "RSI_BB_Squeeze",
+    "timeframe": "1d",
+    "is_return": -0.014873529816276132,
+    "oos_return": 0.010602798454299919,
+    "is_sharpe": -0.04659236415638155,
+    "oos_sharpe": 0.026749385491928707
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "Stochastic_Momentum",
+    "timeframe": "1d",
+    "is_return": -0.04021042066974944,
+    "oos_return": 0.037442173129898434,
+    "is_sharpe": -0.04401799227994297,
+    "oos_sharpe": 0.16383258148477484
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "ATRTrailingStop",
+    "timeframe": "1d",
+    "is_return": 0.07295787482641884,
+    "oos_return": -0.0027022824877999665,
+    "is_sharpe": 0.09378179487064528,
+    "oos_sharpe": -0.2105190956100746
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1h",
+    "is_return": -0.03697285372541432,
+    "oos_return": -0.05155461842836623,
+    "is_sharpe": -0.18313205428807341,
+    "oos_sharpe": -0.5993135111456256
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "VolumeMA_Crossover",
+    "timeframe": "1h",
+    "is_return": 0.03374608481996038,
+    "oos_return": -0.06068105072779276,
+    "is_sharpe": 0.12144824029414476,
+    "oos_sharpe": -0.7168402916557559
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "is_return": 0.0319678159658052,
+    "oos_return": 0.025413879344213054,
+    "is_sharpe": 0.11134807044243895,
+    "oos_sharpe": 0.3420594816440635
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "Three_MA_Trend",
+    "timeframe": "1h",
+    "is_return": 0.016700887714002747,
+    "oos_return": 0.003437805436007038,
+    "is_sharpe": 0.009084870757925505,
+    "oos_sharpe": -0.0258515489941802
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "1h",
+    "is_return": 0.033926413655031504,
+    "oos_return": 0.2084550268127091,
+    "is_sharpe": 0.12343696670290014,
+    "oos_sharpe": 0.8097827751453297
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "5m",
+    "is_return": 0.07183518072693114,
+    "oos_return": -0.008875190231443121,
+    "is_sharpe": 0.48716091690079877,
+    "oos_sharpe": -0.24035846433871597
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.06337567894910374,
+    "oos_return": -0.009385311337175663,
+    "is_sharpe": -1.2088741856859015,
+    "oos_sharpe": -4.2798886598251125
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "is_return": -0.09742412339056843,
+    "oos_return": 0.01474389680610766,
+    "is_sharpe": -1.6868789020409365,
+    "oos_sharpe": 0.4796011690191415
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "is_return": -0.14019353702640233,
+    "oos_return": 0.03681053196679539,
+    "is_sharpe": -2.8676074403024963,
+    "oos_sharpe": 1.4251456059728778
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "5m",
+    "is_return": -0.1323521623650202,
+    "oos_return": -0.01038749158869803,
+    "is_sharpe": -2.616715063493033,
+    "oos_sharpe": -3.2903920753653777
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "ADXTrend",
+    "timeframe": "1d",
+    "is_return": 0.13052781006246397,
+    "oos_return": 0.2771866061600241,
+    "is_sharpe": 0.1138732740406419,
+    "oos_sharpe": 0.2489947726964132
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "ATR_Trend_Confirmation",
+    "timeframe": "1d",
+    "is_return": 0.13052781006246397,
+    "oos_return": 0.2771866061600241,
+    "is_sharpe": 0.1138732740406419,
+    "oos_sharpe": 0.2489947726964132
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "VolatilityRatio_Trend",
+    "timeframe": "1d",
+    "is_return": 0.13052781006246397,
+    "oos_return": 0.2771866061600241,
+    "is_sharpe": 0.1138732740406419,
+    "oos_sharpe": 0.2489947726964132
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "RSI_ADX_TrendConfirm",
+    "timeframe": "1d",
+    "is_return": 0.13341654217931762,
+    "oos_return": 0.2771866061600241,
+    "is_sharpe": 0.11265159505395603,
+    "oos_sharpe": 0.2489947726964132
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "ADX_DI_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.042210916168755795,
+    "oos_return": 0.27917415686395647,
+    "is_sharpe": 0.054470302275935426,
+    "oos_sharpe": 0.23471607702933858
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "is_return": -0.016924280977646703,
+    "oos_return": 0.039407807493644795,
+    "is_sharpe": -0.12303666484899718,
+    "oos_sharpe": 0.5597452723296631
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "DualMomentum",
+    "timeframe": "1h",
+    "is_return": -0.010672480010954314,
+    "oos_return": -0.015083254765465098,
+    "is_sharpe": -0.12202700471608162,
+    "oos_sharpe": -1.0720440711522197
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "Trend_Volume_Alignment",
+    "timeframe": "1h",
+    "is_return": -0.025332133063143265,
+    "oos_return": 0.061557192398995396,
+    "is_sharpe": -0.3863393088426243,
+    "oos_sharpe": 0.6276072360500842
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "is_return": 0.01792222537927926,
+    "oos_return": -0.0019553536029435054,
+    "is_sharpe": 0.018242611401188595,
+    "oos_sharpe": -0.05011521401371905
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "RSI_Volume_Confirmation",
+    "timeframe": "1h",
+    "is_return": 0.007444679559484502,
+    "oos_return": -0.005050907804333838,
+    "is_sharpe": -0.05428411184578797,
+    "oos_sharpe": -0.07927776180094889
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "is_return": -0.021092262451230054,
+    "oos_return": 0.2726992541220529,
+    "is_sharpe": -2.467921143920467,
+    "oos_sharpe": 3.8459087144738042
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.03316832839488896,
+    "oos_return": -0.013038266790079942,
+    "is_sharpe": -0.7754679751381971,
+    "oos_sharpe": -0.48789646975613277
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "is_return": -0.08618411938059929,
+    "oos_return": -0.031719018412742155,
+    "is_sharpe": -1.6219996566191655,
+    "oos_sharpe": -5.688849591586393
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.06744267025446504,
+    "oos_return": -0.007516176230682177,
+    "is_sharpe": -3.9982515205480773,
+    "oos_sharpe": -0.3660851250403924
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "5m",
+    "is_return": -0.08398374337985966,
+    "oos_return": 0.04161768446446644,
+    "is_sharpe": -4.512995496620404,
+    "oos_sharpe": 1.8336584102503197
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "ADX_DI_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.2358226047021002,
+    "oos_return": 0.03357248629050024,
+    "is_sharpe": 0.11208062999934403,
+    "oos_sharpe": 0.10461893916774609
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "Trend_Filter_RSI",
+    "timeframe": "1d",
+    "is_return": 0.05953315535735019,
+    "oos_return": 0.18498055156945004,
+    "is_sharpe": 0.07867577405636689,
+    "oos_sharpe": 0.08139796699650531
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "DualMomentum",
+    "timeframe": "1d",
+    "is_return": 0.03807722277485023,
+    "oos_return": -0.005731940350750083,
+    "is_sharpe": 0.04008928424409561,
+    "oos_sharpe": -0.10374941768620068
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "ADX_Stochastic_Momentum",
+    "timeframe": "1d",
+    "is_return": 0.06530136721710005,
+    "oos_return": 0.03034260158235018,
+    "is_sharpe": 0.09448208547063017,
+    "oos_sharpe": 0.09172410373676743
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "ADX_Trend_Strength",
+    "timeframe": "1d",
+    "is_return": 0.07085138839894993,
+    "oos_return": 0.02502702111280014,
+    "is_sharpe": 0.10506252532073322,
+    "oos_sharpe": 0.07160446117954958
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "is_return": 0.0014638437499580324,
+    "oos_return": -0.017288291951083955,
+    "is_sharpe": -0.08452508969751518,
+    "oos_sharpe": -0.036128251009275476
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1h",
+    "is_return": -0.03362546678301529,
+    "oos_return": 0.3706910400511499,
+    "is_sharpe": -0.22180054577450872,
+    "oos_sharpe": 2.22334550249063
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "Trend_Volume_Alignment",
+    "timeframe": "1h",
+    "is_return": 0.00015020071209219168,
+    "oos_return": -0.03621103606492877,
+    "is_sharpe": -0.06654365893925124,
+    "oos_sharpe": -0.06425460135196608
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "Volatility_Contraction",
+    "timeframe": "1h",
+    "is_return": -0.03650591805822478,
+    "oos_return": -0.01610184977086945,
+    "is_sharpe": -0.22651594070088285,
+    "oos_sharpe": -0.138668840731725
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "is_return": -0.021276282585484734,
+    "oos_return": 0.04071147673265004,
+    "is_sharpe": -0.16722767002441236,
+    "oos_sharpe": 0.4947887075221953
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": -0.0350693384065706,
+    "oos_return": 0.04020260955707519,
+    "is_sharpe": -0.9694021031127446,
+    "oos_sharpe": 1.6530271237808496
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "is_return": -0.043206357656116016,
+    "oos_return": -0.0847969682669481,
+    "is_sharpe": -0.8379045576793299,
+    "oos_sharpe": -2.2737351903883
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "5m",
+    "is_return": -0.08142031164572705,
+    "oos_return": -0.061253355704795974,
+    "is_sharpe": -0.6608700107616098,
+    "oos_sharpe": -2.472460467267865
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.020877029078134803,
+    "oos_return": -0.009908862766775273,
+    "is_sharpe": -0.7015413541747533,
+    "oos_sharpe": -1.8600700758004818
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.05570989789075815,
+    "oos_return": -0.007661336266606231,
+    "is_sharpe": -2.321340649213766,
+    "oos_sharpe": -1.4590755008328784
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "RSI_ADX_TrendConfirm",
+    "timeframe": "1d",
+    "is_return": 0.04003719981501024,
+    "oos_return": -0.17180922058799988,
+    "is_sharpe": 0.031754750498625126,
+    "oos_sharpe": -0.09282976094129598
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "Trend_Filter_RSI",
+    "timeframe": "1d",
+    "is_return": 0.03352836637953005,
+    "oos_return": -0.2225358084740999,
+    "is_sharpe": 0.020783002168611817,
+    "oos_sharpe": -0.04160772047607414
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "DualMomentum",
+    "timeframe": "1d",
+    "is_return": 0.13107358626139948,
+    "oos_return": 0.22410888604650012,
+    "is_sharpe": 0.16486428047492183,
+    "oos_sharpe": 0.11961389749243394
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "Momentum_Volume_Rally",
+    "timeframe": "1d",
+    "is_return": 0.05533628133654653,
+    "oos_return": 0.1302241633811481,
+    "is_sharpe": 0.07239353557561719,
+    "oos_sharpe": 0.30470665996371954
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "MACDTrend",
+    "timeframe": "1d",
+    "is_return": 0.04392722141530234,
+    "oos_return": 0.22410888604650012,
+    "is_sharpe": 0.051962162023293686,
+    "oos_sharpe": 0.11961389749243394
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "is_return": -0.02541859510500988,
+    "oos_return": -0.0012376541454927063,
+    "is_sharpe": -0.17850867942426027,
+    "oos_sharpe": -0.17527769503281065
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "is_return": -0.0023418897956570435,
+    "oos_return": -0.01169415939344064,
+    "is_sharpe": -0.08065629370328702,
+    "oos_sharpe": -0.052215668609163816
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "Trend_Volume_Alignment",
+    "timeframe": "1h",
+    "is_return": -0.05790494916960364,
+    "oos_return": 0.04659239826104851,
+    "is_sharpe": -0.42868971767179564,
+    "oos_sharpe": 0.5777440642546012
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "Three_MA_Trend",
+    "timeframe": "1h",
+    "is_return": -0.018023775490056723,
+    "oos_return": -0.0031254435143187585,
+    "is_sharpe": -0.14953437705262507,
+    "oos_sharpe": -0.31435707433949867
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1h",
+    "is_return": 0.007177197803782037,
+    "oos_return": 0.023962835440064226,
+    "is_sharpe": -0.032272220192421604,
+    "oos_sharpe": 0.2631489292189592
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": -0.05276499437174134,
+    "oos_return": -0.005091673577462934,
+    "is_sharpe": -0.9865202260930932,
+    "oos_sharpe": -0.28210077209282947
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.0174108683356634,
+    "oos_return": -0.009577618691969691,
+    "is_sharpe": -0.4905910395516948,
+    "oos_sharpe": -0.1743656009055036
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "is_return": -0.0759943413134395,
+    "oos_return": -0.037882447689721155,
+    "is_sharpe": -3.403499446681279,
+    "oos_sharpe": -1.536554450400372
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "5m",
+    "is_return": -0.0768891008179156,
+    "oos_return": -0.029184516463990878,
+    "is_sharpe": -1.3138504898187626,
+    "oos_sharpe": -0.9415798130783228
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.061649393482000596,
+    "oos_return": 0.04216130738878331,
+    "is_sharpe": -2.060344279378761,
+    "oos_sharpe": 1.5057333178913526
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "Dual_Moving_Average_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.03831820230597252,
+    "oos_return": 0.0,
+    "is_sharpe": 0.04343380700617508,
+    "oos_sharpe": 0
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "MACD_SMA_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.03576721126869772,
+    "oos_return": 0.26077988874,
+    "is_sharpe": 0.037125118865614454,
+    "oos_sharpe": 0.1406859984833697
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "MACD_Volume_Trend",
+    "timeframe": "1d",
+    "is_return": 0.02796369967123275,
+    "oos_return": 0.30643687993695,
+    "is_sharpe": 0.023631495954276785,
+    "oos_sharpe": 0.4600183051196006
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1d",
+    "is_return": 0.04528574508718011,
+    "oos_return": 0.0,
+    "is_sharpe": 0.057597182638108695,
+    "oos_sharpe": 0
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "Three_MA_Trend",
+    "timeframe": "1d",
+    "is_return": 0.043418323050447655,
+    "oos_return": 0.26077988874,
+    "is_sharpe": 0.05243112645720715,
+    "oos_sharpe": 0.1406859984833697
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "is_return": 0.10319450206365131,
+    "oos_return": -0.004770028953059227,
+    "is_sharpe": 0.2681275930617911,
+    "oos_sharpe": -0.624518993277922
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "is_return": 0.03161445632509916,
+    "oos_return": 0.05259758424112995,
+    "is_sharpe": 0.10427566945945635,
+    "oos_sharpe": 0.7127038232965038
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "Three_MA_Trend",
+    "timeframe": "1h",
+    "is_return": -0.018033748787432413,
+    "oos_return": 0.03646138352992799,
+    "is_sharpe": -0.1545964566288785,
+    "oos_sharpe": 0.4431879480520599
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1h",
+    "is_return": 0.0002921705053560436,
+    "oos_return": -0.05887850090933993,
+    "is_sharpe": -0.03403370020851388,
+    "oos_sharpe": -0.7468323378744379
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "MACD_ADX_TrendRide",
+    "timeframe": "1h",
+    "is_return": -0.020100153489926453,
+    "oos_return": -0.0268130137595837,
+    "is_sharpe": -0.15214942617467034,
+    "oos_sharpe": -0.2686236136921926
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "Momentum_Volume_Rally",
+    "timeframe": "5m",
+    "is_return": -0.027284762048264966,
+    "oos_return": -0.0687541010380772,
+    "is_sharpe": -0.6509657243422905,
+    "oos_sharpe": -2.6746123265583277
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": -0.03434354713121225,
+    "oos_return": -0.023251804329021252,
+    "is_sharpe": -0.765396118640324,
+    "oos_sharpe": -0.7992820421730018
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "is_return": -0.005831781012444116,
+    "oos_return": -0.015035559449478606,
+    "is_sharpe": -0.4510628998259538,
+    "oos_sharpe": -4.000520092018101
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "is_return": -0.03345124083244867,
+    "oos_return": -0.027542558604778316,
+    "is_sharpe": -1.0098675816165497,
+    "oos_sharpe": -0.89471291350804
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "5m",
+    "is_return": -0.06452276413033396,
+    "oos_return": -0.0380353909129012,
+    "is_sharpe": -1.5945295908328174,
+    "oos_sharpe": -6.282350563868283
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "ADX_Stochastic_Momentum",
+    "timeframe": "1d",
+    "is_return": 0.0037083564757552814,
+    "oos_return": -0.004943595382449858,
+    "is_sharpe": -0.02125849176344713,
+    "oos_sharpe": -0.23663766217143956
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "Momentum_Volume_Rally",
+    "timeframe": "1d",
+    "is_return": 0.053356872864701144,
+    "oos_return": 0.2411496120460001,
+    "is_sharpe": 0.07730865556106013,
+    "oos_sharpe": 0.20248792027431914
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "ATRTrailingStop",
+    "timeframe": "1d",
+    "is_return": 0.06844714397872012,
+    "oos_return": -0.009299332577749883,
+    "is_sharpe": 0.08475632556671249,
+    "oos_sharpe": -0.014963941404414493
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "RSI_ADX_TrendConfirm",
+    "timeframe": "1d",
+    "is_return": -0.014209510195226758,
+    "oos_return": -0.005081916522850079,
+    "is_sharpe": -0.047964017639991655,
+    "oos_sharpe": -0.19790801256744284
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "ADX_DI_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.030509413121964316,
+    "oos_return": -0.0031623061295499794,
+    "is_sharpe": 0.026895375702774085,
+    "oos_sharpe": -0.2182791312864004
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1h",
+    "is_return": 0.1038859627060678,
+    "oos_return": -0.015142770452485564,
+    "is_sharpe": 0.19543981863675738,
+    "oos_sharpe": -1.1754080865373895
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "1h",
+    "is_return": 0.024034440503819934,
+    "oos_return": -0.007809881343474117,
+    "is_sharpe": 0.053672807158994196,
+    "oos_sharpe": -0.649417698116904
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1h",
+    "is_return": 0.0104612448683416,
+    "oos_return": 0.023310148053233424,
+    "is_sharpe": -0.02267100907438201,
+    "oos_sharpe": 0.28886192970719166
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "1h",
+    "is_return": 0.07330917919505155,
+    "oos_return": -0.0020835909321896906,
+    "is_sharpe": 0.11896018616757399,
+    "oos_sharpe": -0.42998340889001174
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1h",
+    "is_return": -0.025286824580450628,
+    "oos_return": 0.04146520576890878,
+    "is_sharpe": -0.1854616697696935,
+    "oos_sharpe": 0.5300048706022604
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": 0.006726113972261228,
+    "oos_return": 0.047516185225802914,
+    "is_sharpe": -0.14380986234419094,
+    "oos_sharpe": 2.0656802828160834
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.06694730147715833,
+    "oos_return": -0.01022823939020658,
+    "is_sharpe": -1.7019587126292732,
+    "oos_sharpe": -0.41883876573355605
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "is_return": -0.06654569721421096,
+    "oos_return": -0.03526480151910524,
+    "is_sharpe": -1.6176038447082188,
+    "oos_sharpe": -4.708951424520385
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "is_return": -0.06468456225855218,
+    "oos_return": -0.07899471720506422,
+    "is_sharpe": -1.5364482534536452,
+    "oos_sharpe": -3.0352691754322123
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "Momentum_Volume_Rally",
+    "timeframe": "5m",
+    "is_return": -0.07143903878706187,
+    "oos_return": -0.0815468885471228,
+    "is_sharpe": -1.6574390937902053,
+    "oos_sharpe": -3.087952891296393
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "ADXTrend",
+    "timeframe": "1d",
+    "is_return": 0.3136842620603548,
+    "oos_return": 0.2554263125232002,
+    "is_sharpe": 0.17706766441545965,
+    "oos_sharpe": 0.16765182485064384
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "ATR_Trend_Confirmation",
+    "timeframe": "1d",
+    "is_return": 0.3136842620603548,
+    "oos_return": 0.2554263125232002,
+    "is_sharpe": 0.17706766441545965,
+    "oos_sharpe": 0.16765182485064384
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "VolatilityRatio_Trend",
+    "timeframe": "1d",
+    "is_return": 0.3136842620603548,
+    "oos_return": 0.2554263125232002,
+    "is_sharpe": 0.17706766441545965,
+    "oos_sharpe": 0.16765182485064384
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "Momentum_ADX_Strength",
+    "timeframe": "1d",
+    "is_return": 0.40714845429110896,
+    "oos_return": 0.2554263125232002,
+    "is_sharpe": 0.202513395505706,
+    "oos_sharpe": 0.16765182485064384
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "RSI_ADX_TrendConfirm",
+    "timeframe": "1d",
+    "is_return": 0.40714845429110896,
+    "oos_return": 0.2554263125232002,
+    "is_sharpe": 0.202513395505706,
+    "oos_sharpe": 0.16765182485064384
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "Trend_Volume_Alignment",
+    "timeframe": "1h",
+    "is_return": -0.0037241919882394724,
+    "oos_return": 0.3406396412422837,
+    "is_sharpe": -0.19114441326783083,
+    "oos_sharpe": 1.6534548640938407
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "VolumeMA_Crossover",
+    "timeframe": "1h",
+    "is_return": 0.07821790603771107,
+    "oos_return": 0.03901134218699459,
+    "is_sharpe": 0.1744171849467134,
+    "oos_sharpe": 0.44680843429899386
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "is_return": -0.002556937982813688,
+    "oos_return": 0.05138483843038732,
+    "is_sharpe": -0.07957728203712547,
+    "oos_sharpe": 0.7193040757810638
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "Momentum_ADX_Strength",
+    "timeframe": "1h",
+    "is_return": 0.010331298748097033,
+    "oos_return": -0.019869841078528697,
+    "is_sharpe": -0.022657660283708077,
+    "oos_sharpe": -0.9034032401659657
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "VolumePrice_Confirm",
+    "timeframe": "1h",
+    "is_return": -0.03828185938233539,
+    "oos_return": 0.03442045878244622,
+    "is_sharpe": -0.2390823015069051,
+    "oos_sharpe": 0.4382417711542914
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": 0.022496453854101418,
+    "oos_return": -0.007184692998507089,
+    "is_sharpe": 0.0848170858667039,
+    "oos_sharpe": -0.45580865516852415
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.08579633823113719,
+    "oos_return": -0.07015212305729292,
+    "is_sharpe": -0.8495387847795639,
+    "oos_sharpe": -2.6037350702796758
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.0630262211680117,
+    "oos_return": -0.06822415924444984,
+    "is_sharpe": -1.1472815202181528,
+    "oos_sharpe": -2.6593357847691266
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "is_return": -0.04878855734767974,
+    "oos_return": 0.013855947630990994,
+    "is_sharpe": -1.1675777542087016,
+    "oos_sharpe": 0.4046457446372452
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "5m",
+    "is_return": -0.046421527506286364,
+    "oos_return": -0.05007680774120352,
+    "is_sharpe": -1.1538439714534416,
+    "oos_sharpe": -6.135015425843489
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "MACD_ADX_TrendRide",
+    "timeframe": "1d",
+    "is_return": 0.08221874537543787,
+    "oos_return": -0.00723581647739993,
+    "is_sharpe": 0.07935024158342494,
+    "oos_sharpe": -0.2725361758153779
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "Three_MA_Trend",
+    "timeframe": "1d",
+    "is_return": -0.016031920359965153,
+    "oos_return": 0.2398602839220001,
+    "is_sharpe": -0.020449565839679225,
+    "oos_sharpe": 0.12343190401726684
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1d",
+    "is_return": 0.07284813696817553,
+    "oos_return": 0.2849276415552001,
+    "is_sharpe": 0.06548242491547039,
+    "oos_sharpe": 0.279199589080524
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "Dual_Moving_Average_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.031764531400585695,
+    "oos_return": 0.2853141555463501,
+    "is_sharpe": 0.029997745984819205,
+    "oos_sharpe": 0.28658521001141873
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "Trend_Filter_RSI",
+    "timeframe": "1d",
+    "is_return": 0.0326931293365937,
+    "oos_return": 0.2398602839220001,
+    "is_sharpe": 0.02999010959850968,
+    "oos_sharpe": 0.12343190401726684
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1h",
+    "is_return": -0.008941098212743965,
+    "oos_return": 0.08617371052074785,
+    "is_sharpe": -0.11659282249654808,
+    "oos_sharpe": 0.7622354803699883
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "Trend_Pullback",
+    "timeframe": "1h",
+    "is_return": -0.12047173149152994,
+    "oos_return": -0.00634137491911446,
+    "is_sharpe": -0.1271474308174935,
+    "oos_sharpe": -0.9596349923599234
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "is_return": -0.018089357878762532,
+    "oos_return": 0.03533119487664255,
+    "is_sharpe": -0.15369521669845623,
+    "oos_sharpe": 0.4318688452097034
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "Momentum_Exhaustion",
+    "timeframe": "1h",
+    "is_return": 0.02197279486528525,
+    "oos_return": -0.01345733764880686,
+    "is_sharpe": 0.04363736675168593,
+    "oos_sharpe": -0.16060363753123502
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "End_of_Day_Reversion",
+    "timeframe": "1h",
+    "is_return": -0.025334096784989817,
+    "oos_return": -0.015277533169300004,
+    "is_sharpe": -0.190478910321797,
+    "oos_sharpe": -0.1759998216076529
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "Momentum_Volume_Rally",
+    "timeframe": "5m",
+    "is_return": 0.00046640696196365754,
+    "oos_return": 0.04584773788910185,
+    "is_sharpe": -0.3248178065760795,
+    "oos_sharpe": 1.9127006970336864
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": -0.08190289728297954,
+    "oos_return": 0.2705003353134128,
+    "is_sharpe": -1.483201684763111,
+    "oos_sharpe": 3.7592054623973934
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "5m",
+    "is_return": -0.10712841882480076,
+    "oos_return": -0.017578007763378554,
+    "is_sharpe": -1.8116880640899284,
+    "oos_sharpe": -0.6298168833594622
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "is_return": -0.04023963003853787,
+    "oos_return": 0.03083478135732177,
+    "is_sharpe": -2.7038840305984495,
+    "oos_sharpe": 1.1868430168084965
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.08055727771465433,
+    "oos_return": -0.02177506384858454,
+    "is_sharpe": -1.9066826096904714,
+    "oos_sharpe": -4.466927875058421
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "ADX_DI_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.11710674124460013,
+    "oos_return": 0.26282579800399997,
+    "is_sharpe": 0.10659417081225192,
+    "oos_sharpe": 0.2611078439250336
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "VolumePrice_Confirm",
+    "timeframe": "1d",
+    "is_return": 0.05814204052150046,
+    "oos_return": 0.2688322727667501,
+    "is_sharpe": 0.08462686623120558,
+    "oos_sharpe": 0.307288390446634
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "ADX_Trend_Strength",
+    "timeframe": "1d",
+    "is_return": -0.01541146952044961,
+    "oos_return": 0.2658015834897502,
+    "is_sharpe": -0.013361120295479301,
+    "oos_sharpe": 0.2896565731347083
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1d",
+    "is_return": 0.15642459999540007,
+    "oos_return": 0.25683936185390005,
+    "is_sharpe": 0.10029865661256486,
+    "oos_sharpe": 0.26370283418360263
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "MACD_ADX_TrendRide",
+    "timeframe": "1d",
+    "is_return": -0.004414633456000011,
+    "oos_return": 0.25683936185390005,
+    "is_sharpe": -0.03354381277164733,
+    "oos_sharpe": 0.26370283418360263
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "RSI_Reversal_v2",
+    "timeframe": "1h",
+    "is_return": -0.027892263370385043,
+    "oos_return": 0.04052864068773284,
+    "is_sharpe": -0.15729033502046433,
+    "oos_sharpe": 0.5138500968193285
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1h",
+    "is_return": 0.033558566971261604,
+    "oos_return": 0.034560383011297234,
+    "is_sharpe": 0.11586067238266605,
+    "oos_sharpe": 0.48265817358970137
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "is_return": 0.023794673878001923,
+    "oos_return": 0.04077918622194455,
+    "is_sharpe": 0.05193426220827206,
+    "oos_sharpe": 0.5170361244808066
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "is_return": -0.04614788451520173,
+    "oos_return": 0.0022207992810000725,
+    "is_sharpe": -0.35474136461522404,
+    "oos_sharpe": -0.002731466596110354
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "1h",
+    "is_return": 0.01746374999778622,
+    "oos_return": -0.11547485204169672,
+    "is_sharpe": 0.004970582418543347,
+    "oos_sharpe": -0.6958625203978681
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": 0.1410620281612454,
+    "oos_return": -0.024746298429156304,
+    "is_sharpe": 0.9855789923016278,
+    "oos_sharpe": -1.5067409808505354
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "is_return": -0.007157340262272774,
+    "oos_return": 0.0,
+    "is_sharpe": -0.33820495291204705,
+    "oos_sharpe": 0
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.02678227242994195,
+    "oos_return": 0.08263371037686287,
+    "is_sharpe": -0.6471027600315816,
+    "oos_sharpe": 1.027308902109818
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": -0.03859732029158026,
+    "oos_return": 0.016074480785759807,
+    "is_sharpe": -0.7823329168989482,
+    "oos_sharpe": 0.5229334722896254
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "5m",
+    "is_return": -0.16517072808779398,
+    "oos_return": -0.0745312330942243,
+    "is_sharpe": -2.1939618008329282,
+    "oos_sharpe": -0.6539255991503811
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "ADX_DI_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.16778669156207282,
+    "oos_return": -0.08333219325940008,
+    "is_sharpe": 0.1409309797775547,
+    "oos_sharpe": -0.1682134117043084
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "RSI_Divergence",
+    "timeframe": "1d",
+    "is_return": -0.007764554313730187,
+    "oos_return": -0.08646082314739993,
+    "is_sharpe": -0.040742402010277776,
+    "oos_sharpe": -0.26160283973277304
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "RSI_ADX_TrendConfirm",
+    "timeframe": "1d",
+    "is_return": 0.5088131249281307,
+    "oos_return": -0.21787037649684993,
+    "is_sharpe": 0.210575607902227,
+    "oos_sharpe": -0.0983060636009561
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "ADXTrend",
+    "timeframe": "1d",
+    "is_return": 0.5207104686390536,
+    "oos_return": -0.21787037649684993,
+    "is_sharpe": 0.2157159703557473,
+    "oos_sharpe": -0.0983060636009561
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "ATR_Trend_Confirmation",
+    "timeframe": "1d",
+    "is_return": 0.5207104686390536,
+    "oos_return": -0.21787037649684993,
+    "is_sharpe": 0.2157159703557473,
+    "oos_sharpe": -0.0983060636009561
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "is_return": 0.016914431679791304,
+    "oos_return": -0.3226668852759691,
+    "is_sharpe": 0.010280770176097177,
+    "oos_sharpe": -0.3897188487072345
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "Volume_Trend_Divergence",
+    "timeframe": "1h",
+    "is_return": -0.0010715232968697092,
+    "oos_return": -0.14827497398044753,
+    "is_sharpe": -0.10464286772007735,
+    "oos_sharpe": -0.20332514782876804
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "is_return": 0.01268798330519843,
+    "oos_return": -0.01212788243393079,
+    "is_sharpe": -0.011323324602794286,
+    "oos_sharpe": -0.15097808226874354
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "RSI_Reversal_v2",
+    "timeframe": "1h",
+    "is_return": 0.014860956128480611,
+    "oos_return": -0.057316168926690586,
+    "is_sharpe": -0.002818856108945013,
+    "oos_sharpe": -0.6708395328733495
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "1h",
+    "is_return": -0.005016243042635906,
+    "oos_return": -0.01098775012093436,
+    "is_sharpe": -0.0941451173312195,
+    "oos_sharpe": -0.14007163337750286
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.0793455038796182,
+    "oos_return": -0.02360302134567275,
+    "is_sharpe": -1.4212494692259343,
+    "oos_sharpe": -5.443779067389547
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": -0.07072153789492426,
+    "oos_return": 0.032384799500023216,
+    "is_sharpe": -1.7347137223062241,
+    "oos_sharpe": 1.3076441358631095
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "is_return": -0.10752933859475859,
+    "oos_return": 0.017506015652181087,
+    "is_sharpe": -1.8309867751524376,
+    "oos_sharpe": 0.5966927992253309
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "5m",
+    "is_return": -0.12379739858147513,
+    "oos_return": -0.021560600007195462,
+    "is_sharpe": -2.0464580938083725,
+    "oos_sharpe": -0.7567929229209589
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "is_return": -0.1264272311606338,
+    "oos_return": -0.027201802451659315,
+    "is_sharpe": -2.8712159876938097,
+    "oos_sharpe": -0.9285121575586008
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "RSI_Stochastic_Oversold",
+    "timeframe": "1d",
+    "is_return": -0.007975484524511557,
+    "oos_return": -0.06727843751628854,
+    "is_sharpe": -0.040024104145075214,
+    "oos_sharpe": -0.2598950722099922
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "Stochastic_RSI_Oscillator",
+    "timeframe": "1d",
+    "is_return": -0.007975484524511557,
+    "oos_return": -0.06727843751628854,
+    "is_sharpe": -0.040024104145075214,
+    "oos_sharpe": -0.2598950722099922
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "Bollinger_Mean_Reversion",
+    "timeframe": "1d",
+    "is_return": -0.01889485162556113,
+    "oos_return": -0.06727843751628854,
+    "is_sharpe": -0.03965567923575833,
+    "oos_sharpe": -0.2598950722099922
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "RSI_BB_Squeeze",
+    "timeframe": "1d",
+    "is_return": -0.025119186532109306,
+    "oos_return": -0.06727843751628854,
+    "is_sharpe": -0.03791275693484303,
+    "oos_sharpe": -0.2598950722099922
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "RSI_Reversal_v2",
+    "timeframe": "1d",
+    "is_return": -0.01743686842842726,
+    "oos_return": 0.17806527996877514,
+    "is_sharpe": -0.036482155169881694,
+    "oos_sharpe": 0.19634007273251614
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "is_return": -0.02467169369137875,
+    "oos_return": 0.1819112619342837,
+    "is_sharpe": -0.13841939098759287,
+    "oos_sharpe": 0.647972829210465
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "is_return": -0.03739421149261645,
+    "oos_return": -0.009815191467609256,
+    "is_sharpe": -0.07764890977728148,
+    "oos_sharpe": -1.1457543716847496
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "1h",
+    "is_return": -0.18548675325984165,
+    "oos_return": -0.03492680150191023,
+    "is_sharpe": -0.17572010768196317,
+    "oos_sharpe": -0.8662491994355788
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "is_return": -0.0196001987905227,
+    "oos_return": -0.008005101430500072,
+    "is_sharpe": -0.16223878211889942,
+    "oos_sharpe": -0.11097013711661136
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "1h",
+    "is_return": -0.029327351591356708,
+    "oos_return": -0.05626287112449936,
+    "is_sharpe": -0.19799514817784594,
+    "oos_sharpe": -0.6654908309797769
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": -0.0342842380671273,
+    "oos_return": 0.029091784617790543,
+    "is_sharpe": -0.7694215434524241,
+    "oos_sharpe": 1.1304732257886299
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.000350536585355585,
+    "oos_return": -0.07242595324689043,
+    "is_sharpe": -0.32052591386019436,
+    "oos_sharpe": -2.8229040574361632
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "is_return": -0.06458188390080963,
+    "oos_return": 0.12480932694115167,
+    "is_sharpe": -1.1889741823163718,
+    "oos_sharpe": 2.398461094775678
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "Momentum_Volume_Rally",
+    "timeframe": "5m",
+    "is_return": -0.06775584226908278,
+    "oos_return": -0.01105558781364496,
+    "is_sharpe": -1.2255132605975287,
+    "oos_sharpe": -0.4437418788870464
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "is_return": -0.02708837227347132,
+    "oos_return": -0.0722258975251067,
+    "is_sharpe": -0.887171773052472,
+    "oos_sharpe": -2.854329592419662
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "MACDTrend",
+    "timeframe": "1d",
+    "is_return": 0.03179375996800023,
+    "oos_return": 0.28683823408065,
+    "is_sharpe": 0.029802539312127584,
+    "oos_sharpe": 0.2488707713955746
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "MACD_SMA_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.03222876715924998,
+    "oos_return": 0.26557276879560016,
+    "is_sharpe": 0.0295140736513867,
+    "oos_sharpe": 0.14512403420575215
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "Dual_Moving_Average_Crossover",
+    "timeframe": "1d",
+    "is_return": 0.034595727150499876,
+    "oos_return": -5.400966789995437e-05,
+    "is_sharpe": 0.03466210928350362,
+    "oos_sharpe": -0.11629256109352981
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "MACD_ADX_TrendRide",
+    "timeframe": "1d",
+    "is_return": -0.008303965035650035,
+    "oos_return": 0.046171528897449896,
+    "is_sharpe": -0.037324198071099754,
+    "oos_sharpe": 0.15924061519657182
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "ADX_Stochastic_Momentum",
+    "timeframe": "1d",
+    "is_return": 0.03369587936804979,
+    "oos_return": 0.04714436501640012,
+    "is_sharpe": 0.03347421974501438,
+    "oos_sharpe": 0.16348303950274626
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "1h",
+    "is_return": -0.01093604320267521,
+    "oos_return": 0.0,
+    "is_sharpe": -0.10909680603689074,
+    "oos_sharpe": 0
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "is_return": 0.014069840514763055,
+    "oos_return": -0.009162420560697356,
+    "is_sharpe": -0.007646305421916073,
+    "oos_sharpe": -0.9775674085484594
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "1h",
+    "is_return": 0.08045674051132184,
+    "oos_return": -0.3209075009582998,
+    "is_sharpe": 0.13229679034339803,
+    "oos_sharpe": -0.40882428456084385
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "1h",
+    "is_return": 0.09899066767045325,
+    "oos_return": 0.04074891063781295,
+    "is_sharpe": 0.22321340029773565,
+    "oos_sharpe": 0.34327853810331616
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "is_return": 0.10076988371952801,
+    "oos_return": -0.11836837587389994,
+    "is_sharpe": 0.21430956308621957,
+    "oos_sharpe": -0.15645523239606898
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "is_return": -0.02873670698375965,
+    "oos_return": 0.03504427386459516,
+    "is_sharpe": -0.9075158104666261,
+    "oos_sharpe": 1.401518769278187
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "is_return": -0.004085538731968554,
+    "oos_return": -0.08187629212280008,
+    "is_sharpe": -0.41604956234940277,
+    "oos_sharpe": -2.991235834828345
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "Momentum_Volume_Rally",
+    "timeframe": "5m",
+    "is_return": -0.08956758835444445,
+    "oos_return": -0.011367632498600141,
+    "is_sharpe": -2.1177220262863434,
+    "oos_sharpe": -0.44673997123614445
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "5m",
+    "is_return": -0.08052650686190609,
+    "oos_return": 2.5358016799145845e-05,
+    "is_sharpe": -1.8658042816428584,
+    "oos_sharpe": -0.17185982103504197
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "is_return": -0.12426501472083182,
+    "oos_return": 0.01784460923900173,
+    "is_sharpe": -2.0333074434228915,
+    "oos_sharpe": 0.5938643629859894
+  }
+]

@@ -1,0 +1,207 @@
+======================================================================
+🚀 Segmented Full Backtest - seg_full_backtest_20260220_001030
+======================================================================
+📈 symbols=21
+📊 strategies=64
+🗓️  range=2025-01-01~2026-02-18
+
+------------------------------------------------------------
+▶️  segment timeframe=5m (existing=219/1344)
+🧩 symbol batching: per_batch=1 batches=21 (skip_done=0)
+🧩 strategy batching: per_batch=1 batches=64
+
+🧩 symbol batch 1/21 symbols=1: US.AAPL
+
+   🧩 strategy batch 1/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=ADXTrend symbol=US.AAPL timeframe=5m
+/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtest/batch_backtest.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(query, conn, params=params)
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=69.9s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 2/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=ADX_DI_Crossover symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=66.1s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 3/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=ADX_Ichimoku_Cloud symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=66.0s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 4/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=ADX_ParabolicSAR_Stop symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=64.5s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 5/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=ADX_Stochastic_Momentum symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=64.9s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 6/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=ADX_Trend_Strength symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=64.8s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 7/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=ADX_Volatility_Expansion symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=65.2s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 8/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=AD_Accumulation symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=65.2s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 9/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=ATRTrailingStop symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=72.6s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 10/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=ATR_Trend_Confirmation symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=65.2s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 11/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=BollingerWidth_Expansion symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=66.7s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 12/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=Bollinger_Mean_Reversion symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=63.9s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 13/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=CCI_Mean_Reversion symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=64.4s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 14/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=Chaikin_Volume_Oscillator symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=64.2s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 15/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=DualMomentum symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=69.3s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 16/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=Dual_Moving_Average_Crossover symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=74.1s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 17/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=End_of_Day_Reversion symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=63.9s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 18/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=HistoricalVolatility_Range symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=65.4s ETA=0.0s
+/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/numpy/_core/_methods.py:188: RuntimeWarning: invalid value encountered in subtract
+  x = um.subtract(arr, arrmean, out=...)
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 19/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=Keltner_Bollinger_Squeeze symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=66.2s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 20/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=MACDTrend symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=66.4s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 21/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=MACD_ADX_TrendRide symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=64.3s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 22/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=MACD_BB_Breakout symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=63.4s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 23/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=MACD_RSI_Crossover symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=64.0s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 24/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=MACD_SMA_Crossover symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=64.5s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 25/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=MACD_Volume_Trend symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=64.2s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 26/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=MACD_Zero_Cross symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=64.5s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 27/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=Momentum_ADX_Strength symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=65.4s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 28/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=Momentum_Exhaustion symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=63.8s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 29/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=Momentum_RateOfChange symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=63.9s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 30/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=Momentum_Volume_Rally symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=66.3s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 31/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=MultiFactorV2 symbol=US.AAPL timeframe=5m
+[batch seg_full_backtest_20260220_001030] progress: 1/1 (completed=1, failed=0, pending=0) elapsed=68.4s ETA=0.0s
+✅ landed (cumulative) 5m: 219/1344
+
+   🧩 strategy batch 32/64 strategies=1
+🔄 tasks=1 (expected_batch=1)
+[BACKTEST] Starting task: strategy=OBV_Divergence symbol=US.AAPL timeframe=5m

@@ -14,6 +14,17 @@ from pathlib import Path
 from typing import Dict, List, Optional
 import logging
 import json
+import pymysql
+
+# DB 配置
+DB_CONFIG = {
+    "host": "localhost",
+    "port": 3306,
+    "user": "alita",
+    "password": "alitamysql",
+    "database": "trademaster",
+    "charset": "utf8mb4",
+}
 
 # 嘗試導入 yfinance，如果失敗則標記
 try:
@@ -450,6 +461,56 @@ class SignalGenerator:
         
         logger.info(f"信號已保存: {filepath}")
         return filepath
+
+    def save_signals_to_db(self, signals: Dict) -> int:
+        """保存信號到資料庫"""
+        signals_data = signals.get('signals', {})
+        saved_count = 0
+        
+        conn = pymysql.connect(**DB_CONFIG)
+        with conn.cursor() as cur:
+            for symbol, data in signals_data.items():
+                signal_type = data.get('signal', 'HOLD')
+                if signal_type == 'HOLD':
+                    continue
+                
+                # 檢查是否已存在相同信號
+                cur.execute("""
+                    SELECT id FROM signals 
+                    WHERE symbol = %s 
+                    AND signal_type = %s 
+                    AND status = 'pending'
+                    AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+                """, (symbol, signal_type))
+                
+                if cur.fetchone():
+                    continue  # 已存在近期相同信號
+                
+                # 計算數量 (簡化版：根據 Kelly)
+                price = data.get('price', 0)
+                kelly = data.get('kelly_position', 0.2)
+                capital = 100000  # 假設資本
+                quantity = int(capital * kelly / price) if price > 0 else 0
+                
+                cur.execute("""
+                    INSERT INTO signals 
+                    (symbol, strategy_type, signal_type, price, quantity, confidence, status, created_at)
+                    VALUES (%s, %s, %s, %s, %s, %s, 'pending', NOW())
+                """, (
+                    symbol,
+                    data.get('strategy', 'TopK'),
+                    signal_type,
+                    price,
+                    quantity,
+                    data.get('signal_strength', 0.5)
+                ))
+                saved_count += 1
+            
+            conn.commit()
+        conn.close()
+        
+        logger.info(f"信號已保存到資料庫: {saved_count} 筆")
+        return saved_count
 
 
 def main():

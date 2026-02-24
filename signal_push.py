@@ -21,9 +21,9 @@ TAIPEI_TZ = ZoneInfo("Asia/Taipei")
 DATA_DIR = Path(__file__).parent / "data" / "historical"
 
 
-STOCKS = ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA", 
-           "TSM", "AMD", "INTC", "AVGO", "UBER", "ORCL", 
-           "WDC", "MU", "COIN", "RKLB"]
+# 2026-02-12: 優化股票池 - 剔除 TSLA、INTC、RKLB（高波動/下降趨勢股票）
+# 專注於：科技巨頭、半導體龍頭、穩定成長股
+STOCKS = ["AAPL", "MSFT", "NVDA", "TSM", "AMZN", "META", "UBER", "MU", "AMD", "ORCL"]
 
 
 def check_data_status() -> tuple:
@@ -82,21 +82,97 @@ def main():
     
     print("✅ 信號生成完成")
     
-    # 3. 讀取信號
+    # 3. 讀取信號（從 DB 優先）
     print("\n3️⃣ 讀取信號...")
-    signals_file = Path(__file__).parent / "signals" / "latest_signals.json"
     
-    if not signals_file.exists():
-        print(f"❌ 信號文件不存在")
-        return False
+    import pymysql
+    DB_CONFIG = {
+        "host": "localhost",
+        "port": 3306,
+        "user": "alita",
+        "password": "alitamysql",
+        "database": "trademaster",
+        "charset": "utf8mb4",
+    }
     
-    with open(signals_file, 'r') as f:
-        signals = json.load(f)
+    # 嘗試從 DB 讀取
+    all_signals = {}
+    try:
+        conn = pymysql.connect(**DB_CONFIG)
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT symbol, signal_type, price, quantity, confidence, created_at
+                FROM signals
+                WHERE status = 'pending'
+                ORDER BY created_at DESC
+            """)
+            for row in cur.fetchall():
+                symbol, signal_type, price, quantity, confidence, created_at = row
+                all_signals[symbol] = {
+                    'signal': signal_type,
+                    'price': float(price) if price else 0,
+                    'quantity': quantity,
+                    'confidence': float(confidence) if confidence else 0
+                }
+        conn.close()
+        
+        if all_signals:
+            print(f"   從 DB 讀取 {len(all_signals)} 筆 pending 信號")
+    except Exception as e:
+        print(f"   ⚠️ DB 讀取失敗: {e}")
+        # fallback to JSON
+        signals_file = Path(__file__).parent / "signals" / "latest_signals.json"
+        if signals_file.exists():
+            with open(signals_file, 'r') as f:
+                signals = json.load(f)
+                all_signals = signals.get('signals', {})
+            print(f"   從 JSON 讀取 {len(all_signals)} 筆信號")
+        else:
+            print(f"❌ 信號文件不存在")
+            return False
     
-    overview = signals.get('overview', {})
-    all_signals = signals.get('signals', {})
+    # 4. 讀取 PENDING 信號並更新為 SENT
+    pending_signals = {}
+    try:
+        import pymysql
+        conn = pymysql.connect(**DB_CONFIG)
+        with conn.cursor() as cur:
+            # 讀取 PENDING 信號
+            cur.execute("""
+                SELECT symbol, signal_type, price, quantity, confidence
+                FROM signals
+                WHERE status = 'PENDING'
+                AND created_at > DATE_SUB(NOW(), INTERVAL 1 DAY)
+            """)
+            for row in cur.fetchall():
+                symbol, signal_type, price, quantity, confidence = row
+                pending_signals[symbol] = {
+                    'signal': signal_type,
+                    'price': float(price) if price else 0,
+                    'quantity': quantity,
+                    'confidence': float(confidence) if confidence else 0
+                }
+            
+            # 更新狀態為 SENT
+            if pending_signals:
+                cur.execute("""
+                    UPDATE signals 
+                    SET status = 'SENT', sent_at = NOW()
+                    WHERE status = 'PENDING'
+                    AND created_at > DATE_SUB(NOW(), INTERVAL 1 DAY)
+                """)
+                conn.commit()
+                print(f"   ✅ 已更新 {len(pending_signals)} 筆信號為 SENT")
+        
+        conn.close()
+        
+        if pending_signals:
+            print(f"   📥 找到 {len(pending_signals)} 筆 PENDING 信號")
+    except Exception as e:
+        print(f"   ⚠️ DB 操作失敗: {e}")
+        pending_signals = {}
     
-    # 4. 分類
+    # 5. 分類 (使用 DB 數據)
     long_list = [s for s, d in all_signals.items() if d.get('signal') == 'LONG']
     short_list = [s for s, d in all_signals.items() if d.get('signal') == 'SHORT']
     

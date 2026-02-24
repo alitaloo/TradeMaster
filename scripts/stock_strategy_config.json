@@ -1,0 +1,462 @@
+{
+  "US.AAPL": {
+    "5m": {
+      "indicator": "RSI",
+      "params": {
+        "period": 14,
+        "oversold": 30,
+        "overbought": 70
+      }
+    },
+    "1h": {
+      "indicator": "Stochastic",
+      "params": {
+        "k_period": 14,
+        "d_period": 3,
+        "oversold": 20,
+        "overbought": 80
+      }
+    },
+    "1d": {
+      "indicator": "Stochastic",
+      "params": {
+        "k_period": 14,
+        "d_period": 3,
+        "oversold": 20,
+        "overbought": 80
+      }
+    }
+  },
+  "US.MSFT": {
+    "5m": {
+      "indicator": "EMA_Cross",
+      "params": {
+        "fast": 12,
+        "slow": 26
+      }
+    },
+    "1h": {
+      "indicator": "RSI",
+      "params": {
+        "period": 14,
+        "oversold": 30,
+        "overbought": 70
+      }
+    },
+    "1d": {
+      "indicator": "CCI",
+      "params": {
+        "period": 20,
+        "oversold": -100,
+        "overbought": 100
+      }
+    }
+  },
+  "US.NVDA": {
+    "5m": {
+      "indicator": "Williams_R",
+      "params": {
+        "period": 14,
+        "oversold": -80,
+        "overbought": -20
+      }
+    },
+    "1h": {
+      "indicator": "EMA_Cross",
+      "params": {
+        "fast": 12,
+        "slow": 26
+      }
+    },
+    "1d": {
+      "indicator": "Williams_R",
+      "params": {
+        "period": 14,
+        "oversold": -80,
+        "overbought": -20
+      }
+    }
+  },
+  "US.GOOGL": {
+    "5m": {
+      "indicator": "MACD",
+      "params": {
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    },
+    "1h": {
+      "indicator": "Stochastic",
+      "params": {
+        "k_period": 14,
+        "d_period": 3,
+        "oversold": 20,
+        "overbought": 80
+      }
+    },
+    "1d": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    }
+  },
+  "US.AMZN": {
+    "5m": {
+      "indicator": "MACD",
+      "params": {
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    },
+    "1h": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    },
+    "1d": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    }
+  },
+  "US.META": {
+    "5m": {
+      "indicator": "RSI",
+      "params": {
+        "period": 14,
+        "oversold": 30,
+        "overbought": 70
+      }
+    },
+    "1h": {
+      "indicator": "RSI_7",
+      "params": {
+        "period": 7,
+        "oversold": 25,
+        "overbought": 75
+      }
+    },
+    "1d": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    }
+  },
+  "US.TSM": {
+    "5m": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    },
+    "1h": {
+      "indicator": "Stochastic",
+      "params": {
+        "k_period": 14,
+        "d_period": 3,
+        "oversold": 20,
+        "overbought": 80
+      }
+    },
+    "1d": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    }
+  },
+  "US.AMD": {
+    "5m": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    },
+    "1h": {
+      "indicator": "Stochastic",
+      "params": {
+        "k_period": 14,
+        "d_period": 3,
+        "oversold": 20,
+        "overbought": 80
+      }
+    },
+    "1d": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    }
+  },
+  "US.MU": {
+    "5m": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    },
+    "1h": {
+      "indicator": "SMA_Cross",
+      "params": {
+        "fast": 10,
+        "slow": 50
+      }
+    },
+    "1d": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    }
+  },
+  "US.ORCL": {
+    "5m": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    },
+    "1h": {
+      "indicator": "Stochastic",
+      "params": {
+        "k_period": 14,
+        "d_period": 3,
+        "oversold": 20,
+        "overbought": 80
+      }
+    },
+    "1d": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    }
+  },
+  "US.GOOG": {
+    "5m": {
+      "indicator": "Williams_R",
+      "params": {
+        "period": 14,
+        "oversold": -80,
+        "overbought": -20
+      }
+    },
+    "1h": {
+      "indicator": "Williams_R",
+      "params": {
+        "period": 14,
+        "oversold": -80,
+        "overbought": -20
+      }
+    },
+    "1d": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    }
+  },
+  "US.NFLX": {
+    "5m": {
+      "indicator": "MACD",
+      "params": {
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    },
+    "1h": {
+      "indicator": "EMA_Cross",
+      "params": {
+        "fast": 12,
+        "slow": 26
+      }
+    },
+    "1d": {
+      "indicator": "Stochastic",
+      "params": {
+        "k_period": 14,
+        "d_period": 3,
+        "oversold": 20,
+        "overbought": 80
+      }
+    }
+  },
+  "US.ADBE": {
+    "5m": {
+      "indicator": "SMA_Cross",
+      "params": {
+        "fast": 10,
+        "slow": 50
+      }
+    },
+    "1h": {
+      "indicator": "EMA_Cross",
+      "params": {
+        "fast": 12,
+        "slow": 26
+      }
+    },
+    "1d": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    }
+  },
+  "US.CRM": {
+    "5m": {
+      "indicator": "MACD",
+      "params": {
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    },
+    "1h": {
+      "indicator": "SMA_Cross",
+      "params": {
+        "fast": 10,
+        "slow": 50
+      }
+    },
+    "1d": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    }
+  },
+  "US.QCOM": {
+    "5m": {
+      "indicator": "RSI",
+      "params": {
+        "period": 14,
+        "oversold": 30,
+        "overbought": 70
+      }
+    },
+    "1h": {
+      "indicator": "MACD",
+      "params": {
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    },
+    "1d": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    }
+  },
+  "US.TXN": {
+    "1h": {
+      "indicator": "SMA_Cross",
+      "params": {
+        "fast": 10,
+        "slow": 50
+      }
+    },
+    "1d": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    }
+  },
+  "US.AVGO": {
+    "1h": {
+      "indicator": "EMA_Cross",
+      "params": {
+        "fast": 12,
+        "slow": 26
+      }
+    },
+    "1d": {
+      "indicator": "RSI",
+      "params": {
+        "period": 14,
+        "oversold": 30,
+        "overbought": 70
+      }
+    }
+  },
+  "US.COIN": {
+    "1h": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    },
+    "1d": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    }
+  },
+  "US.MSTR": {
+    "1h": {
+      "indicator": "Stochastic",
+      "params": {
+        "k_period": 14,
+        "d_period": 3,
+        "oversold": 20,
+        "overbought": 80
+      }
+    },
+    "1d": {
+      "indicator": "Stochastic",
+      "params": {
+        "k_period": 14,
+        "d_period": 3,
+        "oversold": 20,
+        "overbought": 80
+      }
+    }
+  },
+  "US.UBER": {
+    "1h": {
+      "indicator": "Bollinger",
+      "params": {
+        "period": 20,
+        "std": 2
+      }
+    },
+    "1d": {
+      "indicator": "RSI",
+      "params": {
+        "period": 14,
+        "oversold": 30,
+        "overbought": 70
+      }
+    }
+  }
+}

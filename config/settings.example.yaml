@@ -30,28 +30,16 @@ trading:
   
   # 觀察清單
   watchlist:
-    # 科技巨頭
     - AAPL
     - MSFT
-    - GOOGL
-    - AMZN
     - NVDA
-    - TSLA
-    # 半導體/晶片
     - TSM
-    - AMD
-    - INTC
-    - AVGO
-    # 軟體/服務
+    - AMZN
+    - META
     - UBER
-    - ORCL
-    # 儲存/記憶體
-    - WDC
     - MU
-    # 加密
-    - COIN
-    # 太空
-    - RKLB
+    - AMD
+    - ORCL
 
 # ===== 風控配置 =====
 risk:

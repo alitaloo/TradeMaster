@@ -31,8 +31,17 @@ class DataEngine:
             # 首先嘗試從本地讀取
             local_data = self._load_local_data(symbol)
             if local_data is not None and not local_data.empty:
-                logger.info(f"使用本地數據: {symbol} ({len(local_data)} rows)")
-                return local_data
+                # 根據日期範圍過濾
+                if start_date:
+                    start_dt = pd.to_datetime(start_date)
+                    local_data = local_data[local_data.index >= start_dt]
+                if end_date:
+                    end_dt = pd.to_datetime(end_date)
+                    local_data = local_data[local_data.index <= end_dt]
+                
+                if not local_data.empty:
+                    logger.info(f"使用本地數據: {symbol} ({len(local_data)} rows)")
+                    return local_data
 
             # 如果本地沒有，再從 yfinance 獲取
             logger.warning(f"本地無 {symbol} 數據，嘗試 yfinance...")
@@ -65,10 +74,29 @@ class DataEngine:
         try:
             filepath = Path(self.cache_dir) / f"{symbol}.csv"
             if filepath.exists():
-                df = pd.read_csv(filepath, index_col=0, parse_dates=True)
+                df = pd.read_csv(filepath)
+                
+                # 檢查是否有 'Date' 列
+                if 'Date' in df.columns:
+                    df['Date'] = pd.to_datetime(df['Date'])
+                    df = df.set_index('Date')
+                elif df.index.name and df.index.name != '':
+                    # 嘗試解析索引為日期
+                    df.index = pd.to_datetime(df.index)
+                
+                # 移除額外的索引列（如果存在且為數字）
+                if df.columns[0] == '' or df.columns[0].isdigit():
+                    df = df.iloc[:, 1:]
+                
                 # 確保是 DatetimeIndex
                 if not isinstance(df.index, pd.DatetimeIndex):
-                    df.index = pd.to_datetime(df.index)
+                    return None
+                    
+                # 只保留 OHLCV 列
+                cols = ['Open', 'High', 'Low', 'Close', 'Volume']
+                if all(c in df.columns for c in cols):
+                    df = df[cols]
+                
                 return df
             return None
         except Exception as e:

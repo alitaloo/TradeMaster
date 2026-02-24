@@ -1,0 +1,1892 @@
+[
+  {
+    "symbol": "US.AAPL",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1d",
+    "return_pct": 0.272278
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "Three_MA_Trend",
+    "timeframe": "1d",
+    "return_pct": 0.22924
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.198576
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.194262
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "1d",
+    "return_pct": 0.191057
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.199886
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.199658
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "return_pct": 0.014759
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1h",
+    "return_pct": 0.014562
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "return_pct": 0.012897
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.201029
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.198891
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": 0.108788
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "return_pct": -0.034445
+  },
+  {
+    "symbol": "US.AAPL",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": -0.038822
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "Trend_Pullback",
+    "timeframe": "1d",
+    "return_pct": 0.305882
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.302694
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.302521
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "Trend_Volume_Alignment",
+    "timeframe": "1d",
+    "return_pct": 0.082788
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "MACDTrend",
+    "timeframe": "1d",
+    "return_pct": 0.061193
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.303665
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.296392
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "PriceBreakout",
+    "timeframe": "1h",
+    "return_pct": 0.241447
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1h",
+    "return_pct": 0.099207
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "Trend_Pullback",
+    "timeframe": "1h",
+    "return_pct": 0.079833
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.307044
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.304061
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": 0.288616
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "return_pct": -0.01146
+  },
+  {
+    "symbol": "US.ADBE",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": -0.041949
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1d",
+    "return_pct": 0.262328
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "Volume_Trend_Divergence",
+    "timeframe": "1d",
+    "return_pct": 0.236603
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "DualMomentum",
+    "timeframe": "1d",
+    "return_pct": 0.112387
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "VolumeMA_Crossover",
+    "timeframe": "1d",
+    "return_pct": 0.092402
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "Stochastic_Momentum",
+    "timeframe": "1d",
+    "return_pct": 0.077523
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "1h",
+    "return_pct": 0.347145
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.08214
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.071396
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "return_pct": 0.056377
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "return_pct": 0.043676
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.072399
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.067129
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": 0.009326
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": 0.000104
+  },
+  {
+    "symbol": "US.AMD",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "return_pct": -0.009235
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.248975
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1d",
+    "return_pct": 0.238293
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.235576
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "1d",
+    "return_pct": 0.20082
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "1d",
+    "return_pct": 0.193821
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.239383
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.239067
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "1h",
+    "return_pct": 0.037437
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "Trend_Pullback",
+    "timeframe": "1h",
+    "return_pct": 0.032989
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "return_pct": 0.022732
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.239632
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.237858
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "5m",
+    "return_pct": -0.010017
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": -0.013822
+  },
+  {
+    "symbol": "US.AMZN",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "return_pct": -0.036141
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1d",
+    "return_pct": 0.391206
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1d",
+    "return_pct": 0.178007
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "Trend_Filter_RSI",
+    "timeframe": "1d",
+    "return_pct": 0.173549
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "MACD_ADX_TrendRide",
+    "timeframe": "1d",
+    "return_pct": 0.145609
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.136802
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.131051
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.124793
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "Trend_Pullback",
+    "timeframe": "1h",
+    "return_pct": 0.030698
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "return_pct": 0.020613
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "return_pct": 0.020181
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": 0.145571
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.127261
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.123697
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": -0.015769
+  },
+  {
+    "symbol": "US.AVGO",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "5m",
+    "return_pct": -0.082623
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.310436
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.293957
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1d",
+    "return_pct": 0.095073
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "DualMomentum",
+    "timeframe": "1d",
+    "return_pct": 0.07273
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "MACD_SMA_Crossover",
+    "timeframe": "1d",
+    "return_pct": 0.066558
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.300259
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.293408
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "1h",
+    "return_pct": 0.119945
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "Trend_Volume_Alignment",
+    "timeframe": "1h",
+    "return_pct": 0.042806
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "return_pct": 0.025803
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.293214
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.289506
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": 0.005722
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "5m",
+    "return_pct": -0.039437
+  },
+  {
+    "symbol": "US.COIN",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "return_pct": -0.048038
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.313391
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.312327
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1d",
+    "return_pct": 0.269444
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1d",
+    "return_pct": 0.266945
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "Trend_Volume_Alignment",
+    "timeframe": "1d",
+    "return_pct": 0.047083
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.314035
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.312037
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "return_pct": 0.018821
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "Three_MA_Trend",
+    "timeframe": "1h",
+    "return_pct": 0.012254
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "return_pct": -0.007999
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.313218
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.311016
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": 0.104306
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": -0.019512
+  },
+  {
+    "symbol": "US.CRM",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "return_pct": -0.022421
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "MACD_ADX_TrendRide",
+    "timeframe": "1d",
+    "return_pct": 0.451227
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "1d",
+    "return_pct": 0.227584
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "Trend_Pullback",
+    "timeframe": "1d",
+    "return_pct": 0.163572
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "MACD_SMA_Crossover",
+    "timeframe": "1d",
+    "return_pct": 0.15631
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "ATRTrailingStop",
+    "timeframe": "1d",
+    "return_pct": 0.148771
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.101389
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.089586
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "1h",
+    "return_pct": 0.037973
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1h",
+    "return_pct": 0.019076
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "1h",
+    "return_pct": 0.012945
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.089707
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.086926
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": -0.012524
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "5m",
+    "return_pct": -0.025769
+  },
+  {
+    "symbol": "US.GOOG",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": -0.040029
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "MACD_ADX_TrendRide",
+    "timeframe": "1d",
+    "return_pct": 0.455352
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "Trend_Pullback",
+    "timeframe": "1d",
+    "return_pct": 0.165074
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1d",
+    "return_pct": 0.15642
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "Trend_Filter_RSI",
+    "timeframe": "1d",
+    "return_pct": 0.132865
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1d",
+    "return_pct": 0.127607
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.100236
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.087798
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "1h",
+    "return_pct": 0.022896
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "1h",
+    "return_pct": 0.012717
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1h",
+    "return_pct": 0.011323
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.087913
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.085443
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": 0.028445
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "return_pct": -0.053516
+  },
+  {
+    "symbol": "US.GOOGL",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "5m",
+    "return_pct": -0.057586
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1d",
+    "return_pct": 0.216408
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.21402
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "RSI_Volume_Confirmation",
+    "timeframe": "1d",
+    "return_pct": 0.209134
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "Opening_Gap",
+    "timeframe": "1d",
+    "return_pct": 0.209134
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.198541
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.202996
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.198487
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "1h",
+    "return_pct": 0.145588
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "Trend_Pullback",
+    "timeframe": "1h",
+    "return_pct": 0.05496
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1h",
+    "return_pct": 0.020923
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.199745
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.196574
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": 0.031222
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": 0.001819
+  },
+  {
+    "symbol": "US.META",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "return_pct": -0.037593
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "1d",
+    "return_pct": 0.241608
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.23852
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.226479
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "1d",
+    "return_pct": 0.2179
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "1d",
+    "return_pct": 0.211175
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.232986
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.227406
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "return_pct": 0.031653
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "DualMomentum",
+    "timeframe": "1h",
+    "return_pct": 0.016031
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "return_pct": 0.013214
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.227941
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.224936
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": 0.033235
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": -0.005835
+  },
+  {
+    "symbol": "US.MSFT",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "return_pct": -0.021946
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.34363
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.339773
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1d",
+    "return_pct": 0.329692
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1d",
+    "return_pct": 0.329345
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "ADX_DI_Crossover",
+    "timeframe": "1d",
+    "return_pct": 0.084553
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.348722
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.341719
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1h",
+    "return_pct": 0.034068
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "return_pct": 0.02567
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "1h",
+    "return_pct": 0.02185
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.340164
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.337861
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": -0.018763
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "Trend_Pullback",
+    "timeframe": "5m",
+    "return_pct": -0.028325
+  },
+  {
+    "symbol": "US.MSTR",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "return_pct": -0.040313
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "Oversold_Bounce",
+    "timeframe": "1d",
+    "return_pct": 0.514896
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "VIXReversal",
+    "timeframe": "1d",
+    "return_pct": 0.508621
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "ADX_ParabolicSAR_Stop",
+    "timeframe": "1d",
+    "return_pct": 0.508621
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "Three_MA_Trend",
+    "timeframe": "1d",
+    "return_pct": 0.283017
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1d",
+    "return_pct": 0.266994
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "Oversold_Bounce",
+    "timeframe": "1h",
+    "return_pct": 0.437473
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "ADX_ParabolicSAR_Stop",
+    "timeframe": "1h",
+    "return_pct": 0.415117
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "VIXReversal",
+    "timeframe": "1h",
+    "return_pct": 0.408103
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1h",
+    "return_pct": 0.150941
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "return_pct": 0.039774
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "Oversold_Bounce",
+    "timeframe": "5m",
+    "return_pct": 0.562421
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "ADX_ParabolicSAR_Stop",
+    "timeframe": "5m",
+    "return_pct": 0.556125
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "VIXReversal",
+    "timeframe": "5m",
+    "return_pct": 0.438817
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": -0.001934
+  },
+  {
+    "symbol": "US.MU",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "return_pct": -0.03107
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.271709
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "1d",
+    "return_pct": 0.267651
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.246464
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "MACD_BB_Breakout",
+    "timeframe": "1d",
+    "return_pct": 0.050755
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "VolumeMA_Crossover",
+    "timeframe": "1d",
+    "return_pct": 0.04815
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.247284
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.237455
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "1h",
+    "return_pct": 0.048341
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "return_pct": 0.037818
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "RSI_SMA_Strategy",
+    "timeframe": "1h",
+    "return_pct": 0.031509
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.248129
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.247844
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": 0.001493
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "Momentum_Volume_Rally",
+    "timeframe": "5m",
+    "return_pct": -0.004986
+  },
+  {
+    "symbol": "US.NFLX",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "return_pct": -0.041921
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "1d",
+    "return_pct": 0.213173
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "RSI_Reversal_v2",
+    "timeframe": "1d",
+    "return_pct": 0.191153
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.143624
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.137841
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1d",
+    "return_pct": 0.137816
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.156648
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.140987
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1h",
+    "return_pct": 0.027132
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "1h",
+    "return_pct": 0.025622
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "1h",
+    "return_pct": 0.006191
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.143058
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.140416
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": 0.081146
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "5m",
+    "return_pct": 0.031257
+  },
+  {
+    "symbol": "US.NVDA",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": -0.00229
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "VolumePrice_Confirm",
+    "timeframe": "1d",
+    "return_pct": 0.334778
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "Momentum_ADX_Strength",
+    "timeframe": "1d",
+    "return_pct": 0.271521
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "RSI_ADX_TrendConfirm",
+    "timeframe": "1d",
+    "return_pct": 0.260157
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "1d",
+    "return_pct": 0.257839
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.23038
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "1h",
+    "return_pct": 0.457537
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.23254
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.232038
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "1h",
+    "return_pct": 0.185404
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "PriceBreakout",
+    "timeframe": "1h",
+    "return_pct": 0.139055
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.230918
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.229524
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": -0.032472
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "return_pct": -0.044193
+  },
+  {
+    "symbol": "US.ORCL",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": -0.06138
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.250388
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "Trend_Pullback",
+    "timeframe": "1d",
+    "return_pct": 0.234002
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.22842
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1d",
+    "return_pct": 0.223064
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "Three_MA_Trend",
+    "timeframe": "1d",
+    "return_pct": 0.044263
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.234452
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.230863
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "Trend_Pullback",
+    "timeframe": "1h",
+    "return_pct": 0.085744
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1h",
+    "return_pct": 0.036354
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "return_pct": 0.009362
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.231964
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.231178
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "Momentum_Volume_Rally",
+    "timeframe": "5m",
+    "return_pct": 0.002405
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": -0.033755
+  },
+  {
+    "symbol": "US.QCOM",
+    "indicator": "DualMomentum",
+    "timeframe": "5m",
+    "return_pct": -0.051716
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.197163
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "ADX_Trend_Strength",
+    "timeframe": "1d",
+    "return_pct": 0.195678
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1d",
+    "return_pct": 0.137946
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "VolumeMA_Crossover",
+    "timeframe": "1d",
+    "return_pct": 0.120226
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.113152
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.214552
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.198354
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "RSI_Reversal_v2",
+    "timeframe": "1h",
+    "return_pct": 0.027398
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1h",
+    "return_pct": 0.02323
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "1h",
+    "return_pct": 0.022855
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.200819
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.200058
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "PriceBreakout",
+    "timeframe": "5m",
+    "return_pct": -0.004053
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": -0.010893
+  },
+  {
+    "symbol": "US.TSLA",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": -0.040041
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1d",
+    "return_pct": 0.220054
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "ADX_DI_Crossover",
+    "timeframe": "1d",
+    "return_pct": 0.197204
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "Trend_Pullback",
+    "timeframe": "1d",
+    "return_pct": 0.163127
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "Momentum_ADX_Strength",
+    "timeframe": "1d",
+    "return_pct": 0.132079
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "ADXTrend",
+    "timeframe": "1d",
+    "return_pct": 0.09526
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.049182
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.036227
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "PriceBreakout",
+    "timeframe": "1h",
+    "return_pct": 0.031626
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1h",
+    "return_pct": 0.027188
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "Trend_Pullback",
+    "timeframe": "1h",
+    "return_pct": 0.018255
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": 0.13627
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.037122
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.030166
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "VIXReversal",
+    "timeframe": "5m",
+    "return_pct": -0.030365
+  },
+  {
+    "symbol": "US.TSM",
+    "indicator": "VWAP_Reversion",
+    "timeframe": "5m",
+    "return_pct": -0.036095
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.180378
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.162478
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "Volatility_Contraction",
+    "timeframe": "1d",
+    "return_pct": 0.157957
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "RSI_BB_Squeeze",
+    "timeframe": "1d",
+    "return_pct": 0.050685
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "RSI_Stochastic_Oversold",
+    "timeframe": "1d",
+    "return_pct": 0.049139
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.167107
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.162059
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "RSI_MACD_Divergence",
+    "timeframe": "1h",
+    "return_pct": 0.036674
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "1h",
+    "return_pct": 0.006025
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "return_pct": 0.003639
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.16625
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.160011
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": 0.001816
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": -0.012059
+  },
+  {
+    "symbol": "US.TXN",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "return_pct": -0.024924
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "1d",
+    "return_pct": 0.255667
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "1d",
+    "return_pct": 0.232611
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "MACD_Zero_Cross",
+    "timeframe": "1d",
+    "return_pct": 0.215809
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1d",
+    "return_pct": 0.212004
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1d",
+    "return_pct": 0.192656
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "Overbought_Decline",
+    "timeframe": "1h",
+    "return_pct": 0.197853
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "AD_Accumulation",
+    "timeframe": "1h",
+    "return_pct": 0.190917
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "SimpleMA_Crossover",
+    "timeframe": "1h",
+    "return_pct": 0.026028
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "ADX_Volatility_Expansion",
+    "timeframe": "1h",
+    "return_pct": 0.007983
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "1h",
+    "return_pct": -0.016404
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "Overbought_Decline",
+    "timeframe": "5m",
+    "return_pct": 0.191341
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "AD_Accumulation",
+    "timeframe": "5m",
+    "return_pct": 0.188267
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "BollingerWidth_Expansion",
+    "timeframe": "5m",
+    "return_pct": 0.035617
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "OBV_Trend_Follow",
+    "timeframe": "5m",
+    "return_pct": -0.014944
+  },
+  {
+    "symbol": "US.UBER",
+    "indicator": "WilliamsR_Momentum",
+    "timeframe": "5m",
+    "return_pct": -0.033698
+  }
+]

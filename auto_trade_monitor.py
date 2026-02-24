@@ -15,7 +15,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 # 導入信號生成器
-from signal_generator import SignalGenerator
+from signal_generator_topk import TopKSignalGenerator
 
 # 設置日誌
 logs_dir = Path(__file__).parent / "logs"
@@ -165,27 +165,76 @@ def generate_signals() -> bool:
     try:
         logger.info("📡 開始生成實時交易信號...")
         
-        # 初始化信號生成器
-        generator = SignalGenerator()
+        # 初始化 Top-K 信號生成器
+        generator = TopKSignalGenerator()
         
-        # 生成所有信號
-        result = generator.generate_all_signals()
+        # 獲取所有股票
+        all_strategies = generator.get_all_strategies()
         
-        # 保存信號
+        # 為每個股票生成信號
+        signals = {}
+        long_count = short_count = hold_count = 0
+        
+        for symbol in all_strategies.keys():
+            try:
+                # 獲取最新數據 (簡化版：使用本地日線)
+                from pathlib import Path
+                daily_file = Path(__file__).parent / "data" / "historical" / f"{symbol}.csv"
+                if daily_file.exists():
+                    import pandas as pd
+                    df = pd.read_csv(daily_file, index_col=0, parse_dates=True)
+                    result = generator.generate_signal(symbol, df)
+                    signals[symbol] = result
+                    
+                    if result.get('signal') == 'BUY':
+                        long_count += 1
+                    elif result.get('signal') == 'SELL':
+                        short_count += 1
+                    else:
+                        hold_count += 1
+            except Exception as e:
+                logger.warning(f"⚠️ {symbol} 信號生成失敗: {e}")
+        
+        result = {
+            'overview': {
+                'timestamp': datetime.now(timezone.utc).isoformat(),
+                'total_stocks': len(signals),
+                'long_count': long_count,
+                'short_count': short_count,
+                'hold_count': hold_count,
+                'market_sentiment': 'BULLISH' if long_count > short_count else ('BEARISH' if short_count > long_count else 'NEUTRAL'),
+            },
+            'signals': signals
+        }
+        
+        # 保存信號到 JSON
         signals_file = SIGNALS_DIR / f"latest_signals.json"
-        generator.save_signals(result, signals_file)
+        with open(signals_file, 'w') as f:
+            json.dump(result, f, indent=2)
+        
+        # 保存信號到資料庫
+        try:
+            db_count = generator.save_signals_to_db(result)
+            if db_count > 0:
+                logger.info(f"💾 已保存 {db_count} 筆信號到資料庫")
+        except Exception as e:
+            logger.warning(f"⚠️ 保存到資料庫失敗: {e}")
         
         # 輸出摘要
         overview = result['overview']
+        actionable = overview['long_count'] + overview['short_count']
+        long_ratio = round(overview['long_count'] / actionable * 100, 1) if actionable > 0 else 0
+        overview['long_ratio'] = long_ratio
+        
         logger.info(f"📊 信號生成完成:")
-        logger.info(f"   🟢 LONG: {overview['long_count']} ({overview['long_ratio']}%)")
+        logger.info(f"   🟢 LONG: {overview['long_count']} ({long_ratio}%)")
         logger.info(f"   🔴 SHORT: {overview['short_count']}")
         logger.info(f"   📈 市場情緒: {overview['market_sentiment']}")
         
         # 輸出 Top 信號
         signals = result['signals']
         strong_signals = sorted(
-            [(s, d['signal_strength']) for s, d in signals.items()],
+            [(s, d.get('signal_strength', 50)) for s, d in signals.items()],
             key=lambda x: -x[1]
         )[:5]
         
@@ -224,7 +273,7 @@ def generate_summary_message(result: dict) -> str:
     
     # 強烈買入
     strong_long = [(s, d) for s, d in signals.items() 
-                   if d['signal'] == 'LONG' and d['signal_strength'] >= 70]
+                   if d['signal'] == 'LONG' and d.get('signal_strength', 50) >= 70]
     strong_long.sort(key=lambda x: -x[1]['signal_strength'])
     
     if strong_long:
@@ -238,7 +287,7 @@ def generate_summary_message(result: dict) -> str:
     
     # 強烈賣出
     strong_short = [(s, d) for s, d in signals.items() 
-                    if d['signal'] == 'SHORT' and d['signal_strength'] >= 70]
+                    if d['signal'] == 'SHORT' and d.get('signal_strength', 50) >= 70]
     strong_short.sort(key=lambda x: -x[1]['signal_strength'])
     
     if strong_short:
@@ -277,7 +326,7 @@ def is_dst_active() -> bool:
     dst_start = get_nth_weekday(year, 3, 2, 0)
     dst_end = get_nth_weekday(year, 11, 1, 0)
     
-    now = datetime.now(timezone.utc)
+    now = datetime.now()  # 使用本地時間 (naive)
     
     return dst_start <= now < dst_end
 

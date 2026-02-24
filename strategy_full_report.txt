@@ -1,0 +1,13 @@
+TradeMaster v2 策略回測報告
+生成時間: 2026-02-19 09:16
+
+AAPL: MultiFactor (Sharpe=0.77, 年化=22.3%)
+MSFT: RSI_Strategy (Sharpe=0.75, 年化=12.4%)
+NVDA: MultiFactor (Sharpe=0.83, 年化=35.2%)
+TSM: BB_Strategy (Sharpe=0.79, 年化=12.6%)
+AMZN: MultiFactor (Sharpe=0.63, 年化=25.0%)
+META: MA+MACD (Sharpe=0.74, 年化=19.7%)
+UBER: MACD_Cross (Sharpe=0.67, 年化=21.5%)
+MU: SMA_Crossover (Sharpe=0.67, 年化=20.1%)
+AMD: MA+MACD (Sharpe=0.72, 年化=28.0%)
+ORCL: BB_Strategy (Sharpe=0.74, 年化=17.4%)

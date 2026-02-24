@@ -48,10 +48,18 @@ class MarketRegimeDetector:
     def detect_regime(
         self,
         prices: pd.Series,
-        adx_value: float = None
+        adx_value: float = None,
+        high: pd.Series = None,
+        low: pd.Series = None
     ) -> Tuple[MarketRegime, float]:
         """
         識別市場環境
+        
+        Args:
+            prices: Close price series
+            adx_value: Optional pre-calculated ADX value
+            high: Optional High price series (for proper ADX calculation)
+            low: Optional Low price series (for proper ADX calculation)
         
         Returns:
             (regime, confidence)
@@ -68,7 +76,7 @@ class MarketRegimeDetector:
         
         # 計算 ADX (如果沒有提供)
         if adx_value is None:
-            adx_value = self._calculate_adx(prices)
+            adx_value = self._calculate_adx(prices, high=high, low=low)
         
         # 判斷環境
         if adx_value >= self.config.adx_threshold:
@@ -176,15 +184,39 @@ class MarketRegimeDetector:
         
         return max(-1.0, min(1.0, strength))
     
-    def _calculate_adx(self, prices: pd.Series, period: int = None) -> float:
-        """計算 ADX (簡化版)"""
+    def _calculate_adx(self, prices: pd.Series, period: int = None, high: pd.Series = None, low: pd.Series = None) -> float:
+        """
+        計算 ADX (使用 Wilder's Smoothing)
+        
+        如果提供了真實的 High/Low 數據，使用標準 ADX 公式
+        否則使用模擬數據 (準確度較低)
+        """
         period = period or self.config.adx_period
         
         if len(prices) < period + 1:
             return 0.0
         
+        # 導入 ADX 計算函數
+        from core.indicators import calculate_adx
+        
+        # 如果提供了真實 High/Low，使用標準計算
+        if high is not None and low is not None:
+            df = pd.DataFrame({
+                'High': high,
+                'Low': low,
+                'Close': prices
+            })
+            adx_result = calculate_adx(df, period=period)
+            return adx_result['ADX'].iloc[-1] if len(adx_result) > 0 else 0.0
+        
+        # 否則使用舊的模擬方法 (較不準確)
         high = prices * 1.02  # 模擬
         low = prices * 0.98   # 模擬
+        
+        # Wilder's Smoothing function
+        def wilder_smoothing(series, per):
+            alpha = 1.0 / per
+            return series.ewm(alpha=alpha, adjust=False).mean()
         
         # +DI 和 -DI
         high_diff = high.diff()
@@ -193,9 +225,9 @@ class MarketRegimeDetector:
         plus_di = 100 * high_diff.rolling(period).mean() / prices.rolling(period).std()
         minus_di = 100 * low_diff.rolling(period).mean() / prices.rolling(period).std()
         
-        # ADX
+        # ADX (Wilder's smoothing)
         dx = abs(plus_di - minus_di) / (plus_di + minus_di + 0.0001) * 100
-        adx = dx.rolling(period).mean()
+        adx = wilder_smoothing(dx, period)
         
         return adx.iloc[-1] if len(adx) > 0 else 0.0
     

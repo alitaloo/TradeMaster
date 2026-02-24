@@ -1,0 +1,44 @@
+# Data files
+data/historical/*.csv
+data/*.db
+data/*.log
+data/backtest_results/
+
+# Logs
+logs/*.log
+logs/trademaster*.log
+scripts/*.log
+scripts/_polling.log
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+api/__pycache__/
+backtests/__pycache__/
+core/__pycache__/
+strategies/__pycache__/
+tools/__pycache__/
+modules/__pycache__/
+
+# Backup files
+*.bak
+*.old
+*.orig
+*.orig2
+backtest.py.bak
+backtest.py.old
+backtest.py.orig
+backtest.py.orig2
+backtest.py.v1
+
+# IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Temporary
+.cache/
+*.tmp
+*.temp

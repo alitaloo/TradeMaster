@@ -4,7 +4,7 @@
 """
 
 from flask import Blueprint, request, jsonify
-from .engine import PredictionEngine
+from modules.prediction.engine import PredictionEngine
 
 # 創建 Blueprint
 prediction_bp = Blueprint('prediction', __name__, url_prefix='/api/v1')

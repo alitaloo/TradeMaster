@@ -1,0 +1,10 @@
+usage: run_segmented_backtest.py [-h] [--batch-id BATCH_ID]
+                                 [--only {,1d,1h,5m}]
+                                 [--symbols-per-batch SYMBOLS_PER_BATCH]
+                                 [--symbol-sort {,symbol}]
+                                 [--strategies-per-batch STRATEGIES_PER_BATCH]
+                                 [--strategy-sort {,name}]
+                                 [--max-workers MAX_WORKERS]
+                                 [--executor-type {thread,process}]
+                                 [--engine-type {walkforward,simple}]
+run_segmented_backtest.py: error: argument --symbols-per-batch: invalid int value: 'AAPL,MSFT,GOOGL,AMZN,META,NVDA,TSLA,BRK.B,JPM,V,UNH,XOM,JNJ,WMT,MA,PG,HD,CVX,MRK,ABBV,KO'

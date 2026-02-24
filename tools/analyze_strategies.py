@@ -23,11 +23,13 @@ DATA_DIR = PROJECT_ROOT / "data" / "historical"
 DB_PATH = PROJECT_ROOT / "data" / "trademaster.db"
 
 # 配置
+# 2026-02-12: 優化股票池 - 剔除 TSLA、INTC、RKLB（高波動/下降趨勢股票）
+# 專注於：科技巨頭、半導體龍頭、穩定成長股
 STOCKS = [
-    "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA",  # 科技巨頭
-    "TSM", "AMD", "INTC", "AVGO",                       # 半導體
-    "UBER", "ORCL",                                     # 軟體/服務
-    "WDC", "MU",                                        # 儲存/記憶體
+    "AAPL", "MSFT", "AMZN", "NVDA", "META",  # 科技巨頭
+    "TSM", "AMD", "MU",                        # 半導體
+    "UBER", "ORCL",                            # 軟體/服務
+]
     "COIN",                                             # 加密
     "RKLB"                                              # 太空
 ]

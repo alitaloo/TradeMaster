@@ -1,0 +1,398 @@
+============================================================
+🚀 Walkforward Optimization (Vectorized)
+   Max tasks: 315
+============================================================
+
+📊 Loaded 315 candidates
+  US.AAPL RSI_SMA_Strategy 1d... OK (oos=26.0%)
+  US.AAPL Three_MA_Trend 1d... OK (oos=0.0%)
+  US.AAPL AD_Accumulation 1d... OK (oos=26.5%)
+  US.AAPL Overbought_Decline 1d... OK (oos=24.8%)
+  US.AAPL WilliamsR_Momentum 1d... OK (oos=24.8%)
+  US.AAPL AD_Accumulation 1h... OK (oos=22.6%)
+  US.AAPL Overbought_Decline 1h... OK (oos=22.4%)
+  US.AAPL ADX_Volatility_Expansion 1h... OK (oos=-4.8%)
+  US.AAPL MACD_BB_Breakout 1h... OK (oos=-0.9%)
+  US.AAPL RSI_SMA_Strategy 1h... OK (oos=4.3%)
+  US.AAPL AD_Accumulation 5m... OK (oos=25.7%)
+  US.AAPL Overbought_Decline 5m... OK (oos=26.0%)
+  US.AAPL BollingerWidth_Expansion 5m... OK (oos=0.0%)
+  US.AAPL PriceBreakout 5m... OK (oos=-1.8%)
+  US.AAPL OBV_Trend_Follow 5m... OK (oos=-3.6%)
+  US.ADBE Trend_Pullback 1d... OK (oos=0.0%)
+  US.ADBE AD_Accumulation 1d... OK (oos=29.0%)
+  US.ADBE Overbought_Decline 1d... OK (oos=0.0%)
+  US.ADBE Trend_Volume_Alignment 1d... OK (oos=0.0%)
+  US.ADBE MACDTrend 1d... OK (oos=0.0%)
+  US.ADBE AD_Accumulation 1h... OK (oos=24.2%)
+  US.ADBE Overbought_Decline 1h... OK (oos=23.5%)
+  US.ADBE PriceBreakout 1h... OK (oos=0.0%)
+  US.ADBE MACD_Zero_Cross 1h... OK (oos=-9.2%)
+  US.ADBE Trend_Pullback 1h... OK (oos=-5.1%)
+  US.ADBE AD_Accumulation 5m... OK (oos=27.6%)
+  US.ADBE Overbought_Decline 5m... OK (oos=27.6%)
+  US.ADBE BollingerWidth_Expansion 5m... OK (oos=0.0%)
+  US.ADBE DualMomentum 5m... OK (oos=4.8%)
+  US.ADBE OBV_Trend_Follow 5m... OK (oos=1.5%)
+  US.AMD MACD_Zero_Cross 1d... OK (oos=-26.7%)
+  US.AMD Volume_Trend_Divergence 1d... OK (oos=28.4%)
+  US.AMD DualMomentum 1d... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=-1.7%)
+  US.AMD VolumeMA_Crossover 1d... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=0.0%)
+  US.AMD Stochastic_Momentum 1d... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=3.7%)
+  US.AMD WilliamsR_Momentum 1h... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=-0.1%)
+  US.AMD Overbought_Decline 1h... OK (oos=27.5%)
+  US.AMD AD_Accumulation 1h... OK (oos=28.2%)
+  US.AMD RSI_SMA_Strategy 1h... OK (oos=-2.5%)
+  US.AMD RSI_MACD_Divergence 1h... OK (oos=-1.2%)
+  US.AMD AD_Accumulation 5m... OK (oos=27.1%)
+  US.AMD Overbought_Decline 5m... OK (oos=27.4%)
+  US.AMD BollingerWidth_Expansion 5m... OK (oos=-1.4%)
+  US.AMD OBV_Trend_Follow 5m... OK (oos=-3.8%)
+  US.AMD PriceBreakout 5m... OK (oos=-0.5%)
+  US.AMZN Overbought_Decline 1d... OK (oos=28.3%)
+  US.AMZN MACD_Zero_Cross 1d... OK (oos=27.5%)
+  US.AMZN AD_Accumulation 1d... OK (oos=27.8%)
+  US.AMZN WilliamsR_Momentum 1d... OK (oos=29.5%)
+  US.AMZN VWAP_Reversion 1d... OK (oos=25.1%)
+  US.AMZN AD_Accumulation 1h... OK (oos=24.9%)
+  US.AMZN Overbought_Decline 1h... OK (oos=24.1%)
+  US.AMZN WilliamsR_Momentum 1h... OK (oos=0.0%)
+  US.AMZN Trend_Pullback 1h... OK (oos=-6.6%)
+  US.AMZN RSI_SMA_Strategy 1h... OK (oos=7.5%)
+  US.AMZN Overbought_Decline 5m... OK (oos=23.4%)
+  US.AMZN AD_Accumulation 5m... OK (oos=23.7%)
+  US.AMZN VWAP_Reversion 5m... OK (oos=4.6%)
+  US.AMZN BollingerWidth_Expansion 5m... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=-26.2%)
+  US.AMZN DualMomentum 5m... OK (oos=-5.9%)
+  US.AVGO MACD_BB_Breakout 1d... OK (oos=0.0%)
+  US.AVGO OBV_Trend_Follow 1d... OK (oos=28.2%)
+  US.AVGO Trend_Filter_RSI 1d... OK (oos=26.0%)
+  US.AVGO MACD_ADX_TrendRide 1d... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=25.9%)
+  US.AVGO Overbought_Decline 1d... OK (oos=26.0%)
+  US.AVGO Overbought_Decline 1h... OK (oos=26.9%)
+  US.AVGO AD_Accumulation 1h... OK (oos=25.7%)
+  US.AVGO Trend_Pullback 1h... OK (oos=29.4%)
+  US.AVGO RSI_MACD_Divergence 1h... OK (oos=-15.1%)
+  US.AVGO ADX_Volatility_Expansion 1h... OK (oos=-3.5%)
+  US.AVGO BollingerWidth_Expansion 5m... OK (oos=26.6%)
+  US.AVGO Overbought_Decline 5m... OK (oos=26.6%)
+  US.AVGO AD_Accumulation 5m... OK (oos=26.9%)
+  US.AVGO OBV_Trend_Follow 5m... OK (oos=-0.6%)
+  US.AVGO MACD_Zero_Cross 5m... OK (oos=3.4%)
+  US.COIN Overbought_Decline 1d... OK (oos=33.6%)
+  US.COIN AD_Accumulation 1d... OK (oos=33.6%)
+  US.COIN MACD_BB_Breakout 1d... OK (oos=0.0%)
+  US.COIN DualMomentum 1d... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=0.4%)
+  US.COIN MACD_SMA_Crossover 1d... OK (oos=21.7%)
+  US.COIN Overbought_Decline 1h... OK (oos=32.0%)
+  US.COIN AD_Accumulation 1h... OK (oos=33.8%)
+  US.COIN SimpleMA_Crossover 1h... OK (oos=0.0%)
+  US.COIN Trend_Volume_Alignment 1h... OK (oos=-6.3%)
+  US.COIN RSI_MACD_Divergence 1h... OK (oos=-1.1%)
+  US.COIN Overbought_Decline 5m... OK (oos=31.6%)
+  US.COIN AD_Accumulation 5m... OK (oos=31.5%)
+  US.COIN OBV_Trend_Follow 5m... OK (oos=31.5%)
+  US.COIN VWAP_Reversion 5m... OK (oos=-34.5%)
+  US.COIN PriceBreakout 5m... OK (oos=-3.9%)
+  US.CRM Overbought_Decline 1d... OK (oos=31.9%)
+  US.CRM AD_Accumulation 1d... OK (oos=28.8%)
+  US.CRM ADX_Volatility_Expansion 1d... OK (oos=30.0%)
+  US.CRM MACD_Zero_Cross 1d... OK (oos=29.5%)
+  US.CRM Trend_Volume_Alignment 1d... OK (oos=0.0%)
+  US.CRM Overbought_Decline 1h... OK (oos=23.5%)
+  US.CRM AD_Accumulation 1h... OK (oos=23.1%)
+  US.CRM RSI_SMA_Strategy 1h... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=3.5%)
+  US.CRM Three_MA_Trend 1h... OK (oos=-1.3%)
+  US.CRM ADX_Volatility_Expansion 1h... OK (oos=-26.8%)
+  US.CRM AD_Accumulation 5m... OK (oos=27.2%)
+  US.CRM Overbought_Decline 5m... OK (oos=27.2%)
+  US.CRM BollingerWidth_Expansion 5m... OK (oos=0.0%)
+  US.CRM OBV_Trend_Follow 5m... OK (oos=3.2%)
+  US.CRM DualMomentum 5m... OK (oos=4.6%)
+  US.GOOG MACD_ADX_TrendRide 1d... OK (oos=-26.2%)
+  US.GOOG WilliamsR_Momentum 1d... OK (oos=0.0%)
+  US.GOOG Trend_Pullback 1d... OK (oos=0.0%)
+  US.GOOG MACD_SMA_Crossover 1d... OK (oos=25.7%)
+  US.GOOG ATRTrailingStop 1d... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=-0.6%)
+  US.GOOG Overbought_Decline 1h... OK (oos=19.1%)
+  US.GOOG AD_Accumulation 1h... OK (oos=18.8%)
+  US.GOOG SimpleMA_Crossover 1h... OK (oos=0.0%)
+  US.GOOG OBV_Trend_Follow 1h... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=0.2%)
+  US.GOOG BollingerWidth_Expansion 1h... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=4.1%)
+  US.GOOG Overbought_Decline 5m... OK (oos=20.2%)
+  US.GOOG AD_Accumulation 5m... OK (oos=20.8%)
+  US.GOOG OBV_Trend_Follow 5m... OK (oos=-0.5%)
+  US.GOOG VWAP_Reversion 5m... OK (oos=-16.4%)
+  US.GOOG BollingerWidth_Expansion 5m... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=0.0%)
+  US.GOOGL MACD_ADX_TrendRide 1d... OK (oos=-26.2%)
+  US.GOOGL Trend_Pullback 1d... OK (oos=0.0%)
+  US.GOOGL MACD_BB_Breakout 1d... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=-0.3%)
+  US.GOOGL Trend_Filter_RSI 1d... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=-26.9%)
+  US.GOOGL OBV_Trend_Follow 1d... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=4.2%)
+  US.GOOGL Overbought_Decline 1h... OK (oos=19.2%)
+  US.GOOGL AD_Accumulation 1h... OK (oos=19.0%)
+  US.GOOGL SimpleMA_Crossover 1h... OK (oos=0.0%)
+  US.GOOGL BollingerWidth_Expansion 1h... OK (oos=4.2%)
+  US.GOOGL MACD_BB_Breakout 1h... OK (oos=4.4%)
+  US.GOOGL Overbought_Decline 5m... OK (oos=20.2%)
+  US.GOOGL AD_Accumulation 5m... OK (oos=20.7%)
+  US.GOOGL OBV_Trend_Follow 5m... OK (oos=-1.8%)
+  US.GOOGL WilliamsR_Momentum 5m... OK (oos=-2.4%)
+  US.GOOGL VWAP_Reversion 5m... OK (oos=-12.1%)
+  US.META MACD_Zero_Cross 1d... OK (oos=0.0%)
+  US.META Overbought_Decline 1d... OK (oos=24.9%)
+  US.META RSI_Volume_Confirmation 1d... OK (oos=27.5%)
+  US.META Opening_Gap 1d... OK (oos=27.5%)
+  US.META AD_Accumulation 1d... OK (oos=23.3%)
+  US.META Overbought_Decline 1h... OK (oos=26.6%)
+  US.META AD_Accumulation 1h... OK (oos=27.0%)
+  US.META WilliamsR_Momentum 1h... OK (oos=-2.7%)
+  US.META Trend_Pullback 1h... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=-0.3%)
+  US.META MACD_BB_Breakout 1h... OK (oos=-5.2%)
+  US.META Overbought_Decline 5m... OK (oos=26.9%)
+  US.META AD_Accumulation 5m... OK (oos=26.3%)
+  US.META BollingerWidth_Expansion 5m... OK (oos=0.0%)
+  US.META OBV_Trend_Follow 5m... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=26.3%)
+  US.META WilliamsR_Momentum 5m... OK (oos=-0.9%)
+  US.MSFT SimpleMA_Crossover 1d... OK (oos=0.0%)
+  US.MSFT Overbought_Decline 1d... OK (oos=29.1%)
+  US.MSFT AD_Accumulation 1d... OK (oos=28.2%)
+  US.MSFT VWAP_Reversion 1d... OK (oos=-10.3%)
+  US.MSFT WilliamsR_Momentum 1d... OK (oos=0.0%)
+  US.MSFT Overbought_Decline 1h... OK (oos=26.1%)
+  US.MSFT AD_Accumulation 1h... OK (oos=26.6%)
+  US.MSFT RSI_SMA_Strategy 1h... OK (oos=3.9%)
+  US.MSFT DualMomentum 1h... OK (oos=-1.5%)
+  US.MSFT RSI_MACD_Divergence 1h... OK (oos=-0.2%)
+  US.MSFT AD_Accumulation 5m... OK (oos=27.7%)
+  US.MSFT Overbought_Decline 5m... OK (oos=27.7%)
+  US.MSFT BollingerWidth_Expansion 5m... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=0.0%)
+  US.MSFT OBV_Trend_Follow 5m... OK (oos=-3.3%)
+  US.MSFT DualMomentum 5m... OK (oos=27.3%)
+  US.MSTR Overbought_Decline 1d... OK (oos=29.7%)
+  US.MSTR AD_Accumulation 1d... OK (oos=31.0%)
+  US.MSTR ADX_Volatility_Expansion 1d... OK (oos=25.6%)
+  US.MSTR MACD_Zero_Cross 1d... OK (oos=0.0%)
+  US.MSTR ADX_DI_Crossover 1d... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=3.4%)
+  US.MSTR Overbought_Decline 1h... OK (oos=36.9%)
+  US.MSTR AD_Accumulation 1h... OK (oos=37.1%)
+  US.MSTR MACD_Zero_Cross 1h... OK (oos=36.4%)
+  US.MSTR RSI_SMA_Strategy 1h... OK (oos=-1.7%)
+  US.MSTR WilliamsR_Momentum 1h... OK (oos=0.0%)
+  US.MSTR Overbought_Decline 5m... OK (oos=33.2%)
+  US.MSTR AD_Accumulation 5m... OK (oos=33.4%)
+  US.MSTR OBV_Trend_Follow 5m... OK (oos=4.0%)
+  US.MSTR Trend_Pullback 5m... OK (oos=-8.5%)
+  US.MSTR WilliamsR_Momentum 5m... OK (oos=-1.0%)
+  US.MU Oversold_Bounce 1d... OK (oos=-4.5%)
+  US.MU VIXReversal 1d... OK (oos=-22.7%)
+  US.MU ADX_ParabolicSAR_Stop 1d... OK (oos=-17.2%)
+  US.MU Three_MA_Trend 1d... OK (oos=-23.2%)
+  US.MU MACD_Zero_Cross 1d... OK (oos=0.0%)
+  US.MU Oversold_Bounce 1h... OK (oos=-19.8%)
+  US.MU ADX_ParabolicSAR_Stop 1h... OK (oos=-20.7%)
+  US.MU VIXReversal 1h... OK (oos=-21.9%)
+  US.MU OBV_Trend_Follow 1h... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=-3.0%)
+  US.MU ADX_Volatility_Expansion 1h... OK (oos=-0.1%)
+  US.MU Oversold_Bounce 5m... OK (oos=-12.4%)
+  US.MU ADX_ParabolicSAR_Stop 5m... OK (oos=-12.4%)
+  US.MU VIXReversal 5m... OK (oos=-16.8%)
+  US.MU OBV_Trend_Follow 5m... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=-0.5%)
+  US.MU PriceBreakout 5m... OK (oos=-1.0%)
+  US.NFLX Overbought_Decline 1d... OK (oos=0.0%)
+  US.NFLX SimpleMA_Crossover 1d... OK (oos=0.0%)
+  US.NFLX AD_Accumulation 1d... OK (oos=31.8%)
+  US.NFLX MACD_BB_Breakout 1d... OK (oos=0.0%)
+  US.NFLX VolumeMA_Crossover 1d... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=0.0%)
+  US.NFLX AD_Accumulation 1h... OK (oos=30.7%)
+  US.NFLX Overbought_Decline 1h... OK (oos=30.5%)
+  US.NFLX SimpleMA_Crossover 1h... OK (oos=0.0%)
+  US.NFLX ADX_Volatility_Expansion 1h... OK (oos=-0.5%)
+  US.NFLX RSI_SMA_Strategy 1h... OK (oos=5.3%)
+  US.NFLX AD_Accumulation 5m... OK (oos=29.7%)
+  US.NFLX Overbought_Decline 5m... OK (oos=29.7%)
+  US.NFLX BollingerWidth_Expansion 5m... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=0.0%)
+  US.NFLX Momentum_Volume_Rally 5m... OK (oos=-6.9%)
+  US.NFLX DualMomentum 5m... OK (oos=-1.5%)
+  US.NVDA WilliamsR_Momentum 1d... OK (oos=25.7%)
+  US.NVDA RSI_Reversal_v2 1d... OK (oos=0.0%)
+  US.NVDA AD_Accumulation 1d... OK (oos=24.8%)
+  US.NVDA Overbought_Decline 1d... OK (oos=25.7%)
+  US.NVDA RSI_MACD_Divergence 1d... OK (oos=0.0%)
+  US.NVDA Overbought_Decline 1h... OK (oos=26.4%)
+  US.NVDA AD_Accumulation 1h... OK (oos=27.5%)
+  US.NVDA MACD_Zero_Cross 1h... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=-1.5%)
+  US.NVDA VWAP_Reversion 1h... OK (oos=-33.2%)
+  US.NVDA BollingerWidth_Expansion 1h... OK (oos=-0.8%)
+  US.NVDA Overbought_Decline 5m... OK (oos=26.5%)
+  US.NVDA AD_Accumulation 5m... OK (oos=26.7%)
+  US.NVDA BollingerWidth_Expansion 5m... OK (oos=22.1%)
+  US.NVDA VWAP_Reversion 5m... OK (oos=5.6%)
+  US.NVDA OBV_Trend_Follow 5m... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=4.8%)
+  US.ORCL VolumePrice_Confirm 1d... OK (oos=29.1%)
+  US.ORCL Momentum_ADX_Strength 1d... OK (oos=25.5%)
+  US.ORCL RSI_ADX_TrendConfirm 1d... OK (oos=25.5%)
+  US.ORCL SimpleMA_Crossover 1d... OK (oos=0.0%)
+  US.ORCL AD_Accumulation 1d... OK (oos=29.8%)
+  US.ORCL SimpleMA_Crossover 1h... OK (oos=0.0%)
+  US.ORCL Overbought_Decline 1h... OK (oos=35.4%)
+  US.ORCL AD_Accumulation 1h... OK (oos=34.9%)
+  US.ORCL WilliamsR_Momentum 1h... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=5.0%)
+  US.ORCL PriceBreakout 1h... OK (oos=33.4%)
+  US.ORCL AD_Accumulation 5m... OK (oos=31.5%)
+  US.ORCL Overbought_Decline 5m... OK (oos=31.5%)
+  US.ORCL OBV_Trend_Follow 5m... OK (oos=-0.7%)
+  US.ORCL WilliamsR_Momentum 5m... OK (oos=-7.0%)
+  US.ORCL BollingerWidth_Expansion 5m... OK (oos=-11.4%)
+  US.QCOM Overbought_Decline 1d... OK (oos=30.6%)
+  US.QCOM Trend_Pullback 1d... OK (oos=0.0%)
+  US.QCOM AD_Accumulation 1d... OK (oos=28.4%)
+  US.QCOM MACD_Zero_Cross 1d... OK (oos=0.0%)
+  US.QCOM Three_MA_Trend 1d... OK (oos=24.0%)
+  US.QCOM Overbought_Decline 1h... OK (oos=23.2%)
+  US.QCOM AD_Accumulation 1h... OK (oos=23.2%)
+  US.QCOM Trend_Pullback 1h... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=-0.6%)
+  US.QCOM OBV_Trend_Follow 1h... OK (oos=8.6%)
+  US.QCOM RSI_MACD_Divergence 1h... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=3.5%)
+  US.QCOM Overbought_Decline 5m... OK (oos=27.2%)
+  US.QCOM AD_Accumulation 5m... OK (oos=27.1%)
+  US.QCOM Momentum_Volume_Rally 5m... OK (oos=4.6%)
+  US.QCOM OBV_Trend_Follow 5m... OK (oos=27.1%)
+  US.QCOM DualMomentum 5m... OK (oos=3.1%)
+  US.TSLA AD_Accumulation 1d... OK (oos=24.5%)
+  US.TSLA ADX_Trend_Strength 1d... OK (oos=26.6%)
+  US.TSLA MACD_Zero_Cross 1d... OK (oos=0.0%)
+  US.TSLA VolumeMA_Crossover 1d... OK (oos=0.0%)
+  US.TSLA Overbought_Decline 1d... OK (oos=0.0%)
+  US.TSLA Overbought_Decline 1h... OK (oos=22.3%)
+  US.TSLA AD_Accumulation 1h... OK (oos=22.4%)
+  US.TSLA RSI_Reversal_v2 1h... OK (oos=4.1%)
+  US.TSLA MACD_Zero_Cross 1h... OK (oos=3.5%)
+  US.TSLA VWAP_Reversion 1h... OK (oos=-11.5%)
+  US.TSLA Overbought_Decline 5m... OK (oos=25.0%)
+  US.TSLA AD_Accumulation 5m... OK (oos=24.9%)
+  US.TSLA PriceBreakout 5m... OK (oos=-2.5%)
+  US.TSLA BollingerWidth_Expansion 5m... OK (oos=0.0%)
+  US.TSLA OBV_Trend_Follow 5m... OK (oos=1.6%)
+  US.TSM OBV_Trend_Follow 1d... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=-0.5%)
+  US.TSM ADX_DI_Crossover 1d... OK (oos=-8.3%)
+  US.TSM Trend_Pullback 1d... OK (oos=0.0%)
+  US.TSM Momentum_ADX_Strength 1d... OK (oos=-21.8%)
+  US.TSM ADXTrend 1d... OK (oos=-21.8%)
+  US.TSM Overbought_Decline 1h... OK (oos=26.8%)
+  US.TSM AD_Accumulation 1h... OK (oos=26.6%)
+  US.TSM PriceBreakout 1h... OK (oos=0.0%)
+  US.TSM OBV_Trend_Follow 1h... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=4.4%)
+  US.TSM Trend_Pullback 1h... OK (oos=25.2%)
+  US.TSM BollingerWidth_Expansion 5m... OK (oos=-25.1%)
+  US.TSM Overbought_Decline 5m... OK (oos=21.3%)
+  US.TSM AD_Accumulation 5m... OK (oos=21.7%)
+  US.TSM VIXReversal 5m... OK (oos=0.0%)
+  US.TSM VWAP_Reversion 5m... OK (oos=-11.0%)
+  US.TXN Overbought_Decline 1d... OK (oos=20.2%)
+  US.TXN AD_Accumulation 1d... OK (oos=14.5%)
+  US.TXN Volatility_Contraction 1d... OK (oos=17.4%)
+  US.TXN RSI_BB_Squeeze 1d... OK (oos=-6.7%)
+  US.TXN RSI_Stochastic_Oversold 1d... OK (oos=-6.7%)
+  US.TXN Overbought_Decline 1h... OK (oos=24.7%)
+  US.TXN AD_Accumulation 1h... OK (oos=25.1%)
+  US.TXN RSI_MACD_Divergence 1h... OK (oos=18.2%)
+  US.TXN WilliamsR_Momentum 1h... OK (oos=24.6%)
+  US.TXN ADX_Volatility_Expansion 1h... OK (oos=-1.0%)
+  US.TXN AD_Accumulation 5m... OK (oos=20.1%)
+  US.TXN Overbought_Decline 5m... OK (oos=20.1%)
+  US.TXN OBV_Trend_Follow 5m... OK (oos=2.9%)
+  US.TXN BollingerWidth_Expansion 5m... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=24.5%)
+  US.TXN WilliamsR_Momentum 5m... OK (oos=-7.2%)
+  US.UBER SimpleMA_Crossover 1d... OK (oos=0.0%)
+  US.UBER WilliamsR_Momentum 1d... OK (oos=0.0%)
+  US.UBER MACD_Zero_Cross 1d... OK (oos=0.0%)
+  US.UBER Overbought_Decline 1d... OK (oos=29.4%)
+  US.UBER AD_Accumulation 1d... OK (oos=29.0%)
+  US.UBER Overbought_Decline 1h... OK (oos=29.0%)
+  US.UBER AD_Accumulation 1h... OK (oos=29.3%)
+  US.UBER SimpleMA_Crossover 1h... OK (oos=0.0%)
+  US.UBER ADX_Volatility_Expansion 1h... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=-0.9%)
+  US.UBER OBV_Trend_Follow 1h... OK (oos=4.8%)
+  US.UBER Overbought_Decline 5m... OK (oos=28.3%)
+  US.UBER AD_Accumulation 5m... OK (oos=28.1%)
+  US.UBER BollingerWidth_Expansion 5m... OK (oos=26.6%)
+  US.UBER OBV_Trend_Follow 5m... /Users/alita/.openclaw/workspace/codes/TradeMaster_v2/backtests/../backtest_vectorized.py:252: RuntimeWarning: divide by zero encountered in scalar divide
+  kelly_pct = p - (1 - p) / b
+OK (oos=3.5%)
+  US.UBER WilliamsR_Momentum 5m... OK (oos=-8.2%)
+
+✅ Completed 315 optimizations
+
+Top OOS performers:
+  US.MSTR AD_Accumulation 1h: 37.1%
+  US.MSTR Overbought_Decline 1h: 36.9%
+  US.MSTR MACD_Zero_Cross 1h: 36.4%
+  US.ORCL Overbought_Decline 1h: 35.4%
+  US.ORCL AD_Accumulation 1h: 34.9%
+
+Saved to walkforward_results.json

@@ -288,6 +288,118 @@ cat reports/QUALIFIED_STRATEGY_REPORT.md
 
 ---
 
+## 🚀 實盤交易系統 (v2 升級)
+
+2026-02-13 升級為支持實盤交易功能
+
+### 新增項目結構
+
+```
+TradeMaster_v2/
+├── migrations/                    # 數據庫遷移
+│   ├── 001_signals.sql          # 信號表
+│   ├── 002_positions.sql        # 持倉表
+│   ├── 003_orders.sql           # 訂單表
+│   ├── 004_news_notifications_risk.sql  # 新聞/推送/風控日誌表
+│   └── migrate_v2.py           # 遷移腳本
+│
+├── api/                         # API 端點 (已擴展)
+│   ├── signals_bp.py            # 信號 API
+│   ├── positions_bp.py          # 持倉 API
+│   ├── orders_bp.py            # 訂單 API
+│   └── ...
+│
+├── core/                        # 核心引擎 (已擴展)
+│   ├── risk_engine.py           # 風控引擎
+│   └── position_manager.py      # 持倉管理
+│
+├── middleware/                  # 中間件
+│   └── auth.py                 # API 認證
+│
+└── utils/                      # 工具
+    ├── logger.py               # 結構化日誌
+    └── metrics.py              # 監控指標
+```
+
+### API 端點
+
+| 端點 | 功能 |
+|------|------|
+| `GET /api/v1/signals` | 獲取信號列表 |
+| `POST /api/v1/signals` | 創建新信號 |
+| `GET /api/v1/positions` | 獲取持倉列表 |
+| `GET /api/v1/positions/summary` | 持倉摘要 |
+| `GET /api/v1/orders` | 獲取訂單列表 |
+| `POST /api/v1/orders` | 創建訂單 |
+
+### 數據庫表
+
+| 表名 | 功能 |
+|------|------|
+| `signals` | 交易信號記錄 |
+| `positions` | 持倉記錄 |
+| `orders` | 訂單記錄 |
+| `news` | 新聞記錄 |
+| `notifications` | 推送記錄 |
+| `risk_logs` | 風控日誌 |
+
+### 運行遷移
+
+```bash
+# 執行遷移
+python3 migrations/migrate_v2.py
+
+# 查看狀態
+python3 migrations/migrate_v2.py --status
+
+# 回滾
+python3 migrations/migrate_v2.py --rollback
+```
+
+### API Key 認證
+
+**用途：**
+- 保護 API 不被隨便訪問
+- 區分不同用戶/應用
+- 記錄誰調用了 API
+- 必要时可以停用某個 key
+
+**使用方式：**
+
+```bash
+# 請求時帶上 API Key
+curl -H "Authorization: sk_abc123_xyz" \
+     http://localhost:8080/api/v1/positions
+```
+
+**認證流程：**
+```
+1. 調用 API 時帶上 Header: Authorization: <api_key>
+2. 服務器驗證 key 是否有效
+3. 有效 → 返回數據，無效 → 返回 401 錯誤
+```
+
+### 風控引擎
+
+**功能：**
+- 單筆金額檢查 (上限 $10,000)
+- 總持倉檢查 (上限 $50,000)
+- 單股票持倉檢查 (上限 $20,000)
+- 止損檢查
+- 信心度檢查
+- 杠桿檢查
+- 風險評分 (0-100)
+
+### 持倉管理
+
+**功能：**
+- 持倉 CRUD
+- 盈虧計算
+- 持倉同步
+- 持倉報警 (-5% 止損 / +10% 止盈)
+
+---
+
 ## 📝 開發規範
 
 ### 添加新策略
@@ -313,5 +425,5 @@ cut -d',' -f1 data/backtest_results/*.csv | sort | uniq
 
 ---
 
-*Updated: 2026-02-07*
+*Updated: 2026-02-13*
 *規範創造效率，流程保證質量*

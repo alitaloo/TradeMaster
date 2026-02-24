@@ -127,10 +127,26 @@ def format_signal_message(signal: Dict) -> str:
     """
     symbol = signal.get('symbol', 'N/A')
     signal_type = signal.get('signal_type', 'HOLD')
-    price = signal.get('price', 0)
-    quantity = signal.get('quantity', 0)
-    confidence = signal.get('confidence', 0)
-    stop_loss = signal.get('stop_loss', 5)
+    # 解析信號數值 - API 返回的是字符串
+    try:
+        price = float(signal.get('price', 0)) if signal.get('price') else 0.0
+    except (ValueError, TypeError):
+        price = 0.0
+    
+    try:
+        quantity = int(signal.get('quantity', 0)) if signal.get('quantity') else 0
+    except (ValueError, TypeError):
+        quantity = 0
+    
+    try:
+        confidence = float(signal.get('confidence', 0)) if signal.get('confidence') else 0.0
+    except (ValueError, TypeError):
+        confidence = 0.0
+    
+    try:
+        stop_loss = float(signal.get('stop_loss', 5)) if signal.get('stop_loss') else 5.0
+    except (ValueError, TypeError):
+        stop_loss = 5.0
     
     # 方向映射
     direction_map = {
@@ -149,7 +165,7 @@ def format_signal_message(signal: Dict) -> str:
     action = action_map.get(signal_type, '未知')
     
     # 計算總額
-    total = price * quantity if price and quantity else 0
+    total = price * quantity if price and quantity else 0.0
     
     # 風控狀態
     metadata = signal.get('metadata', {})
@@ -179,16 +195,15 @@ def format_signal_message(signal: Dict) -> str:
     else:
         time_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
-    # 格式化消息
     message = SIGNAL_TEMPLATE.format(
         symbol=symbol,
         direction=direction,
         action=action,
-        price=f"{price:.2f}" if price else "0.00",
-        quantity=quantity if quantity else 0,
-        total=f"{total:.2f}" if total else "0.00",
-        confidence=int(confidence * 100) if confidence else 0,
-        stop_loss=f"{stop_loss:.1f}" if stop_loss else "5.0",
+        price=f"{price:.2f}",
+        quantity=quantity,
+        total=f"{(price * quantity):.2f}",
+        confidence=int(confidence * 100),
+        stop_loss=f"{stop_loss:.1f}",
         time=time_str
     )
     
@@ -280,12 +295,12 @@ def push_signals(dry_run: bool = False) -> List[Dict]:
         logger.info("⚠️ 沒有待推送信號")
         return []
     
-    # 2. 過濾掉 HOLD 信號 (只推送 BUY/SELL)
-    signals_to_push = [s for s in signals if s.get('signal_type') != 'HOLD']
-    hold_count = len(signals) - len(signals_to_push)
+    # 2. 過濾掉 IGNORED 狀態的信號 (只推送 PENDING 的 BUY/SELL)
+    signals_to_push = [s for s in signals if s.get('status') != 'IGNORED']
+    ignored_count = len(signals) - len(signals_to_push)
     
-    if hold_count > 0:
-        logger.info(f"   ℹ️ 過濾掉 {hold_count} 個 HOLD 信號 (不推送)")
+    if ignored_count > 0:
+        logger.info(f"   ℹ️ 過濾掉 {ignored_count} 個 IGNORED 信號 (不推送)")
     
     if not signals_to_push:
         logger.info("⚠️ 沒有需要推送的 BUY/SELL 信號")

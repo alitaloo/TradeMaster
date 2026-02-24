@@ -10,10 +10,17 @@ from pathlib import Path
 import warnings
 warnings.filterwarnings('ignore')
 
+# 導入技術指標
+import sys
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from core.indicators import calculate_adx
+
 DATA_DIR = Path("data/historical")
 REPORT_FILE = Path("strategy_full_report.txt")
 
-STOCKS = ["AAPL","MSFT","GOOGL","AMZN","NVDA","TSLA","TSM","AMD","INTC","AVGO","UBER","ORCL","WDC","MU","COIN","RKLB"]
+# 2026-02-12: 優化股票池 - 剔除 TSLA、INTC、RKLB（高波動/下降趨勢股票）
+# 專注於：科技巨頭、半導體龍頭、穩定成長股
+STOCKS = ["AAPL", "MSFT", "NVDA", "TSM", "AMZN", "META", "UBER", "MU", "AMD", "ORCL"]
 
 def load(sym):
     p = DATA_DIR / f"{sym}.csv"
@@ -41,17 +48,11 @@ def compute(df):
     d['BB_Low'] = m - s * 2
     d['BB_Pct'] = ((d['Close'] - d['BB_Low']) / (d['BB_Up'] - d['BB_Low']).replace(0, np.nan)).fillna(0.5)
     
-    h, l, c = d['High'], d['Low'], d['Close']
-    pm = h.diff().clip(0)
-    mm = (-l.diff()).clip(0)
-    tr = pd.concat([h - l, (h - c.shift(1)).abs(), (l - c.shift(1)).abs()], axis=1).max(axis=1)
-    atr = tr.rolling(14, min_periods=1).mean()
-    pdm = (pm / atr.replace(0, np.nan)) * 100
-    mdm = (mm / atr.replace(0, np.nan)) * 100
-    dx = ((pdm - mdm).abs() / (pdm + mdm).replace(0, np.nan)) * 100
-    d['ADX'] = dx.rolling(14, min_periods=1).mean().fillna(0)
-    d['PLUS_DI'] = pdm
-    d['MINUS_DI'] = mdm
+    # 使用標準 Wilder's Smoothing ADX 計算
+    adx_result = calculate_adx(d, period=14)
+    d['ADX'] = adx_result['ADX']
+    d['PLUS_DI'] = adx_result['PLUS_DI']
+    d['MINUS_DI'] = adx_result['MINUS_DI']
     return d
 
 # 7種策略信號邏輯

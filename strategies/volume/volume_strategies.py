@@ -105,19 +105,15 @@ class OBVDivergence(BaseStrategy):
     
     def generate_signal(self, ind, data):
         close = data["Close"]
-        # 計算 OBV
-        obv = (pd.Series(1) * 0).iloc[:0]
+        # 計算 OBV (真正 vectorized)
+        obv = pd.Series(0, index=close.index)
         if "Volume" in data.columns:
             volume = data["Volume"]
-            close_diff = close.diff()
-            obv = pd.Series(0, index=close.index)
-            for i in range(1, len(close)):
-                if close_diff.iloc[i] > 0:
-                    obv.iloc[i] = obv.iloc[i-1] + volume.iloc[i]
-                elif close_diff.iloc[i] < 0:
-                    obv.iloc[i] = obv.iloc[i-1] - volume.iloc[i]
-                else:
-                    obv.iloc[i] = obv.iloc[i-1]
+            close_diff = close.diff().fillna(0)
+            # 真正的 vectorized：用 np.where 避免 apply
+            import numpy as np
+            direction = np.where(close_diff > 0, 1, np.where(close_diff < 0, -1, 0))
+            obv = pd.Series((direction * volume.values).cumsum(), index=close.index)
         else:
             obv = close * 0
         

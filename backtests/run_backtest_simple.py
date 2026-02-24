@@ -87,7 +87,8 @@ def run_backtest():
     print("="*70)
     
     # 測試標的 (使用模擬數據確保穩定性)
-    symbols = ['AAPL', 'TSLA', 'SPY']
+    from get_db_symbols import get_trading_symbols
+symbols = get_trading_symbols()
     
     # 策略配置 (經過優化的參數)
     strategies = [
