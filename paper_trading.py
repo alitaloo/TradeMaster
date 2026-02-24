@@ -149,6 +149,18 @@ def submit_paper_order(symbol: str, order_type: str, quantity: int,
             'error': 'quantity 必须大于 0'
         }
     
+    # SELL 订单检查持仓（禁止做空）
+    if order_type == 'SELL':
+        from models import PaperPosition
+        position = PaperPosition.find_by_symbol(symbol)
+        available_qty = position.quantity if position else 0
+        
+        if available_qty < quantity:
+            return {
+                'success': False,
+                'error': f'持仓不足: 可用 {available_qty} 股, 尝试卖出 {quantity} 股'
+            }
+    
     # 呼叫富途 API (真實調用)
     try:
         import futu as ft

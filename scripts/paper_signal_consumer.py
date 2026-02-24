@@ -65,10 +65,7 @@ def get_pending_orders() -> List[Dict]:
 
 def update_order_status(order_id: int, status: str, filled_quantity: int = 0, filled_price: float = 0):
     """更新訂單狀態"""
-    conn = get_db_cursor()
-    cursor = conn.cursor()
-    
-    try:
+    with get_db_cursor() as cursor:
         filled_at = datetime.now() if status == 'filled' else None
         
         cursor.execute("""
@@ -76,13 +73,7 @@ def update_order_status(order_id: int, status: str, filled_quantity: int = 0, fi
             SET status = %s, filled_quantity = %s, filled_price = %s, filled_at = %s, updated_at = %s
             WHERE id = %s
         """, (status, filled_quantity, filled_price, filled_at, datetime.now(), order_id))
-        conn.commit()
         print(f"✅ 更新訂單狀態: ID={order_id}, status={status}")
-    except Exception as e:
-        print(f"❌ 更新訂單狀態失敗: {e}")
-    finally:
-        cursor.close()
-        conn.close()
 
 
 def handle_buy_fill(order: Dict):
@@ -91,10 +82,7 @@ def handle_buy_fill(order: Dict):
     quantity = order['filled_quantity']
     price = order['filled_price']
     
-    conn = get_db_cursor()
-    cursor = conn.cursor(pymysql.cursors.DictCursor)
-    
-    try:
+    with get_db_cursor() as cursor:
         cursor.execute("SELECT * FROM paper_positions WHERE symbol = %s", (symbol,))
         position = cursor.fetchone()
         
@@ -116,13 +104,7 @@ def handle_buy_fill(order: Dict):
                 VALUES (%s, %s, %s, %s, %s)
             """, (symbol, quantity, price, price, datetime.now()))
         
-        conn.commit()
         print(f"✅ 更新持倉: {symbol}")
-    except Exception as e:
-        print(f"❌ 處理買入成交失敗: {e}")
-    finally:
-        cursor.close()
-        conn.close()
 
 
 def handle_sell_fill(order: Dict):
@@ -131,10 +113,7 @@ def handle_sell_fill(order: Dict):
     quantity = order['filled_quantity']
     price = order['filled_price']
     
-    conn = get_db_cursor()
-    cursor = conn.cursor(pymymysql.cursors.DictCursor)
-    
-    try:
+    with get_db_cursor() as cursor:
         cursor.execute("SELECT * FROM paper_positions WHERE symbol = %s", (symbol,))
         position = cursor.fetchone()
         
@@ -153,13 +132,7 @@ def handle_sell_fill(order: Dict):
                     WHERE symbol = %s
                 """, (new_qty, old_realized + realized_pnl, datetime.now(), symbol))
         
-        conn.commit()
         print(f"✅ 處理賣出: {symbol}")
-    except Exception as e:
-        print(f"❌ 處理賣出成交失敗: {e}")
-    finally:
-        cursor.close()
-        conn.close()
 
 
 def poll_orders():
@@ -209,7 +182,7 @@ def poll_orders():
             elif futu_status == ft.OrderStatus.FILLED_PART:
                 update_order_status(order_id, 'partial', dealt_qty, dealt_price)
                 print(f"⏳ 部分成交: {symbol}")
-            elif futu_status == ft.OrderStatus.CANCELLED:
+            elif futu_status == ft.OrderStatus.CANCELLED_ALL:
                 update_order_status(order_id, 'cancelled')
                 print(f"❌ 訂單取消: {symbol}")
     
