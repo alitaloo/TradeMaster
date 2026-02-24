@@ -79,7 +79,7 @@ def get_portfolio_data():
         
         positions.append({
             'symbol': symbol,
-            'shares': int(quantity),
+            'quantity': int(quantity),
             'avg_price': round(avg_price, 2),
             'current_price': round(current_price, 2),
             'market_value': round(market_value, 2),
