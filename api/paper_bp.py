@@ -44,8 +44,11 @@ def enable_paper_trading():
 
 @paper_bp.route('/positions', methods=['GET'])
 def get_positions():
-    """取得模擬持倉"""
-    positions = get_paper_positions()
+    """取得模擬持倉（實時更新價格）"""
+    # 先更新所有持倉價格
+    from paper_trading_portfolio import update_position_prices
+    positions = update_position_prices()
+    
     return jsonify({
         'success': True,
         'positions': positions,

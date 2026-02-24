@@ -40,9 +40,28 @@ def get_paper_position(symbol: str) -> Optional[Dict]:
 def get_current_price(symbol: str) -> float:
     """
     取得現價
-    TODO: 從富途 API 取得實際價格
+    從 K 線數據獲取最新收盤價
     """
-    # 模擬: 從持倉記錄中獲取或隨機
+    # 嘗試從 K 線數據獲取最新價格
+    try:
+        from config.database import get_db_cursor
+        
+        with get_db_cursor() as cursor:
+            cursor.execute("""
+                SELECT close_price as close
+                FROM kline_cache 
+                WHERE symbol = %s 
+                    AND interval_val = '5m'
+                ORDER BY timestamp DESC 
+                LIMIT 1
+            """, (symbol,))
+            row = cursor.fetchone()
+            if row and row['close']:
+                return float(row['close'])
+    except Exception as e:
+        print(f"獲取 {symbol} 價格失敗: {e}")
+    
+    # Fallback: 從持倉記錄中獲取
     pos = PaperPosition.find_by_symbol(symbol)
     if pos and pos.current_price:
         return float(pos.current_price)
