@@ -37,18 +37,47 @@ def get_paper_position(symbol: str) -> Optional[Dict]:
     return pos.to_dict() if pos else None
 
 
-def get_current_price(symbol: str) -> float:
+def get_current_price(symbol: str, max_age_minutes: int = 30) -> float:
     """
     取得現價
-    從 K 線數據獲取最新收盤價
+    優先從富途實時報價獲取，若失敗則從 K 線數據獲取
+    
+    Args:
+        symbol: 股票代碼 (如 US.TSLA)
+        max_age_minutes: K 線數據最大可接受的陳舊時間（分鐘）
+    
+    Returns:
+        float: 當前價格
     """
-    # 嘗試從 K 線數據獲取最新價格
+    from datetime import datetime, timedelta
+    import pytz
+    
+    # 1. 嘗試從富途實時報價獲取（交易時間內優先）
+    try:
+        import futu as ft
+        quote_ctx = ft.OpenQuoteContext(host='127.0.0.1', port=11111)
+        
+        # 先訂閱基礎報價，才能獲取實時數據
+        quote_ctx.subscribe([symbol], [ft.SubType.QUOTE])
+        
+        ret, data = quote_ctx.get_stock_quote([symbol])
+        quote_ctx.close()
+        
+        if ret == 0 and data is not None and len(data) > 0:
+            last_price = data.iloc[0].get('last_price', 0)
+            if last_price and last_price > 0:
+                return float(last_price)
+    except Exception as e:
+        # 富途 API 不可用，繼續使用 K 線數據
+        pass
+    
+    # 2. 從 K 線數據獲取
     try:
         from config.database import get_db_cursor
         
         with get_db_cursor() as cursor:
             cursor.execute("""
-                SELECT close_price as close
+                SELECT close_price as close, timestamp, updated_at
                 FROM kline_cache 
                 WHERE symbol = %s 
                     AND interval_val = '5m'
@@ -57,11 +86,29 @@ def get_current_price(symbol: str) -> float:
             """, (symbol,))
             row = cursor.fetchone()
             if row and row['close']:
-                return float(row['close'])
+                price = float(row['close'])
+                
+                # 檢查數據新鮮度
+                if row.get('updated_at'):
+                    updated_at = row['updated_at']
+                    if isinstance(updated_at, str):
+                        updated_at = datetime.fromisoformat(updated_at.replace('Z', '+00:00'))
+                    
+                    # 計算數據年齡
+                    now = datetime.now()
+                    if updated_at.tzinfo:
+                        now = datetime.now(pytz.UTC)
+                    age = now - updated_at
+                    age_minutes = age.total_seconds() / 60
+                    
+                    if age_minutes > max_age_minutes:
+                        print(f"⚠️ {symbol} K線數據已 {age_minutes:.0f} 分鐘未更新 (最後: {row.get('timestamp')})")
+                
+                return price
     except Exception as e:
         print(f"獲取 {symbol} 價格失敗: {e}")
     
-    # Fallback: 從持倉記錄中獲取
+    # 3. Fallback: 從持倉記錄中獲取
     pos = PaperPosition.find_by_symbol(symbol)
     if pos and pos.current_price:
         return float(pos.current_price)
