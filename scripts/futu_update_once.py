@@ -108,18 +108,20 @@ def main():
     conn = get_mysql_connection()
     cursor = conn.cursor()
     
-    # 先訂閱所有股票的 K 線（用於 get_cur_kline）
-    print("📡 訂閱即時報價...")
-    for symbol in WATCHLIST:
-        quote_ctx.subscribe(symbol, KL_TYPE_MAP.values())
-    time.sleep(1)  # 等待訂閱生效
+    # 注意: Futu 訂閱限制為 100 個
+    # 21 stocks × 5 intervals = 105 > 100，所以需要分批訂閱
+    print("📡 分批訂閱即時報價...")
     
     for symbol in WATCHLIST:
+        # 每個股票訂閱後立即處理，然後取消訂閱
+        quote_ctx.subscribe(symbol, list(KL_TYPE_MAP.values()))
+        time.sleep(0.3)  # 等待訂閱生效
         for interval in INTERVALS:
             print(f"Fetching {symbol} {interval}...", flush=True)
             sys.stdout.flush()
             
             ktype = KL_TYPE_MAP.get(interval, ft.KLType.K_DAY)
+            kline_data = None  # 重置，避免使用上一輪的數據
             
             # 優先使用 get_cur_kline（訂閱方式，數據更齊全）
             ret, data = quote_ctx.get_cur_kline(symbol, 100, ktype)
@@ -144,16 +146,19 @@ def main():
                 
                 if len(result) == 3:
                     ret, data, extra = result
-                    kline_data = data if ret == ft.RET_OK else None
+                    if ret == ft.RET_OK and data is not None and not data.empty:
+                        kline_data = data
+                    else:
+                        print(f"  ⚠️ {symbol} {interval} 歷史API返回空數據")
+                        continue
                 else:
+                    print(f"  ⚠️ {symbol} {interval} 歷史API返回格式異常: {len(result)} 個元素")
                     continue
             
-            if ret == ft.RET_OK and data is not None and not data.empty:
-                kline_data = data
-                
             if kline_data is not None and not kline_data.empty:
                 now_utc = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
                 count = 0
+                errors = 0
                 
                 for _, row in kline_data.iterrows():
                     try:
@@ -177,14 +182,32 @@ def main():
                             int(row['volume']), now_utc
                         ))
                         count += 1
+                    except pymysql.Error as e:
+                        errors += 1
+                        print(f"  ❌ MySQL錯誤 {symbol} {interval} {timestamp}: {e}")
+                        # 嚴重錯誤時拋出
+                        if e.args[0] in (2006, 2013):  # MySQL server gone away
+                            raise
                     except Exception as e:
-                        print(f"Error inserting {symbol} {interval}: {e}")
-                        pass
+                        errors += 1
+                        print(f"  ❌ 插入錯誤 {symbol} {interval}: {e}")
                 
-                conn.commit()
-                total += count
+                try:
+                    conn.commit()
+                    if errors > 0:
+                        print(f"  ⚠️ {symbol} {interval}: {count} 筆成功, {errors} 筆失敗")
+                    total += count
+                except pymysql.Error as e:
+                    print(f"  ❌ 提交失敗 {symbol} {interval}: {e}")
+                    conn.rollback()
+                    raise
+            else:
+                print(f"  ⚠️ {symbol} {interval} 無數據")
             
             time.sleep(0.2)
+        
+        # 處理完一個股票後取消訂閱，釋放訂閱額度
+        quote_ctx.unsubscribe(symbol, list(KL_TYPE_MAP.values()))
     
     cursor.close()
     conn.close()
