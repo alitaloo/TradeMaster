@@ -6,6 +6,7 @@ Orders API Blueprint
 
 from flask import Blueprint, jsonify, request
 import pymysql
+from pymysql.cursors import DictCursor
 from api.db import get_connection
 import uuid
 from datetime import datetime
@@ -18,14 +19,13 @@ orders_bp = Blueprint('orders', __name__, url_prefix='/api/v1/orders')
 
 def get_db_connection():
     conn = get_connection()
-    conn.row_factory = sqlite3.Row
     return conn
 
 
 def row_to_dict(row):
     if row is None:
         return None
-    return dict(row)
+    return dict(row) if not isinstance(row, dict) else row
 
 
 @orders_bp.route('', methods=['GET'])
@@ -36,20 +36,20 @@ def get_orders():
     limit = int(request.args.get('limit', 100))
     
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(DictCursor)
     
     query = "SELECT * FROM orders WHERE 1=1"
     params = []
     
     if status:
-        query += " AND status = ?"
+        query += " AND status = %s"
         params.append(status)
     
     if symbol:
-        query += " AND symbol = ?"
+        query += " AND symbol = %s"
         params.append(symbol.upper())
     
-    query += " ORDER BY created_at DESC LIMIT ?"
+    query += " ORDER BY created_at DESC LIMIT %s"
     params.append(limit)
     
     cursor.execute(query, params)
@@ -69,9 +69,9 @@ def get_orders():
 def get_order(order_id):
     """獲取單個訂單"""
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(DictCursor)
     
-    cursor.execute("SELECT * FROM orders WHERE id = ?", (order_id,))
+    cursor.execute("SELECT * FROM orders WHERE id = %s", (order_id,))
     row = cursor.fetchone()
     conn.close()
     
@@ -96,11 +96,11 @@ def create_order():
     order_id = f"ORD-{uuid.uuid4().hex[:8].upper()}"
     
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(DictCursor)
     
     cursor.execute('''
         INSERT INTO orders (order_id, symbol, direction, order_type, price, quantity, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
     ''', (
         order_id,
         data['symbol'].upper(),
@@ -129,7 +129,7 @@ def update_order(order_id):
     data = request.json
     
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(DictCursor)
     
     # 構建更新語句
     updates = []
@@ -138,18 +138,18 @@ def update_order(order_id):
     for field in ['order_type', 'price', 'quantity', 'filled_quantity', 
                   'avg_fill_price', 'status']:
         if field in data:
-            updates.append(f"{field} = ?")
+            updates.append(f"{field} = %s")
             params.append(data[field])
     
     if not updates:
         return jsonify({"status": "error", "message": "No fields to update"}), 400
     
-    updates.append("updated_at = ?")
+    updates.append("updated_at = %s")
     params.append(datetime.now().isoformat())
     params.append(order_id)
     
     cursor.execute(
-        f"UPDATE orders SET {', '.join(updates)} WHERE id = ?",
+        f"UPDATE orders SET {', '.join(updates)} WHERE id = %s",
         params
     )
     
@@ -170,24 +170,24 @@ def update_order(order_id):
 def cancel_order(order_id):
     """取消訂單"""
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(DictCursor)
     
     # 檢查訂單狀態
-    cursor.execute("SELECT status FROM orders WHERE id = ?", (order_id,))
+    cursor.execute("SELECT status FROM orders WHERE id = %s", (order_id,))
     row = cursor.fetchone()
     
     if not row:
         conn.close()
         return jsonify({"status": "error", "message": "Order not found"}), 404
     
-    if row[0] not in ['PENDING', 'PARTIAL']:
+    if row['status'] not in ['PENDING', 'PARTIAL']:
         conn.close()
-        return jsonify({"status": "error", "message": f"Cannot cancel order with status: {row[0]}"}), 400
+        return jsonify({"status": "error", "message": f"Cannot cancel order with status: {row['status']}"}), 400
     
     cursor.execute('''
         UPDATE orders 
-        SET status = 'CANCELLED', cancelled_at = ?, updated_at = ? 
-        WHERE id = ?
+        SET status = 'CANCELLED', cancelled_at = %s, updated_at = %s 
+        WHERE id = %s
     ''', (datetime.now().isoformat(), datetime.now().isoformat(), order_id))
     
     conn.commit()
@@ -205,13 +205,13 @@ def get_orders_by_status(status):
     limit = int(request.args.get('limit', 100))
     
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(DictCursor)
     
     cursor.execute('''
         SELECT * FROM orders 
-        WHERE status = ?
+        WHERE status = %s
         ORDER BY created_at DESC
-        LIMIT ?
+        LIMIT %s
     ''', (status.upper(), limit))
     
     rows = cursor.fetchall()
