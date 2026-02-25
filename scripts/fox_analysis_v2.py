@@ -1165,42 +1165,24 @@ def decide_signal(confidence: float, news_ok: bool, market_ok: bool) -> Tuple[st
         return 'SELL', f'低信心度 ({confidence})'
 
 
-def get_recent_signal(symbol: str, hours: int = 24, signal_type: str = None) -> Optional[Dict]:
+def get_recent_signal(symbol: str, hours: int = 24) -> Optional[Dict]:
     """
-    獲取最近的小時內的信號
+    獲取最近的小時內的同方向信號
     用於去重邏輯
-    
-    Args:
-        symbol: 股票代碼
-        hours: 查詢時間範圍（小時）
-        signal_type: 如果指定，只查詢該方向的信號（用於 BUY/SELL 去重）
     """
     try:
         conn = mysql.connector.connect(**DB_CONFIG)
         cursor = conn.cursor(dictionary=True)
         
         # 查詢最近 N 小時內的信號
-        if signal_type and signal_type != 'HOLD':
-            # BUY/SELL 去重：只查詢同方向的信號
-            cursor.execute("""
-                SELECT id, symbol, signal_type, confidence, created_at
-                FROM signals
-                WHERE symbol = %s 
-                AND signal_type = %s
-                AND created_at >= DATE_SUB(NOW(), INTERVAL %s HOUR)
-                ORDER BY created_at DESC
-                LIMIT 1
-            """, (symbol, signal_type, hours))
-        else:
-            # HOLD 去重：查詢最近的任何信號
-            cursor.execute("""
-                SELECT id, symbol, signal_type, confidence, created_at
-                FROM signals
-                WHERE symbol = %s 
-                AND created_at >= DATE_SUB(NOW(), INTERVAL %s HOUR)
-                ORDER BY created_at DESC
-                LIMIT 1
-            """, (symbol, hours))
+        cursor.execute("""
+            SELECT id, symbol, signal_type, confidence, created_at
+            FROM signals
+            WHERE symbol = %s 
+            AND created_at >= DATE_SUB(NOW(), INTERVAL %s HOUR)
+            ORDER BY created_at DESC
+            LIMIT 1
+        """, (symbol, hours))
         
         row = cursor.fetchone()
         cursor.close()
@@ -1222,9 +1204,7 @@ def should_write_signal(symbol: str, new_direction: str, hours: int = 24) -> Tup
     - 如果方向改變，寫入新信號
     - 連續 HOLD 跳過
     """
-    # BUY/SELL 去重：只查詢同方向的信號
-    # HOLD 去重：查詢最近的任何信號
-    recent = get_recent_signal(symbol, hours, signal_type=new_direction)
+    recent = get_recent_signal(symbol, hours)
     
     if recent is None:
         # 無歷史信號，寫入
