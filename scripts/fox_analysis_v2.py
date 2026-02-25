@@ -1427,12 +1427,18 @@ def analyze_position(position: Dict, market_data: Dict, max_age_minutes: Optiona
         confidence = min(0.95, confidence + 0.15)
         signal_type = 'BUY'
     elif consensus == 'SELL':
-        confidence = min(0.95, confidence + 0.15)
-        signal_type = 'SELL'
+        # 檢查是否有持倉，沒有持倉則改為 HOLD
+        current_qty = position.get('quantity', 0)
+        if current_qty <= 0:
+            signal_type = 'HOLD'
+            logger.info(f"   ⚠️ {symbol} 無持倉，SELL 信號改為 HOLD")
+        else:
+            confidence = min(0.95, confidence + 0.15)
+            signal_type = 'SELL'
     else:
         signal_type = 'HOLD'
     
-    signal_reason = f'TopK 共識'
+    signal_reason = f'TopK 共識' if signal_type != 'HOLD' or consensus == 'HOLD' else '無持倉，SELL → HOLD'
     logger.info(f"   信號: {signal_type} - {signal_reason} (信心度: {confidence})")
     
     return {
