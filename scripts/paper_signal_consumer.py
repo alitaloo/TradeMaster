@@ -90,7 +90,7 @@ def handle_buy_fill(order: Dict):
             old_qty = position['quantity']
             old_cost = position['average_cost']
             new_qty = old_qty + quantity
-            new_cost = (old_cost * old_qty + price * quantity) / new_qty
+            new_cost = (float(old_cost) * old_qty + price * quantity) / new_qty
             
             cursor.execute("""
                 UPDATE paper_positions 
