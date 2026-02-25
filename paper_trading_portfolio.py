@@ -9,7 +9,9 @@ from typing import List, Dict, Optional
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from models import PaperPosition, PaperOrder, SystemConfig
+from models import PaperPosition
+from config.database import get_db_connection
+from models import PaperOrder, SystemConfig
 
 
 def get_paper_positions() -> List[Dict]:
@@ -201,18 +203,31 @@ def get_paper_balance() -> float:
         # result = call_futu_api('account_info', trading_mode=trading_mode)
         # return result['cash']
         
-        # 模擬: 初始資金 - 已用資金
+        # 模擬: 現金 = 初始資金 - 淨買入花費 + 賣出收入
         initial = SystemConfig.get_initial_balance()
         
-        # 計算已用資金 (持倉市值)
-        positions = PaperPosition.find_all()
-        used = sum(float(p.market_value or 0) for p in positions)
+        # 從數據庫計算實際買賣
+        with get_db_connection() as conn:
+            cursor = conn.cursor(dictionary=True)
+            
+            # 計算買入總花費
+            cursor.execute("""
+                SELECT COALESCE(SUM(filled_quantity * filled_price), 0) as total_buy
+                FROM paper_orders 
+                WHERE order_type = 'BUY' AND status = 'filled'
+            """)
+            total_buy = float(cursor.fetchone()['total_buy'] or 0)
+            
+            # 計算賣出總收入
+            cursor.execute("""
+                SELECT COALESCE(SUM(filled_quantity * filled_price), 0) as total_sell
+                FROM paper_orders 
+                WHERE order_type = 'SELL' AND status = 'filled'
+            """)
+            total_sell = float(cursor.fetchone()['total_sell'] or 0)
         
-        # 計算已實現損益
-        realized_pnl = sum(float(p.realized_pnl or 0) for p in positions)
-        
-        # 現金 = 初始 + 已實現損益 - 已用
-        cash = initial + realized_pnl - used
+        # 現金 = 初始資金 - 買入花費 + 賣出收入
+        cash = initial - total_buy + total_sell
         
         return max(0, cash)
         
