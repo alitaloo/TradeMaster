@@ -419,8 +419,14 @@ def get_realtime_kline(symbol: str, timeframe: str, limit: int = 10) -> Optional
         
         quote_ctx.close()
         
-        if ret != 0 or data is None or len(data) == 0:
-            logger.warning(f"富途 API 獲取失敗: {symbol} {timeframe}")
+        if ret != 0:
+            logger.warning(f"富途 API 獲取失敗: {symbol} {timeframe}, ret={ret}")
+            return None
+        if data is None:
+            logger.warning(f"富途 API 返回空數據: {symbol} {timeframe}")
+            return None
+        if len(data) == 0:
+            logger.warning(f"富途 API 返回 0 條數據: {symbol} {timeframe}")
             return None
         
         # 轉換為 DataFrame
