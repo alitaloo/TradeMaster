@@ -31,6 +31,16 @@ import argparse
 import time
 from functools import wraps
 
+# 富途 API
+try:
+    import futu as ft
+    HAS_FUTU = True
+except ImportError:
+    HAS_FUTU = False
+
+FUTU_HOST = '127.0.0.1'
+FUTU_PORT = 11111
+
 # 導入市場時間判斷模組
 try:
     from market_hours import should_update_kline, is_dst_us
@@ -347,6 +357,91 @@ def api_post(endpoint: str, data: dict) -> dict:
 
 
 # ==================== K線數據 (含新鮮度檢查) ====================
+def get_realtime_kline(symbol: str, timeframe: str, limit: int = 10) -> Optional[pd.DataFrame]:
+    """
+    從富途 API 獲取實時 K 線數據
+    
+    Parameters:
+    - symbol: 股票代碼 (如 US.AAPL)
+    - timeframe: 週期 (5m, 1h, 1d)
+    - limit: 獲取數據量
+    
+    Returns:
+    - pd.DataFrame 或 None (獲取失敗)
+    """
+    if not HAS_FUTU:
+        logger.warning("富途模組未安裝，無法獲取實時數據")
+        return None
+    
+    try:
+        # 轉換週期格式
+        timeframe_map = {
+            '5m': ft.KLType.K_5M,
+            '1h': ft.KLType.K_60M,
+            '1d': ft.KLType.K_DAY,
+            '1w': ft.KLType.K_WEEK,
+            '1M': ft.KLType.K_1M,
+        }
+        ktype = timeframe_map.get(timeframe)
+        if ktype is None:
+            logger.warning(f"不支持的週期: {timeframe}")
+            return None
+        
+        # 連接富途
+        quote_ctx = ft.OpenQuoteContext(host=FUTU_HOST, port=FUTU_PORT)
+        
+        # 計算時間範圍（取足夠的歷史數據）
+        if timeframe == '5m':
+            start_date = (datetime.now() - pd.Timedelta(days=3)).strftime('%Y-%m-%d')
+        elif timeframe == '1h':
+            start_date = (datetime.now() - pd.Timedelta(days=60)).strftime('%Y-%m-%d')
+        else:  # 1d
+            start_date = (datetime.now() - pd.Timedelta(days=365)).strftime('%Y-%m-%d')
+        
+        end_date = datetime.now().strftime('%Y-%m-%d')
+        
+        # 獲取實時 K 線
+        result = quote_ctx.request_history_kline(
+            symbol,
+            start=start_date,
+            end=end_date,
+            ktype=ktype,
+            max_count=limit
+        )
+        
+        # 富途返回 (ret, data, extra) 三個值
+        if len(result) == 3:
+            ret, data, extra = result
+        else:
+            logger.warning(f"富途 API 返回格式錯誤: {symbol} {timeframe}")
+            quote_ctx.close()
+            return None
+        
+        quote_ctx.close()
+        
+        if ret != 0 or data is None or len(data) == 0:
+            logger.warning(f"富途 API 獲取失敗: {symbol} {timeframe}")
+            return None
+        
+        # 轉換為 DataFrame
+        df = pd.DataFrame({
+            'timestamp': pd.to_datetime(data['time_key']),
+            'open': data['open'].astype(float),
+            'high': data['high'].astype(float),
+            'low': data['low'].astype(float),
+            'close': data['close'].astype(float),
+            'volume': data['volume'].astype(int)
+        })
+        
+        df = df.sort_values('timestamp')  # oldest first
+        logger.info(f"✅ 實時 K 線獲取成功: {symbol} {timeframe}, {len(df)} 條")
+        return df
+        
+    except Exception as e:
+        logger.error(f"獲取實時 K 線失敗: {symbol} {timeframe} - {e}")
+        return None
+
+
 def get_kline_data(
     symbol: str, 
     timeframe: str, 
@@ -354,7 +449,7 @@ def get_kline_data(
     max_age_minutes: Optional[float] = None
 ) -> Optional[pd.DataFrame]:
     """
-    從數據庫獲取 K 線數據
+    獲取 K 線數據：優先實時 K 線，失敗則用 cache
     
     Parameters:
     - symbol: 股票代碼 (如 AAPL 或 US.AAPL)
@@ -369,6 +464,17 @@ def get_kline_data(
         # 添加 US. 前綴（如果沒有）
         if not symbol.startswith('US.'):
             symbol = f'US.{symbol}'
+        
+        # ===== Step 1: 嘗試獲取實時 K 線 =====
+        realtime_df = get_realtime_kline(symbol, timeframe, limit=limit)
+        
+        if realtime_df is not None and len(realtime_df) > 0:
+            # 有實時數據，直接使用
+            df = realtime_df
+            source = "實時"
+        else:
+            # ===== Step 2: 實時獲取失敗，使用 cache =====
+            logger.info(f"無法獲取實時 K 線，使用 cache: {symbol} {timeframe}")
         
         conn = mysql.connector.connect(**DB_CONFIG)
         cursor = conn.cursor()
