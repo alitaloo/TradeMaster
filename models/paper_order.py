@@ -73,10 +73,10 @@ class PaperOrder:
     
     @classmethod
     def find_pending(cls):
-        """查詢所有待輪詢訂單（pending / partial）"""
+        """查詢所有待輪詢訂單（pending / partial / expired，expired 也查因為富途可能已成交但本地標錯）"""
         with get_db_cursor() as cursor:
             cursor.execute(
-                f"SELECT * FROM {cls.TABLE_NAME} WHERE status IN ('pending', 'partial') ORDER BY created_at ASC"
+                f"SELECT * FROM {cls.TABLE_NAME} WHERE status IN ('pending', 'partial', 'expired') AND futu_order_id IS NOT NULL ORDER BY created_at ASC"
             )
             return [cls(**row) for row in cursor.fetchall()]
     
