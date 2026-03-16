@@ -105,9 +105,9 @@ def check_stop_loss_take_profit() -> List[Dict]:
         
         # 如果沒有設定，從持倉成本計算（使用預設比例）
         if not stop_loss_price:
-            stop_loss_price = pos.average_cost * (1 - DEFAULT_STOP_LOSS_PCT)  # 5% 止損
+            stop_loss_price = float(pos.average_cost) * (1 - DEFAULT_STOP_LOSS_PCT)  # 5% 止損
         if not take_profit_price:
-            take_profit_price = pos.average_cost * (1 + DEFAULT_TAKE_PROFIT_PCT)  # 10% 止盈
+            take_profit_price = float(pos.average_cost) * (1 + DEFAULT_TAKE_PROFIT_PCT)  # 10% 止盈
         
         # 檢查是否觸發
         if current_price <= stop_loss_price:

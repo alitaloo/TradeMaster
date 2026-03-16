@@ -30,7 +30,7 @@ DB_PATH = os.path.join(PROJECT_ROOT, 'trademaster.db')
 _TZ = timezone(timedelta(hours=8))
 
 # ── 執行狀態追蹤 (process-level in-memory) ──
-# {action_name: {status, started_at, finished_at, summary, error}}
+# {action_name: {status, started_at, finished_at, summary, error, last_5_runs: []}}
 _action_state = {}
 _action_locks = {}  # per-action threading lock
 
@@ -43,8 +43,32 @@ def _get_lock(action: str) -> threading.Lock:
 
 def _set_state(action: str, **kwargs):
     if action not in _action_state:
-        _action_state[action] = {}
+        _action_state[action] = {'last_5_runs': []}
+    if 'last_5_runs' not in _action_state[action]:
+        _action_state[action]['last_5_runs'] = []
     _action_state[action].update(kwargs)
+
+
+def _add_to_history(action: str, status: str, started_at: str, finished_at: str, summary: str = None, error: str = None):
+    """將執行結果加入 last_5_runs"""
+    if action not in _action_state:
+        _action_state[action] = {'last_5_runs': []}
+    
+    if 'last_5_runs' not in _action_state[action]:
+        _action_state[action]['last_5_runs'] = []
+    
+    record = {
+        'status': status,
+        'started_at': started_at,
+        'finished_at': finished_at,
+        'summary': summary,
+        'error': error[:100] if error else None  # max 100 chars
+    }
+    _action_state[action]['last_5_runs'].append(record)
+    
+    # Keep only last 5
+    if len(_action_state[action]['last_5_runs']) > 5:
+        _action_state[action]['last_5_runs'] = _action_state[action]['last_5_runs'][-5:]
 
 
 def _now_iso():
@@ -78,10 +102,11 @@ def _save_history(action: str, status: str, started_at: str,
 
 
 def _load_last_states():
-    """啟動時從 DB 還原每個 action 的最近一次結果"""
+    """啟動時從 DB 還原每個 action 的最近狀態和最近5筆記錄"""
     try:
         conn = _get_db()
         for action_name in ACTION_REGISTRY:
+            # Load last state
             row = conn.execute(
                 """SELECT status, started_at, finished_at, summary, error
                    FROM action_history
@@ -96,6 +121,21 @@ def _load_last_states():
                            finished_at=row['finished_at'],
                            summary=row['summary'],
                            error=row['error'])
+            
+            # Load last 5 runs
+            rows = conn.execute(
+                """SELECT status, started_at, finished_at, summary, error
+                   FROM action_history
+                   WHERE action = ?
+                   ORDER BY id DESC LIMIT 5""",
+                (action_name,)
+            ).fetchall()
+            if rows:
+                # Reverse to get oldest first (chronological order)
+                records = [dict(r) for r in reversed(rows)]
+                if action_name not in _action_state:
+                    _action_state[action_name] = {}
+                _action_state[action_name]['last_5_runs'] = records
         conn.close()
     except Exception as e:
         print(f"[action_history] load_last_states failed: {e}")
@@ -250,16 +290,19 @@ def _run_action_async(action: str):
             _set_state(action, status='success', finished_at=finished,
                        summary=summary, error=None)
             _save_history(action, 'success', started, finished, summary=summary)
+            _add_to_history(action, 'success', started, finished, summary=summary)
         else:
             _set_state(action, status='failed', finished_at=finished,
                        summary=None, error=summary)
             _save_history(action, 'failed', started, finished, error=summary)
+            _add_to_history(action, 'failed', started, finished, error=summary)
     except Exception as e:
         finished = _now_iso()
         err_msg = str(e)[:300]
         _set_state(action, status='failed', finished_at=finished,
                    summary=None, error=err_msg)
         _save_history(action, 'failed', started, finished, error=err_msg)
+        _add_to_history(action, 'failed', started, finished, error=err_msg)
 
 
 # ── 啟動時從 DB 還原最近狀態 ──
@@ -283,6 +326,7 @@ def list_actions():
             'finished_at': state.get('finished_at'),
             'summary': state.get('summary'),
             'error': state.get('error'),
+            'last_5_runs': state.get('last_5_runs', []),
         })
     return jsonify({'actions': actions})
 
