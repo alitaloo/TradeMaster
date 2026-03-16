@@ -180,14 +180,44 @@ class PredictionEngine:
         if self.data_engine:
             return self.data_engine.get_daily_data(symbol, period=f"{days}d")
 
-        # 如果沒有數據引擎，嘗試直接獲取
+        # yfinance / Yahoo Finance 已移除 (2026-03-06)
+        # 改用富途數據：從 MySQL kline_cache 讀取（由 scripts/futu_polling.py 維護）
+        # 若無數據引擎，嘗試直接從 MySQL 讀取
         try:
-            import yfinance
-            ticker = yfinance.Ticker(symbol)
-            df = ticker.history(period=f"{days}d")
-            return df if len(df) > 0 else None
+            import sys, os
+            from pathlib import Path
+            proj_root = str(Path(__file__).parent.parent.parent)
+            if proj_root not in sys.path:
+                sys.path.insert(0, proj_root)
+            from config.database import get_db_connection
+            import pandas as pd
+            from datetime import datetime, timedelta
+            start_date = (datetime.now() - timedelta(days=days)).strftime('%Y-%m-%d')
+            futu_symbol = f"US.{symbol}" if not symbol.startswith("US.") else symbol
+            with get_db_connection() as conn:
+                df = pd.read_sql(
+                    "SELECT timestamp, open_price AS Open, high_price AS High, "
+                    "low_price AS Low, close_price AS Close, volume AS Volume "
+                    "FROM kline_cache WHERE symbol = %s AND interval_val = '1d' "
+                    "AND timestamp >= %s ORDER BY timestamp",
+                    conn, params=(futu_symbol, start_date),
+                    index_col='timestamp', parse_dates=['timestamp']
+                )
+            
+            if df is None or df.empty:
+                logger.warning(f"⚠️ {symbol}: 無法從 kline_cache 獲取數據（數據庫為空）")
+                return None
+            
+            # 檢查數據可用性
+            if len(df) < 20:
+                logger.warning(f"⚠️ {symbol}: 數據不足 {len(df)} 條（需要至少 20 條）")
+                return None
+            
+            logger.info(f"✅ {symbol}: 成功獲取 {len(df)} 條 K 線數據")
+            return df
+            
         except Exception as e:
-            logger.error(f"獲取數據失敗: {e}")
+            logger.error(f"⚠️ {symbol}: 獲取數據失敗 - {str(e)}")
             return None
     
     def _parse_direction(self, emoji: str) -> Optional[str]:

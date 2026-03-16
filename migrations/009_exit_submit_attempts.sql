@@ -1,0 +1,37 @@
+-- Stage 3.5 pre-live safety pack: reservation/lease + submit attempt state machine
+-- migrations/009_exit_submit_attempts.sql
+
+CREATE TABLE IF NOT EXISTS lifecycle_exit_submit_attempts (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    proposal_id BIGINT NOT NULL,
+    candidate_id BIGINT NOT NULL,
+    lifecycle_id BIGINT NOT NULL,
+    symbol VARCHAR(32) NOT NULL,
+    proposal_mode ENUM('dry_run','live') NOT NULL DEFAULT 'dry_run',
+    reservation_key VARCHAR(191) NOT NULL,
+    reservation_status ENUM('active','released','expired') NOT NULL DEFAULT 'active',
+    lease_owner VARCHAR(128) NOT NULL,
+    lease_acquired_at DATETIME NOT NULL,
+    lease_expires_at DATETIME NOT NULL,
+    submit_state ENUM('reserved','submitting','submitted','ack_pending','reconcile_pending','reconciled','cancelled','expired','failed') NOT NULL DEFAULT 'reserved',
+    idempotency_key VARCHAR(191) NOT NULL,
+    external_correlation_id VARCHAR(191) NOT NULL,
+    broker_order_id VARCHAR(128) NULL,
+    last_error TEXT NULL,
+    submit_requested_at DATETIME NULL,
+    submit_finished_at DATETIME NULL,
+    reconciliation_due_at DATETIME NULL,
+    reconciled_at DATETIME NULL,
+    audit_payload JSON NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_submit_attempt_proposal (proposal_id),
+    UNIQUE KEY uq_submit_attempt_idempotency (idempotency_key),
+    UNIQUE KEY uq_submit_attempt_external_corr (external_correlation_id),
+    UNIQUE KEY uq_submit_attempt_active_reservation (reservation_key, reservation_status),
+    KEY idx_submit_attempt_lifecycle_state (lifecycle_id, submit_state, updated_at),
+    KEY idx_submit_attempt_lease (lease_expires_at, reservation_status),
+    CONSTRAINT fk_submit_attempt_proposal FOREIGN KEY (proposal_id) REFERENCES lifecycle_exit_action_proposals(id),
+    CONSTRAINT fk_submit_attempt_candidate FOREIGN KEY (candidate_id) REFERENCES lifecycle_exit_candidates(id),
+    CONSTRAINT fk_submit_attempt_lifecycle FOREIGN KEY (lifecycle_id) REFERENCES trade_lifecycles(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

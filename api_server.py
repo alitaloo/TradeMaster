@@ -7,9 +7,10 @@ import os
 import sys
 import logging
 from pathlib import Path
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import yaml
+from datetime import datetime, timezone, timedelta
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +19,8 @@ PROJECT_ROOT = Path(__file__).parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from api import prediction_bp, init_prediction_engine
-from api import signals_bp, backtests_bp, strategies_bp, portfolio_bp, stocks_bp, kline_bp, futu_bp
+from api import backtests_bp, strategies_bp, portfolio_bp, stocks_bp, kline_bp, futu_bp
+# Stage 1: 只使用 DB-based signals blueprint，消除 file-based 路由歧義
 from api.signals_bp import signals_bp as new_signals_bp
 from api.positions_bp import positions_bp
 from api.orders_bp import orders_bp
@@ -27,8 +29,23 @@ from api.market_bp import market_bp
 from api.config_bp import config_bp
 from api.stock_strategies_bp import stock_strategies_bp
 from api.paper_bp import paper_bp
+from api.system_status_bp import system_status_bp
+from api.manual_actions_bp import manual_actions_bp
 from modules.prediction import PredictionEngine
 from data import DataEngine
+
+
+# 全局新聞錯誤計數器 (進程內記憶體，重啟歸零)
+_news_error_counter = {'count_24h': 0, 'last_error': None, 'last_error_ts': None}
+
+
+def news_error_increment(error_msg: str = ""):
+    """供 news_bp 或 cron 腳本呼叫，遞增錯誤計數"""
+    from datetime import datetime, timezone, timedelta
+    _news_error_counter['count_24h'] = _news_error_counter.get('count_24h', 0) + 1
+    _news_error_counter['last_error'] = str(error_msg)[:200]
+    _news_error_counter['last_error_ts'] = datetime.now(
+        timezone(timedelta(hours=8))).isoformat()
 
 
 def load_config(config_path: str = None) -> dict:
@@ -86,15 +103,113 @@ def create_app(config: dict = None) -> Flask:
     app.register_blueprint(config_bp)
     app.register_blueprint(stock_strategies_bp)
     app.register_blueprint(paper_bp)
+    app.register_blueprint(system_status_bp)
+    app.register_blueprint(manual_actions_bp)
     
     # 健康檢查
     @app.route('/health')
     def health():
-        return jsonify({
+        result = {
             "status": "ok",
             "service": "TradeMaster v2.0 API",
             "version": "2.0.0"
-        })
+        }
+
+        # 如 ?detail=news 或 ?detail=all，附加新聞同步狀態
+        detail = request.args.get('detail', '')
+        if detail in ('news', 'all'):
+            try:
+                from config.database import get_db_connection
+                _tz = timezone(timedelta(hours=8))
+                with get_db_connection() as conn:
+                    cur = conn.cursor(dictionary=True)
+
+                    # 最後同步時間
+                    cur.execute("SELECT MAX(created_at) AS last_synced FROM news")
+                    row = cur.fetchone()
+                    last_synced = row['last_synced'] if row else None
+                    if last_synced and last_synced.tzinfo is None:
+                        last_synced = last_synced.replace(tzinfo=_tz)
+
+                    # 24h 計數
+                    cur.execute("SELECT COUNT(*) AS cnt FROM news WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)")
+                    count_24h = cur.fetchone()['cnt']
+
+                    # 總計
+                    cur.execute("SELECT COUNT(*) AS cnt FROM news")
+                    total = cur.fetchone()['cnt']
+
+                news_status = {
+                    "news_last_synced": last_synced.isoformat() if last_synced else None,
+                    "news_count_24h": count_24h,
+                    "news_count_total": total,
+                    "news_sync_errors_24h": _news_error_counter.get('count_24h', 0),
+                    "news_sync_status": "ok" if count_24h > 0 else ("stale" if last_synced else "never_synced"),
+                }
+                result["news"] = news_status
+            except Exception as e:
+                result["news"] = {"news_sync_status": "error", "detail": str(e)}
+
+        return jsonify(result)
+
+    # 專用新聞同步狀態 endpoint
+    @app.route('/api/v1/news/sync-status')
+    def news_sync_status():
+        """新聞同步狀態 (freshness / observability)"""
+        try:
+            from config.database import get_db_connection
+            _tz = timezone(timedelta(hours=8))
+            with get_db_connection() as conn:
+                cur = conn.cursor(dictionary=True)
+
+                cur.execute("SELECT MAX(created_at) AS last_synced FROM news")
+                row = cur.fetchone()
+                last_synced = row['last_synced'] if row else None
+                if last_synced and last_synced.tzinfo is None:
+                    last_synced = last_synced.replace(tzinfo=_tz)
+
+                cur.execute("SELECT COUNT(*) AS cnt FROM news WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)")
+                count_24h = cur.fetchone()['cnt']
+
+                cur.execute("SELECT COUNT(*) AS cnt FROM news")
+                total = cur.fetchone()['cnt']
+
+                # 每來源統計
+                cur.execute("""
+                    SELECT source, COUNT(*) AS cnt, MAX(created_at) AS latest
+                    FROM news WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                    GROUP BY source ORDER BY cnt DESC LIMIT 10
+                """)
+                by_source = []
+                for r in cur.fetchall():
+                    lt = r['latest']
+                    if lt and lt.tzinfo is None:
+                        lt = lt.replace(tzinfo=_tz)
+                    by_source.append({
+                        "source": r['source'],
+                        "count_24h": r['cnt'],
+                        "latest": lt.isoformat() if lt else None
+                    })
+
+            # 判定 sync_status
+            if last_synced is None:
+                sync_status = "never_synced"
+            elif count_24h > 0:
+                sync_status = "ok"
+            else:
+                sync_status = "stale"
+
+            return jsonify({
+                "status": "ok",
+                "news_last_synced": last_synced.isoformat() if last_synced else None,
+                "news_count_24h": count_24h,
+                "news_count_total": total,
+                "news_sync_errors_24h": _news_error_counter.get('count_24h', 0),
+                "news_sync_status": sync_status,
+                "by_source": by_source
+            })
+        except Exception as e:
+            return jsonify({"status": "error", "message": str(e)}), 500
     
     # API 信息
     @app.route('/api/v1')

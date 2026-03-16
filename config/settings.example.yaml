@@ -55,6 +55,21 @@ risk:
   # 每日最大交易次數
   max_orders_per_day: 50
 
+
+  # 每日交易上限（execution/signal_consumer.py）
+  per_day_trade_cap: 6
+
+trend_veto:
+  enabled: true
+  required_tf: 1h
+
+execution:
+  min_confidence: 0.60
+  min_confidence_tier: medium
+
+strategy:
+  rsi_profile: default  # default / tighter / conservative
+
 # ===== 技術參數 =====
 indicators:
   rsi:

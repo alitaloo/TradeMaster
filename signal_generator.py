@@ -16,23 +16,24 @@ import logging
 import json
 import pymysql
 
-# DB 配置
-DB_CONFIG = {
-    "host": "localhost",
-    "port": 3306,
-    "user": "alita",
-    "password": "alitamysql",
-    "database": "trademaster",
-    "charset": "utf8mb4",
-}
-
-# 嘗試導入 yfinance，如果失敗則標記
+# DB 配置 - 統一從 config.database 讀取
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).parent))
 try:
-    import yfinance as yf
-    YFINANCE_AVAILABLE = True
+    from config.database import MYSQL_CONFIG as DB_CONFIG, get_db_connection
 except ImportError:
-    YFINANCE_AVAILABLE = False
-    print("⚠️ yfinance 未安裝，將使用本地日線數據")
+    DB_CONFIG = {
+        "host": "localhost",
+        "port": 3306,
+        "user": "alita",
+        "password": "alitamysql",
+        "database": "trademaster",
+        "charset": "utf8mb4",
+    }
+
+# yfinance / Yahoo Finance 已移除 (2026-03-06)
+# 改用富途數據：盤中 K線從 MySQL kline_cache 讀取（由 scripts/futu_polling.py 維護）
+YFINANCE_AVAILABLE = False  # 永久禁用，不再使用 Yahoo Finance
 
 # 設置日誌
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -330,17 +331,27 @@ class SignalGenerator:
             strategy = strat_info['strategy']
             data_source = None
             
-            if data is None and use_intraday and YFINANCE_AVAILABLE:
-                # 嘗試即時獲取 10 分鐘 K 線（5分鐘API有限制）
+            if data is None and use_intraday:
+                # 從 MySQL kline_cache 讀取盤中 K線（富途數據，由 futu_polling.py 寫入）
+                # yfinance / Yahoo Finance 已移除 (2026-03-06)
                 try:
-                    ticker = yf.Ticker(stock)
-                    intraday = ticker.history(period="1d", interval="10m")
-                    
+                    from config.database import get_db_connection
+                    futu_symbol = f"US.{stock}" if not stock.startswith("US.") else stock
+                    with get_db_connection() as conn:
+                        intraday = pd.read_sql(
+                            "SELECT timestamp, open_price AS Open, high_price AS High, "
+                            "low_price AS Low, close_price AS Close, volume AS Volume "
+                            "FROM kline_cache WHERE symbol = %s AND interval_val = '5m' "
+                            "ORDER BY timestamp DESC LIMIT 200",
+                            conn, params=(futu_symbol,),
+                            index_col='timestamp', parse_dates=['timestamp']
+                        )
                     if intraday is not None and not intraday.empty and len(intraday) > 50:
+                        intraday = intraday.sort_index()
                         data = intraday
-                        data_source = "5分鐘K線 (即時)"
+                        data_source = "5分鐘K線 (MySQL/富途)"
                 except Exception as e:
-                    logger.debug(f"{stock}: 即時獲取失敗 ({e})，使用本地數據")
+                    logger.debug(f"{stock}: MySQL kline 讀取失敗 ({e})，使用本地數據")
             
             # 如果沒有 5 分鐘數據，使用本地日線
             if data is None:
@@ -471,38 +482,59 @@ class SignalGenerator:
         with conn.cursor() as cur:
             for symbol, data in signals_data.items():
                 signal_type = data.get('signal', 'HOLD')
+                strategy_type = data.get('strategy', 'TopK')
                 if signal_type == 'HOLD':
                     continue
                 
-                # 檢查是否已存在相同信號
+                # 檢查是否已存在相同信號（擴展到 4 小時，並增加策略+方向的去重條件）
                 cur.execute("""
                     SELECT id FROM signals 
                     WHERE symbol = %s 
                     AND signal_type = %s 
+                    AND strategy_type = %s
                     AND status = 'pending'
-                    AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
-                """, (symbol, signal_type))
+                    AND created_at > DATE_SUB(NOW(), INTERVAL 4 HOUR)
+                """, (symbol, signal_type, strategy_type))
                 
                 if cur.fetchone():
-                    continue  # 已存在近期相同信號
+                    logger.debug(f"跳過重複信號: {symbol} {strategy_type} {signal_type} (4小時內已存在)")
+                    continue  # 已存在近期相同策略+方向信號
                 
                 # 計算數量 (簡化版：根據 Kelly)
                 price = data.get('price', 0)
                 kelly = data.get('kelly_position', 0.2)
                 capital = 100000  # 假設資本
                 quantity = int(capital * kelly / price) if price > 0 else 0
-                
+
+                # 計算止損止盈 (僅對買入信號 LONG)
+                stop_loss = 0.0
+                take_profit = None
+
+                if signal_type == 'LONG' and price > 0:
+                    # 如果信號已有值則用原值，沒有才計算預設值
+                    if not data.get('stop_loss') or data.get('stop_loss', 0) == 0:
+                        stop_loss = round(price * (1 - 0.05), 2)  # -5%
+                    else:
+                        stop_loss = data.get('stop_loss')
+
+                    if not data.get('take_profit'):
+                        take_profit = round(price * (1 + 0.10), 2)  # +10%
+                    else:
+                        take_profit = data.get('take_profit')
+
                 cur.execute("""
-                    INSERT INTO signals 
-                    (symbol, strategy_type, signal_type, price, quantity, confidence, status, created_at)
-                    VALUES (%s, %s, %s, %s, %s, %s, 'pending', NOW())
+                    INSERT INTO signals
+                    (symbol, strategy_type, signal_type, price, quantity, confidence, status, stop_loss, take_profit, created_at)
+                    VALUES (%s, %s, %s, %s, %s, %s, 'pending', %s, %s, NOW())
                 """, (
                     symbol,
-                    data.get('strategy', 'TopK'),
+                    strategy_type,
                     signal_type,
                     price,
                     quantity,
-                    data.get('signal_strength', 0.5)
+                    data.get('signal_strength', 0.5),
+                    stop_loss,
+                    take_profit
                 ))
                 saved_count += 1
             

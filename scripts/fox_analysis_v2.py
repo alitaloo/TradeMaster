@@ -34,12 +34,26 @@ from functools import wraps
 # 富途 API
 try:
     import futu as ft
+    from futu.quote.open_quote_context import OpenQuoteContext
+    from futu.common.constant import KLType, TrdMarket, TrdSide, OrderType, TrdEnv
+    # 附加到 ft 对象
+    ft.OpenQuoteContext = OpenQuoteContext
+    ft.KLType = KLType
+    ft.TrdMarket = TrdMarket
+    ft.TrdSide = TrdSide
+    ft.OrderType = OrderType
+    ft.TrdEnv = TrdEnv
     HAS_FUTU = True
-except ImportError:
+except ImportError as e:
     HAS_FUTU = False
+    print(f"⚠️ 富途 SDK 导入失败: {e}")
 
 FUTU_HOST = '127.0.0.1'
 FUTU_PORT = 11111
+
+# 添加 socket timeout 防止連接阻塞
+import socket
+socket.setdefaulttimeout(10)
 
 # 導入市場時間判斷模組
 try:
@@ -71,6 +85,19 @@ RISK_PARAMS = {
     'HIGH_CONFIDENCE': 0.8,        # 高信心度閾值
     'STOP_LOSS_PCT': 5.0,          # 止損百分比
 }
+
+RSI_PROFILES = {
+    'default': {'RSI': {'oversold': 30, 'overbought': 70}, 'RSI_7': {'oversold': 25, 'overbought': 75}},
+    'tighter': {'RSI': {'oversold': 25, 'overbought': 75}, 'RSI_7': {'oversold': 20, 'overbought': 80}},
+    'conservative': {'RSI': {'oversold': 20, 'overbought': 80}, 'RSI_7': {'oversold': 18, 'overbought': 82}},
+}
+
+CONFIDENCE_TIERS = [
+    (0.85, 'very_high', 'very_strong'),
+    (0.75, 'high', 'strong'),
+    (0.60, 'medium', 'moderate'),
+    (0.00, 'low', 'weak'),
+]
 
 # 數據庫配置 - 從統一配置導入
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -224,6 +251,50 @@ def get_volume_signal(df: pd.DataFrame, period: int = 20) -> Tuple[int, Dict]:
 
 
 # ==================== 數據庫操作 ====================
+def get_runtime_setting(key: str, default=None):
+    if not SystemConfig:
+        return default
+    try:
+        value = SystemConfig.get(key, default)
+        return default if value in (None, '') else value
+    except Exception:
+        return default
+
+
+def get_rsi_profile() -> str:
+    profile = str(get_runtime_setting('rsi_profile', 'default')).strip().lower()
+    return profile if profile in RSI_PROFILES else 'default'
+
+
+def apply_rsi_profile(indicator: str, params: dict) -> dict:
+    adjusted = dict(params or {})
+    profile = RSI_PROFILES[get_rsi_profile()]
+    if indicator == 'RSI':
+        adjusted.update(profile['RSI'])
+    elif indicator == 'RSI_7':
+        adjusted.update(profile['RSI_7'])
+    elif 'RSI' in indicator.split('+'):
+        adjusted.update(profile['RSI'])
+    return adjusted
+
+
+def quantize_confidence(value: float) -> float:
+    clipped = max(0.1, min(0.95, value))
+    return round(round(clipped / 0.05) * 0.05, 2)
+
+
+def classify_confidence(confidence: float) -> Tuple[str, str]:
+    for minimum, tier, strength in CONFIDENCE_TIERS:
+        if confidence >= minimum:
+            return tier, strength
+    return 'low', 'weak'
+
+
+def get_trend_label(tf_signal) -> str:
+    mapping = {1: 'bullish', -1: 'bearish', 0: 'neutral', None: 'unknown', 'BUY': 'bullish', 'SELL': 'bearish', 'HOLD': 'neutral'}
+    return mapping.get(tf_signal, str(tf_signal).lower())
+
+
 def load_stock_strategies() -> dict:
     """從 MySQL 加載股票最佳策略"""
     global _stock_strategy_cache, _cache_loaded
@@ -259,6 +330,7 @@ def load_stock_strategies() -> dict:
             # 根據指標類型設置默認參數
             params = get_indicator_params(indicator)
             params.update(params_extra)
+            params = apply_rsi_profile(indicator, params)
             
             if symbol not in _stock_strategy_cache:
                 _stock_strategy_cache[symbol] = {}
@@ -318,7 +390,8 @@ def get_stock_strategy(symbol: str, timeframe: str) -> dict:
         '1h': {'indicator': 'Stochastic', 'params': {'k_period': 14, 'd_period': 3, 'oversold': 20, 'overbought': 80}},
         '1d': {'indicator': 'Bollinger', 'params': {'period': 20, 'std': 2}},
     }
-    return default_config.get(timeframe, {'indicator': 'RSI', 'params': {}})
+    config = default_config.get(timeframe, {'indicator': 'RSI', 'params': {}})
+    return {'indicator': config['indicator'], 'params': apply_rsi_profile(config['indicator'], config['params'])}
 
 
 # 保持向後兼容的默認配置
@@ -371,6 +444,24 @@ def get_realtime_kline(symbol: str, timeframe: str, limit: int = 10) -> Optional
     """
     if not HAS_FUTU:
         logger.warning("富途模組未安裝，無法獲取實時數據")
+        return None
+    
+    # 快速檢查連接，如果失敗則跳過
+    import socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(3)
+    try:
+        result = sock.connect_ex(('127.0.0.1', 11111))
+        sock.close()
+        if result != 0:
+            logger.warning("富途服務未運行，跳過實時數據")
+            return None
+    except Exception:
+        try:
+            sock.close()
+        except:
+            pass
+        logger.warning("富途連接失敗，跳過實時數據")
         return None
     
     try:
@@ -1075,19 +1166,41 @@ def get_watchlist() -> List[str]:
 
 
 def get_news_weight(symbol: str, hours: int = 24) -> Dict:
-    """獲取股票新聞權重"""
-    result = api_get(f'/news/weight/{symbol}', {'hours': hours})
+    """獲取股票新聞權重
+    注意：news 表與 API 使用無市場前綴的代碼（TSLA），
+    需在此處移除例如 US.TSLA 之類的前綴，避免永遠查不到資料。
+
+    業務規則 (見 docs/news_sync_business_rules.md):
+    - sync_status == 'ok' + news_count == 0 = 真的沒有新聞 (quiet)
+    - sync_status == 'error'/'degraded' = 同步失敗，需告警或繞過
+    - is_stale == True = 數據過期，需重新同步
+    - 兼容舊版 API：無 sync_status 欄位時，預設視為 ok
+    """
+    # 去除市場前綴（例如 US.TSLA → TSLA）
+    if symbol.startswith('US.'):
+        api_symbol = symbol.split('.', 1)[1]
+    else:
+        api_symbol = symbol
+
+    result = api_get(f'/news/weight/{api_symbol}', {'hours': hours})
     
     if result.get('status') == 'ok':
+        # 兼容舊版 API（無 sync_status/is_stale 欄位）
+        result.setdefault('sync_status', 'ok')
+        result.setdefault('is_stale', False)
         return result
     else:
         logger.warning(f"   獲取新聞權重失敗: {result.get('message')}")
         return {
-            'status': 'ok',
-            'symbol': symbol,
-            'total_weight': 0,
+            'status': 'error',
+            'degraded': True,
+            'symbol': api_symbol,
+            'total_weight': None,
             'news_count': 0,
-            'breakdown': {'positive': 0, 'negative': 0, 'neutral': 0}
+            'breakdown': {'positive': 0, 'negative': 0, 'neutral': 0},
+            'error_message': result.get('message', 'unknown API error'),
+            'sync_status': 'error',  # 明確標記為錯誤
+            'is_stale': True
         }
 
 
@@ -1154,11 +1267,36 @@ def check_market_risk(market_data: Dict) -> Tuple[bool, str]:
     return True, "市場風險檢查通過"
 
 
-def check_news_risk(news_weight: int) -> Tuple[bool, str]:
+def check_news_risk(news_weight: int, news_data: Optional[Dict] = None) -> Tuple[bool, str]:
     """
     檢查新聞風險
     返回: (是否通過, 原因)
+    
+    業務規則:
+    - sync_status == 'error' = API 完全失敗，阻擋交易
+    - sync_status == 'degraded' = 部分失敗，建議謹慎
+    - is_stale == True = 數據過期，阻擋交易
+    - news_weight > 阈值 = 新聞異常，阻擋交易
+    - news_weight == 0 且 sync_status == 'ok' = quiet，正常通過
     """
+    # 檢查同步狀態
+    if news_data:
+        sync_status = news_data.get('sync_status', 'ok')
+        is_stale = news_data.get('is_stale', False)
+        
+        if sync_status == 'error':
+            return False, f"新聞同步失敗 (API error)，無法評估風險"
+        
+        if sync_status == 'degraded':
+            return False, f"新聞同步降級 (partial failure)，建議謹慎"
+        
+        if is_stale:
+            return False, f"新聞數據過期 (超過 6 小時未更新)，請重新同步"
+    
+    # 檢查新聞權重
+    if news_weight is None:
+        news_weight = 0
+    
     if news_weight > RISK_PARAMS['NEWS_WEIGHT_THRESHOLD']:
         return False, f"新聞權重={news_weight} > {RISK_PARAMS['NEWS_WEIGHT_THRESHOLD']} (新聞異常)"
     
@@ -1183,70 +1321,106 @@ def check_total_position(positions: List[Dict], max_total: float = 50000) -> Dic
         return {'passed': False, 'reason': f'check_error: {e}'}
 
 
-def calculate_confidence(position: Dict, news_data: Dict, market_data: Dict) -> float:
+def calculate_confidence(position: Dict, news_data: Dict, market_data: Dict, tf_signals: Optional[Dict] = None) -> Dict:
     """
-    計算信心度 (0.0 - 1.0)
-    
-    信心度因素:
-    - 持倉回報率: 正回報 + 信心，負回報 - 信心
-    - 新聞權重: 低權重 + 信心，高權重 - 信心
-    - 市場環境: VIX 低 + 信心，市場漲 + 信心
+    計算更細緻的信心度，並返回 tier / strength 供 execution 使用
     """
-    confidence = 0.5  # 基礎信心度
-    
-    # 1. 持倉回報率因素 (+/- 0.2)
+    confidence = 0.50
+    components = []
+
     return_pct = position.get('return_pct', 0) or 0
-    if return_pct > 10:
-        confidence += 0.2
-    elif return_pct > 5:
-        confidence += 0.1
+    if return_pct > 15:
+        confidence += 0.18
+        components.append('position_return:strong_positive')
+    elif return_pct > 8:
+        confidence += 0.12
+        components.append('position_return:positive')
     elif return_pct > 0:
-        confidence += 0.05
+        confidence += 0.06
+        components.append('position_return:slightly_positive')
     elif return_pct > -5:
-        confidence -= 0.1
+        confidence -= 0.08
+        components.append('position_return:slightly_negative')
     else:
-        confidence -= 0.2
+        confidence -= 0.16
+        components.append('position_return:negative')
+
+    news_weight_raw = news_data.get('total_weight')
+    # 兼容新舊版 API：優先使用 sync_status，fallback 到 degraded 欄位
+    sync_status = news_data.get('sync_status', 'ok')
+    news_degraded = news_data.get('degraded', False) or (sync_status in ('error', 'degraded'))
     
-    # 2. 新聞因素 (+/- 0.2)
-    news_weight = news_data.get('total_weight', 0) or 0
-    if news_weight == 0:
-        confidence += 0.1  # 無新聞 = 穩定
-    elif news_weight < 3:
-        confidence += 0.05
-    elif news_weight > 7:
-        confidence -= 0.2
-    
-    # 新聞情感
+    if news_degraded or news_weight_raw is None:
+        # API error: don't adjust confidence, mark as degraded
+        confidence += 0.0
+        components.append('news:degraded')
+    else:
+        news_weight = news_weight_raw or 0
+        if news_weight == 0:
+            confidence += 0.08
+            components.append('news:quiet')
+        elif news_weight < 3:
+            confidence += 0.04
+            components.append('news:light')
+        elif news_weight > 7:
+            confidence -= 0.16
+            components.append('news:heavy')
+
     breakdown = news_data.get('breakdown', {})
     positive = breakdown.get('positive', 0)
     negative = breakdown.get('negative', 0)
     if positive > negative:
-        confidence += 0.1
+        confidence += 0.06
+        components.append('sentiment:positive')
     elif negative > positive:
-        confidence -= 0.1
-    
-    # 3. 市場環境因素 (+/- 0.2)
+        confidence -= 0.06
+        components.append('sentiment:negative')
+
     vix = market_data.get('vix')
     if vix is not None:
         if vix < 15:
-            confidence += 0.2
+            confidence += 0.12
+            components.append('vix:calm')
         elif vix < 20:
-            confidence += 0.1
-        elif vix > 25:
-            confidence -= 0.1
+            confidence += 0.06
+            components.append('vix:stable')
         elif vix > 30:
-            confidence -= 0.2
-    
+            confidence -= 0.14
+            components.append('vix:risk_off')
+        elif vix > 25:
+            confidence -= 0.08
+            components.append('vix:elevated')
+
     market_drop = market_data.get('market_drop', 0) or 0
     if market_drop > 1:
-        confidence += 0.1
+        confidence += 0.05
+        components.append('market:broad_strength')
     elif market_drop < -2:
-        confidence -= 0.15
-    
-    # 限制在 0.1 - 0.95 範圍內
-    confidence = max(0.1, min(0.95, confidence))
-    
-    return round(confidence, 2)
+        confidence -= 0.10
+        components.append('market:broad_weakness')
+
+    if tf_signals:
+        consensus = tf_signals.get('consensus')
+        one_hour = tf_signals.get('1h')
+        daily = tf_signals.get('1d')
+        if consensus in ('BUY', 'SELL'):
+            confidence += 0.08
+            components.append('topk:consensus')
+        if one_hour == consensus and consensus in ('BUY', 'SELL'):
+            confidence += 0.05
+            components.append('trend_1h:aligned')
+        if daily == consensus and consensus in ('BUY', 'SELL'):
+            confidence += 0.03
+            components.append('trend_1d:aligned')
+
+    confidence = quantize_confidence(confidence)
+    tier, strength = classify_confidence(confidence)
+    return {
+        'confidence': confidence,
+        'confidence_tier': tier,
+        'strength': strength,
+        'components': components,
+    }
 
 
 def decide_signal(confidence: float, news_ok: bool, market_ok: bool) -> Tuple[str, str]:
@@ -1368,7 +1542,9 @@ def update_signal_confidence(signal_id: int, new_confidence: float) -> bool:
 
 def create_signal(position: Dict, signal_type: str, confidence: float, 
                   news_ok: bool, market_ok: bool, reason: str,
-                  stop_loss_pct: float = None, market_data: Dict = None) -> Dict:
+                  stop_loss_pct: float = None, market_data: Dict = None,
+                  *, tf_signals: Optional[Dict] = None, confidence_tier: Optional[str] = None,
+                  strength: Optional[str] = None, confidence_components: Optional[List[str]] = None) -> Dict:
     """創建交易信號 (自動去重)"""
     symbol = position.get('symbol')
     
@@ -1399,11 +1575,20 @@ def create_signal(position: Dict, signal_type: str, confidence: float,
             'price': current_price,
             'quantity': 0,
             'confidence': 0.5,
+            'confidence_tier': 'low',
+            'strength': 'weak',
             'status': 'IGNORED',
             'news_weight': position.get('news_weight', 0),
             'stop_loss': 0,
             'risk_score': 1,
-            'metadata': {'reason': reason}
+            'metadata': {
+                'reason': reason,
+                'trend_tf': '1h',
+                '1h_trend': get_trend_label((tf_signals or {}).get('1h')),
+                'confidence_tier': confidence_tier or 'low',
+                'strength': strength or 'weak',
+                'tf_signals': tf_signals or {}
+            }
         }
         
         logger.info(f"   📝 寫入 HOLD: {symbol} (status=IGNORED)")
@@ -1465,7 +1650,15 @@ def create_signal(position: Dict, signal_type: str, confidence: float,
             'reason': reason,
             'market_ok': market_ok,
             'news_ok': news_ok,
-            'created_at': datetime.now().isoformat()
+            'created_at': datetime.now().isoformat(),
+            'trend_tf': '1h',
+            '1h_trend': get_trend_label((tf_signals or {}).get('1h')),
+            '1d_trend': get_trend_label((tf_signals or {}).get('1d')),
+            'confidence_tier': confidence_tier,
+            'strength': strength,
+            'confidence_components': confidence_components or [],
+            'tf_signals': tf_signals or {},
+            'rsi_profile': get_rsi_profile()
         }
     }
     
@@ -1501,6 +1694,8 @@ def analyze_position(position: Dict, market_data: Dict, max_age_minutes: Optiona
             'symbol': symbol,
             'signal_type': 'HOLD',
             'confidence': 0.5,
+            'confidence_tier': 'low',
+            'strength': 'weak',
             'news_ok': True,
             'market_ok': True,
             'reason': f'TopK: 5m={tf_signals.get("5m")}, 1h={tf_signals.get("1h")}, 1d={tf_signals.get("1d")}',
@@ -1519,11 +1714,16 @@ def analyze_position(position: Dict, market_data: Dict, max_age_minutes: Optiona
     
     # 1. 獲取新聞權重
     news_data = get_news_weight(symbol)
-    news_weight = news_data.get('total_weight', 0) or 0
-    logger.info(f"   新聞權重: {news_weight}")
+    news_degraded = news_data.get('degraded', False)
+    news_weight_raw = news_data.get('total_weight')
+    news_weight = 0 if (news_weight_raw is None or news_degraded) else (news_weight_raw or 0)
+    if news_degraded:
+        logger.warning(f"   新聞權重: DEGRADED (API error: {news_data.get('error_message', '?')})")
+    else:
+        logger.info(f"   新聞權重: {news_weight}")
     
-    # 2. 檢查新聞風險
-    news_ok, news_reason = check_news_risk(news_weight)
+    # 2. 檢查新聞風險（傳遞 news_data 以檢查 sync_status）
+    news_ok, news_reason = check_news_risk(news_weight, news_data)
     logger.info(f"   新聞風險: {'✅ 通過' if news_ok else '❌ 失敗'} - {news_reason}")
     
     # 3. 檢查市場風險
@@ -1531,12 +1731,16 @@ def analyze_position(position: Dict, market_data: Dict, max_age_minutes: Optiona
     logger.info(f"   市場風險: {'✅ 通過' if market_ok else '❌ 失敗'} - {market_reason}")
     
     # 4. 計算信心度
-    confidence = calculate_confidence(position, news_data, market_data)
-    logger.info(f"   信心度: {confidence}")
+    confidence_info = calculate_confidence(position, news_data, market_data, tf_signals=tf_signals)
+    confidence = confidence_info['confidence']
+    confidence_tier = confidence_info['confidence_tier']
+    strength = confidence_info['strength']
+    logger.info(f"   信心度: {confidence} ({confidence_tier}/{strength})")
     
     # 5. 決定信號 (TopK 共識時增強信心度)
     if consensus == 'BUY':
-        confidence = min(0.95, confidence + 0.15)
+        confidence = quantize_confidence(confidence + 0.10)
+        confidence_tier, strength = classify_confidence(confidence)
         signal_type = 'BUY'
     elif consensus == 'SELL':
         # 檢查是否有持倉，沒有持倉則改為 HOLD
@@ -1545,12 +1749,13 @@ def analyze_position(position: Dict, market_data: Dict, max_age_minutes: Optiona
             signal_type = 'HOLD'
             logger.info(f"   ⚠️ {symbol} 無持倉，SELL 信號改為 HOLD")
         else:
-            confidence = min(0.95, confidence + 0.15)
+            confidence = quantize_confidence(confidence + 0.10)
+            confidence_tier, strength = classify_confidence(confidence)
             signal_type = 'SELL'
     else:
         signal_type = 'HOLD'
     
-    signal_reason = f'TopK 共識' if signal_type != 'HOLD' or consensus == 'HOLD' else '無持倉，SELL → HOLD'
+    signal_reason = f"TopK 共識 ({consensus}) | 1h={get_trend_label(tf_signals.get('1h'))} | tier={confidence_tier}" if signal_type != 'HOLD' or consensus == 'HOLD' else '無持倉，SELL → HOLD'
     logger.info(f"   信號: {signal_type} - {signal_reason} (信心度: {confidence})")
     
     return {
@@ -1562,7 +1767,11 @@ def analyze_position(position: Dict, market_data: Dict, max_age_minutes: Optiona
         'reason': signal_reason,
         'news_weight': news_weight,
         'position': position,
-        'tf_signals': tf_signals
+        'tf_signals': tf_signals,
+        'confidence_tier': confidence_tier,
+        'strength': strength,
+        'confidence_components': confidence_info['components'],
+        '1h_trend': get_trend_label(tf_signals.get('1h'))
     }
 
 
@@ -1703,7 +1912,11 @@ def run_analysis(dry_run: bool = False, max_age_minutes: Optional[float] = None)
                 news_ok=result['news_ok'],
                 market_ok=result['market_ok'],
                 reason=result['reason'],
-                market_data=market_data
+                market_data=market_data,
+                tf_signals=result.get('tf_signals'),
+                confidence_tier=result.get('confidence_tier'),
+                strength=result.get('strength'),
+                confidence_components=result.get('confidence_components')
             )
             if response.get('status') == 'ok':
                 logger.info(f"   ✅ 信號創建成功: ID={response.get('signal_id')}")

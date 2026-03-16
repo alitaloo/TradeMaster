@@ -18,6 +18,8 @@ import argparse
 import time
 from functools import wraps
 
+from paper_position_reconciliation import reconcile_paper_positions, reconcile_single_filled_order
+
 # 配置日誌
 logging.basicConfig(
     level=logging.INFO,
@@ -184,14 +186,14 @@ def create_paper_order(signal: Dict, futu_order_id: str) -> Optional[int]:
 
 # ==================== 訂單輪詢與狀態更新 ====================
 def get_pending_paper_orders() -> List[Dict]:
-    """獲取待處理的訂單"""
+    """獲取待輪詢訂單（pending / partial）。"""
     conn = get_db_connection()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     
     try:
         cursor.execute("""
             SELECT * FROM paper_orders 
-            WHERE status = 'pending'
+            WHERE status IN ('pending', 'partial')
             ORDER BY created_at ASC
         """)
         return cursor.fetchall()
@@ -202,33 +204,42 @@ def get_pending_paper_orders() -> List[Dict]:
 
 @retry_api(max_retries=2)
 def query_order_status(futu_order_id: str, trade_ctx: ft.OpenUSTradeContext) -> Optional[Dict]:
-    """查詢富途訂單狀態"""
+    """查詢富途訂單狀態，回傳 polling/lifecycle 可直接使用的欄位。"""
     ret, data = trade_ctx.order_list_query(
         order_id=futu_order_id,
         trd_env=ft.TrdEnv.SIMULATE
     )
-    
-    if ret == ft.RET_OK and not data.empty:
-        order_info = data.iloc[0].to_dict()
-        return order_info
-    else:
+
+    if ret != ft.RET_OK or data.empty:
         logger.warning(f"⚠️ 查詢訂單失敗: {futu_order_id}")
         return None
 
+    order_info = data.iloc[0].to_dict()
+    dealt_qty = int(order_info.get('dealt_qty', 0) or 0)
+    dealt_avg_price = float(order_info.get('dealt_avg_price', 0) or 0)
+    updated_time = order_info.get('updated_time') or order_info.get('create_time')
 
-def update_order_status(order_id: int, status: str, filled_quantity: int = 0, filled_price: float = 0):
+    order_info['futu_order_id'] = str(order_info.get('order_id') or futu_order_id)
+    order_info['normalized_status'] = str(order_info.get('order_status'))
+    order_info['filled_quantity'] = dealt_qty
+    order_info['filled_price'] = dealt_avg_price if dealt_qty > 0 else 0
+    order_info['filled_at'] = updated_time if dealt_qty > 0 else None
+    return order_info
+
+
+def update_order_status(order_id: int, status: str, filled_quantity: int = 0, filled_price: float = 0, filled_at=None):
     """更新訂單狀態"""
     conn = get_db_connection()
     cursor = conn.cursor()
     
     try:
-        filled_at = datetime.now() if status == 'filled' else None
+        effective_filled_at = filled_at or (datetime.now() if status in ('filled', 'partial') and filled_quantity > 0 else None)
         
         cursor.execute("""
             UPDATE paper_orders 
             SET status = %s, filled_quantity = %s, filled_price = %s, filled_at = %s, updated_at = %s
             WHERE id = %s
-        """, (status, filled_quantity, filled_price, filled_at, datetime.now(), order_id))
+        """, (status, filled_quantity, filled_price, effective_filled_at, datetime.now(), order_id))
         conn.commit()
         logger.info(f"✅ 更新訂單狀態: ID={order_id}, status={status}")
     except Exception as e:
@@ -241,98 +252,21 @@ def update_order_status(order_id: int, status: str, filled_quantity: int = 0, fi
 
 # ==================== 持倉更新 ====================
 def handle_buy_fill(order: Dict):
-    """處理買入成交"""
-    symbol = order['symbol']
-    quantity = order['filled_quantity']
-    price = order['filled_price']
-    
-    conn = get_db_connection()
-    cursor = conn.cursor(pymysql.cursors.DictCursor)
-    
-    try:
-        # 查詢是否已有持倉
-        cursor.execute("SELECT * FROM paper_positions WHERE symbol = %s", (symbol,))
-        position = cursor.fetchone()
-        
-        if position:
-            # 更新持倉：計算新平均成本
-            old_qty = position['quantity']
-            old_cost = position['average_cost']
-            new_qty = old_qty + quantity
-            new_cost = (old_cost * old_qty + price * quantity) / new_qty
-            
-            cursor.execute("""
-                UPDATE paper_positions 
-                SET quantity = %s, average_cost = %s, updated_at = %s
-                WHERE symbol = %s
-            """, (new_qty, new_cost, datetime.now(), symbol))
-            logger.info(f"✅ 更新持倉: {symbol} 數量={new_qty}, 成本=${new_cost:.2f}")
-        else:
-            # 新增持倉
-            cursor.execute("""
-                INSERT INTO paper_positions 
-                (symbol, quantity, average_cost, current_price, updated_at)
-                VALUES (%s, %s, %s, %s, %s)
-            """, (symbol, quantity, price, price, datetime.now()))
-            logger.info(f"✅ 新增持倉: {symbol} 數量={quantity}, 成本=${price:.2f}")
-        
-        conn.commit()
-    except Exception as e:
-        logger.error(f"❌ 處理買入成交失敗: {e}")
-        conn.rollback()
-    finally:
-        cursor.close()
-        conn.close()
+    """處理買入成交：統一改用 paper_orders 重建持倉。"""
+    result = reconcile_single_filled_order(order['id'], apply=True)
+    if not result.get('success'):
+        logger.error(f"❌ 處理買入成交失敗: order_id={order['id']}, result={result}")
+    else:
+        logger.info(f"✅ 已重建持倉: {order['symbol']} (BUY fill applied)")
 
 
 def handle_sell_fill(order: Dict):
-    """處理賣出成交"""
-    symbol = order['symbol']
-    quantity = order['filled_quantity']
-    price = order['filled_price']
-    
-    conn = get_db_connection()
-    cursor = conn.cursor(pymysql.cursors.DictCursor)
-    
-    try:
-        # 查詢持倉
-        cursor.execute("SELECT * FROM paper_positions WHERE symbol = %s", (symbol,))
-        position = cursor.fetchone()
-        
-        if not position:
-            logger.warning(f"⚠️ 找不到持倉: {symbol}")
-            return
-        
-        # 計算已實現損益
-        avg_cost = position['average_cost']
-        realized_pnl = (price - avg_cost) * quantity
-        
-        # 更新持倉數量
-        new_qty = position['quantity'] - quantity
-        
-        if new_qty <= 0:
-            # 完全平倉
-            cursor.execute("DELETE FROM paper_positions WHERE symbol = %s", (symbol,))
-            logger.info(f"✅ 完全平倉: {symbol}, 已實現損益=${realized_pnl:.2f}")
-        else:
-            # 部分平倉
-            old_realized = position.get('realized_pnl', 0) or 0
-            new_realized = old_realized + realized_pnl
-            
-            cursor.execute("""
-                UPDATE paper_positions 
-                SET quantity = %s, realized_pnl = %s, updated_at = %s
-                WHERE symbol = %s
-            """, (new_qty, new_realized, datetime.now(), symbol))
-            logger.info(f"✅ 部分平倉: {symbol} 剩餘={new_qty}, 已實現損益=${realized_pnl:.2f}")
-        
-        conn.commit()
-    except Exception as e:
-        logger.error(f"❌ 處理賣出成交失敗: {e}")
-        conn.rollback()
-    finally:
-        cursor.close()
-        conn.close()
+    """處理賣出成交：統一改用 paper_orders 重建持倉。"""
+    result = reconcile_single_filled_order(order['id'], apply=True)
+    if not result.get('success'):
+        logger.error(f"❌ 處理賣出成交失敗: order_id={order['id']}, result={result}")
+    else:
+        logger.info(f"✅ 已重建持倉: {order['symbol']} (SELL fill applied)")
 
 
 # ==================== 主流程 ====================
@@ -395,9 +329,9 @@ def poll_paper_orders(dry_run: bool = False):
     trade_ctx = ft.OpenUSTradeContext(host=FUTU_HOST, port=FUTU_PORT)
     
     try:
-        # 獲取 pending 訂單
+        # 獲取待輪詢訂單（包含 pending / partial）
         orders = get_pending_paper_orders()
-        logger.info(f"📊 共 {len(orders)} 個待處理訂單")
+        logger.info(f"📊 共 {len(orders)} 個待輪詢訂單 (pending/partial)")
         
         if not orders:
             logger.info("✅ 無待處理訂單")
@@ -429,7 +363,7 @@ def poll_paper_orders(dry_run: bool = False):
             # 狀態映射
             if futu_status == ft.OrderStatus.FILLED_ALL:
                 # 完全成交
-                update_order_status(order_id, 'filled', dealt_qty, dealt_avg_price)
+                update_order_status(order_id, 'filled', dealt_qty, dealt_avg_price, order_info.get('filled_at'))
                 
                 # 更新持倉
                 order['filled_quantity'] = dealt_qty
@@ -443,20 +377,28 @@ def poll_paper_orders(dry_run: bool = False):
                 logger.info(f"✅ 訂單成交: {symbol} {dealt_qty}股 @${dealt_avg_price:.2f}")
             
             elif futu_status == ft.OrderStatus.FILLED_PART:
-                # 部分成交
-                update_order_status(order_id, 'partial', dealt_qty, dealt_avg_price)
-                logger.info(f"⏳ 部分成交: {symbol} {dealt_qty}股")
+                # 部分成交：保留在 partial，後續 cron 會持續輪詢直到 filled/cancelled/failed
+                update_order_status(order_id, 'partial', dealt_qty, dealt_avg_price, order_info.get('filled_at'))
+                logger.info(f"⏳ 部分成交: {symbol} {dealt_qty}股 @${dealt_avg_price:.2f}")
             
             elif futu_status == ft.OrderStatus.CANCELLED:
-                # 已取消
-                update_order_status(order_id, 'cancelled')
+                # 已取消：若有部分成交，保留已成交欄位做對帳
+                update_order_status(order_id, 'cancelled', dealt_qty, dealt_avg_price, order_info.get('filled_at'))
                 logger.info(f"❌ 訂單取消: {symbol}")
+
+            elif 'FAILED' in str(futu_status) or 'REJECT' in str(futu_status):
+                update_order_status(order_id, 'failed', dealt_qty, dealt_avg_price, order_info.get('filled_at'))
+                logger.info(f"❌ 訂單失敗: {symbol}, status={futu_status}")
             
             else:
-                logger.info(f"⏳ 訂單待成交: {symbol}, status={futu_status}")
+                # pending / submitted / 未完全成交狀態都會持續被下次 polling 再追一次
+                update_order_status(order_id, 'partial' if dealt_qty > 0 else 'pending', dealt_qty, dealt_avg_price, order_info.get('filled_at'))
+                logger.info(f"⏳ 訂單待成交: {symbol}, status={futu_status}, dealt_qty={dealt_qty}")
     
     finally:
         trade_ctx.close()
+        # 自癒：即使本輪沒有新成交，也從 filled orders 修補一次本地持倉。
+        reconcile_paper_positions(apply=True)
         logger.info("=" * 60)
 
 

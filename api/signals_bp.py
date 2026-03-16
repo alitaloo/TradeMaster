@@ -1,118 +1,203 @@
 #!/usr/bin/env python3
 """
-Signals API Blueprint
+Signals API Blueprint (DB-based, single source of truth)
 交易信號的 CRUD 接口 - MySQL
+Stage 1: 收斂為唯一 signals 路由，消除 file-based 歧義
 """
 
 from flask import Blueprint, jsonify, request
+from api.db import get_db_connection
 import json
 from datetime import datetime
-from pathlib import Path
 
-signals_bp = Blueprint('signals', __name__, url_prefix='/api/v1/signals')
+signals_bp = Blueprint('signals_db', __name__, url_prefix='/api/v1/signals')
+
+
+def _serialize_row(row):
+    """Ensure datetime fields are ISO-8601 strings with +08:00 timezone"""
+    if not row:
+        return row
+    out = dict(row)
+    for k, v in out.items():
+        if isinstance(v, datetime):
+            # MySQL stores local time (Asia/Taipei), tag it explicitly
+            out[k] = v.strftime('%Y-%m-%dT%H:%M:%S+08:00')
+    return out
+
+
+def _serialize_rows(rows):
+    return [_serialize_row(r) for r in rows]
 
 
 @signals_bp.route('', methods=['GET'])
 def get_signals():
-    """獲取信號列表"""
-    from api.db import get_connection
-    
+    """獲取信號列表 (支持 offset 分頁)"""
     status = request.args.get('status')
     symbol = request.args.get('symbol')
     limit = int(request.args.get('limit', 100))
-    
-    conn = get_connection()
-    cursor = conn.cursor()
-    
-    query = "SELECT * FROM signals WHERE 1=1"
-    params = []
-    
-    if status:
-        query += " AND status = %s"
-        params.append(status)
-    
-    if symbol:
-        query += " AND symbol = %s"
-        params.append(symbol)
-    
-    query += " ORDER BY created_at DESC LIMIT %s"
-    params.append(limit)
-    
-    cursor.execute(query, params)
-    rows = cursor.fetchall()
-    conn.close()
-    
+    offset = int(request.args.get('offset', 0))
+
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+
+        # Count query
+        count_query = "SELECT COUNT(*) as cnt FROM signals WHERE 1=1"
+        query = "SELECT * FROM signals WHERE 1=1"
+        params = []
+
+        if status:
+            query += " AND status = %s"
+            count_query += " AND status = %s"
+            params.append(status)
+
+        if symbol:
+            query += " AND symbol = %s"
+            count_query += " AND symbol = %s"
+            params.append(symbol)
+
+        # Get total count
+        cursor.execute(count_query, params)
+        total = cursor.fetchone()['cnt']
+
+        query += " ORDER BY created_at DESC LIMIT %s OFFSET %s"
+        cursor.execute(query, params + [limit, offset])
+        rows = cursor.fetchall()
+
+        # data_timestamp: use latest row's created_at
+        data_timestamp = None
+        if rows:
+            latest_ts = rows[0].get('created_at')
+            if isinstance(latest_ts, datetime):
+                data_timestamp = latest_ts.strftime('%Y-%m-%dT%H:%M:%S+08:00')
+            elif latest_ts:
+                data_timestamp = str(latest_ts)
+
+    return jsonify({
+        "status": "ok",
+        "count": total,
+        "data_timestamp": data_timestamp,
+        "signals": _serialize_rows(rows)
+    })
+
+
+@signals_bp.route('/latest', methods=['GET'])
+def get_latest_signals():
+    """獲取最新信號 (供 store/Dashboard 使用)"""
+    limit = int(request.args.get('limit', 10))
+
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT * FROM signals ORDER BY created_at DESC LIMIT %s",
+            (limit,)
+        )
+        rows = cursor.fetchall()
+
+        data_timestamp = None
+        if rows:
+            latest_ts = rows[0].get('created_at')
+            if isinstance(latest_ts, datetime):
+                data_timestamp = latest_ts.strftime('%Y-%m-%dT%H:%M:%S+08:00')
+            elif latest_ts:
+                data_timestamp = str(latest_ts)
+
     return jsonify({
         "status": "ok",
         "count": len(rows),
-        "signals": rows
+        "data_timestamp": data_timestamp,
+        "signals": _serialize_rows(rows)
+    })
+
+
+@signals_bp.route('/by-symbol/<symbol>', methods=['GET'])
+def get_signals_by_symbol(symbol):
+    """根據股票代號獲取信號"""
+    limit = int(request.args.get('limit', 50))
+
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT * FROM signals WHERE symbol = %s ORDER BY created_at DESC LIMIT %s",
+            (symbol.upper(), limit)
+        )
+        rows = cursor.fetchall()
+
+        data_timestamp = None
+        if rows:
+            latest_ts = rows[0].get('created_at')
+            if isinstance(latest_ts, datetime):
+                data_timestamp = latest_ts.strftime('%Y-%m-%dT%H:%M:%S+08:00')
+            elif latest_ts:
+                data_timestamp = str(latest_ts)
+
+    return jsonify({
+        "status": "ok",
+        "symbol": symbol.upper(),
+        "count": len(rows),
+        "data_timestamp": data_timestamp,
+        "signals": _serialize_rows(rows)
     })
 
 
 @signals_bp.route('/<int:signal_id>', methods=['GET'])
 def get_signal(signal_id):
     """獲取單個信號"""
-    from api.db import get_connection
-    
-    conn = get_connection()
-    cursor = conn.cursor()
-    
-    cursor.execute("SELECT * FROM signals WHERE id = %s", (signal_id,))
-    row = cursor.fetchone()
-    conn.close()
-    
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM signals WHERE id = %s", (signal_id,))
+        row = cursor.fetchone()
+
     if not row:
         return jsonify({"status": "error", "message": "Signal not found"}), 404
-    
+
     return jsonify({
         "status": "ok",
-        "signal": row
+        "signal": _serialize_row(row)
     })
 
 
 @signals_bp.route('', methods=['POST'])
 def create_signal():
     """創建新信號"""
-    from api.db import get_connection
-    
     data = request.json
-    
+
     if not data or 'symbol' not in data or 'signal_type' not in data:
         return jsonify({"status": "error", "message": "Missing required fields"}), 400
-    
+
     # HOLD 信號自動標記為 IGNORED
     signal_type = data.get('signal_type')
     status = data.get('status', 'PENDING')
     if signal_type == 'HOLD':
         status = 'IGNORED'
-    
-    conn = get_connection()
-    cursor = conn.cursor()
-    
-    cursor.execute('''
-        INSERT INTO signals (symbol, strategy_type, signal_type, price, quantity, 
-                          confidence, status, risk_score, news_weight, stop_loss, 
-                          take_profit, metadata)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-    ''', (
-        data['symbol'],
-        data.get('strategy_type'),
-        data['signal_type'],
-        data.get('price'),
-        data.get('quantity'),
-        data.get('confidence', 0.5),
-        status,
-        data.get('risk_score'),
-        data.get('news_weight'),
-        data.get('stop_loss'),
-        data.get('take_profit'),
-        json.dumps(data.get('metadata', {}))
-    ))
-    
-    signal_id = cursor.lastrowid
-    conn.commit()
-    conn.close()
-    
+
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            INSERT INTO signals (symbol, strategy_type, signal_type, price, quantity,
+                              confidence, status, risk_score, news_weight, stop_loss,
+                              take_profit, metadata)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        ''', (
+            data['symbol'],
+            data.get('strategy_type'),
+            data['signal_type'],
+            data.get('price'),
+            data.get('quantity'),
+            data.get('confidence', 0.5),
+            status,
+            data.get('risk_score'),
+            data.get('news_weight'),
+            data.get('stop_loss'),
+            data.get('take_profit'),
+            json.dumps(data.get('metadata', {}))
+        ))
+
+        signal_id = cursor.lastrowid
+        conn.commit()
+
     return jsonify({
         "status": "ok",
         "message": "Signal created",
@@ -123,40 +208,37 @@ def create_signal():
 @signals_bp.route('/<int:signal_id>', methods=['PUT'])
 def update_signal(signal_id):
     """更新信號"""
-    from api.db import get_connection
-    
     data = request.json
-    
-    conn = get_connection()
-    cursor = conn.cursor()
-    
-    updates = []
-    params = []
-    
-    for field in ['symbol', 'strategy_type', 'signal_type', 'price', 'quantity', 
-                  'confidence', 'status', 'risk_score', 'news_weight', 
-                  'stop_loss', 'take_profit']:
-        if field in data:
-            updates.append(f"{field} = %s")
-            params.append(data[field])
-    
-    if not updates:
-        return jsonify({"status": "error", "message": "No fields to update"}), 400
-    
-    params.append(signal_id)
-    
-    cursor.execute(
-        f"UPDATE signals SET {', '.join(updates)} WHERE id = %s",
-        params
-    )
-    
-    conn.commit()
-    affected = cursor.rowcount
-    conn.close()
-    
+
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+
+        updates = []
+        params = []
+
+        for field in ['symbol', 'strategy_type', 'signal_type', 'price', 'quantity',
+                      'confidence', 'status', 'risk_score', 'news_weight',
+                      'stop_loss', 'take_profit']:
+            if field in data:
+                updates.append(f"{field} = %s")
+                params.append(data[field])
+
+        if not updates:
+            return jsonify({"status": "error", "message": "No fields to update"}), 400
+
+        params.append(signal_id)
+
+        cursor.execute(
+            f"UPDATE signals SET {', '.join(updates)} WHERE id = %s",
+            params
+        )
+
+        conn.commit()
+        affected = cursor.rowcount
+
     if affected == 0:
         return jsonify({"status": "error", "message": "Signal not found"}), 404
-    
+
     return jsonify({
         "status": "ok",
         "message": "Signal updated"
@@ -166,20 +248,15 @@ def update_signal(signal_id):
 @signals_bp.route('/<int:signal_id>', methods=['DELETE'])
 def delete_signal(signal_id):
     """刪除信號"""
-    from api.db import get_connection
-    
-    conn = get_connection()
-    cursor = conn.cursor()
-    
-    cursor.execute("DELETE FROM signals WHERE id = %s", (signal_id,))
-    
-    conn.commit()
-    affected = cursor.rowcount
-    conn.close()
-    
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM signals WHERE id = %s", (signal_id,))
+        conn.commit()
+        affected = cursor.rowcount
+
     if affected == 0:
         return jsonify({"status": "error", "message": "Signal not found"}), 404
-    
+
     return jsonify({
         "status": "ok",
         "message": "Signal deleted"
@@ -189,57 +266,60 @@ def delete_signal(signal_id):
 @signals_bp.route('/active', methods=['GET'])
 def get_active_signals():
     """獲取活躍信號"""
-    from api.db import get_connection
-    
-    conn = get_connection()
-    cursor = conn.cursor()
-    
-    cursor.execute('''
-        SELECT * FROM signals 
-        WHERE status IN ('PENDING', 'SENT')
-        ORDER BY created_at DESC
-        LIMIT 50
-    ''')
-    
-    rows = cursor.fetchall()
-    conn.close()
-    
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            SELECT * FROM signals
+            WHERE status IN ('PENDING', 'SENT')
+            ORDER BY created_at DESC
+            LIMIT 50
+        ''')
+
+        rows = cursor.fetchall()
+
     return jsonify({
         "status": "ok",
         "count": len(rows),
-        "signals": rows
+        "signals": _serialize_rows(rows)
     })
 
 
 @signals_bp.route('/summary', methods=['GET'])
 def get_signals_summary():
     """獲取信號摘要"""
-    from api.db import get_connection
-    
-    conn = get_connection()
-    cursor = conn.cursor()
-    
-    cursor.execute('''
-        SELECT status, COUNT(*) as count 
-        FROM signals 
-        GROUP BY status
-    ''')
-    
-    status_counts = {row['status']: row['count'] for row in cursor.fetchall()}
-    
-    cursor.execute('''
-        SELECT COUNT(*) as cnt FROM signals 
-        WHERE DATE(created_at) = DATE(NOW())
-    ''')
-    today_count = cursor.fetchone()['cnt']
-    
-    conn.close()
-    
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            SELECT status, COUNT(*) as count
+            FROM signals
+            GROUP BY status
+        ''')
+
+        status_counts = {row['status']: row['count'] for row in cursor.fetchall()}
+
+        cursor.execute('''
+            SELECT COUNT(*) as cnt FROM signals
+            WHERE DATE(created_at) = DATE(NOW())
+        ''')
+        today_count = cursor.fetchone()['cnt']
+
+        # Also provide long/short counts for Dashboard compatibility
+        cursor.execute('''
+            SELECT signal_type, COUNT(*) as count
+            FROM signals
+            WHERE DATE(created_at) = DATE(NOW())
+            GROUP BY signal_type
+        ''')
+        type_counts = {row['signal_type']: row['count'] for row in cursor.fetchall()}
+
     return jsonify({
         "status": "ok",
         "summary": {
             "total": sum(status_counts.values()),
             "by_status": status_counts,
+            "by_type": type_counts,
             "today": today_count
         }
     })

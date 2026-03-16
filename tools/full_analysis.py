@@ -18,9 +18,12 @@ from core.indicators import calculate_adx
 DATA_DIR = Path("data/historical")
 REPORT_FILE = Path("strategy_full_report.txt")
 
+# 導入統一股票配置
+from config.constants import STOCKS as DEFAULT_STOCKS
+
 # 2026-02-12: 優化股票池 - 剔除 TSLA、INTC、RKLB（高波動/下降趨勢股票）
 # 專注於：科技巨頭、半導體龍頭、穩定成長股
-STOCKS = ["AAPL", "MSFT", "NVDA", "TSM", "AMZN", "META", "UBER", "MU", "AMD", "ORCL"]
+STOCKS = DEFAULT_STOCKS
 
 def load(sym):
     p = DATA_DIR / f"{sym}.csv"

@@ -30,40 +30,8 @@ TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', '7506814516')
 
 # 翻譯函數 (使用 LLM API)
 def translate_to_chinese(text: str) -> str:
-    """翻譯文本為中文"""
-    if not text:
-        return ""
-    
-    # 如果來源是中文，或是簡短文字，跳過翻譯
-    chinese_chars = sum(1 for c in text if '\u4e00' <= c <= '\u9fff')
-    if chinese_chars > len(text) * 0.3:  # 30% 以上是中文字
-        return text
-    
-    # 調用 LLM API 翻譯
-    try:
-        api_url = "http://127.0.0.1:50020/v1/chat/completions"
-        payload = {
-            "model": "minimax/MiniMax-M2.1",
-            "messages": [
-                {"role": "user", "content": f"將以下新聞翻譯成繁體中文，維持簡潔专业：\n\n{text}"}
-            ],
-            "max_tokens": 150,
-            "temperature": 0.3
-        }
-        
-        response = requests.post(api_url, json=payload, timeout=15)
-        if response.status_code == 200:
-            result = response.json()
-            translated = result.get("choices", [{}])[0].get("message", {}).get("content", text)
-            return translated.strip()
-        else:
-            print(f"[WARN] 翻譯 API 失敗: {response.status_code}")
-    except requests.exceptions.ConnectionError:
-        print("[WARN] 無法連接翻譯 API (localhost:50020)")
-    except Exception as e:
-        print(f"[WARN] 翻譯錯誤: {e}")
-    
-    return text  # 失敗時返回原文
+    """翻譯文本為中文（翻譯交由 cron agent 處理，此函數直接返回原文）"""
+    return text  # cron agent（MiniMax）負責翻譯，腳本只負責抓取原文
 
 
 class NewsFetcher:
@@ -137,11 +105,19 @@ class NewsFetcher:
         except Exception as e:
             print(f"[WARN] 無法載入快取: {e}")
     
+    # .news_cache.json 上限 (避免無限增長)
+    NEWS_CACHE_MAX_LINKS = 2000
+
     def _save_seen_links(self):
-        """儲存已讀取的連結"""
+        """儲存已讀取的連結 (自動截斷至上限)"""
         try:
             cache_file = "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/scripts/.news_cache.json"
-            data = {'links': list(self.seen_links)}
+            links = list(self.seen_links)
+            # 超過上限時只保留最新的 N 條
+            if len(links) > self.NEWS_CACHE_MAX_LINKS:
+                links = links[-self.NEWS_CACHE_MAX_LINKS:]
+                self.seen_links = set(links)
+            data = {'links': links}
             with open(cache_file, 'w') as f:
                 json.dump(data, f)
         except Exception as e:

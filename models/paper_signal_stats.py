@@ -2,8 +2,10 @@
 """
 Paper Signal Stats Model - 信號命中率統計
 """
-from datetime import datetime, date
+from datetime import datetime, date, timezone, timedelta
 from config.database import get_db_cursor
+
+_TZ_TAIPEI = timezone(timedelta(hours=8))
 
 
 class PaperSignalStats:
@@ -21,7 +23,7 @@ class PaperSignalStats:
         self.signal_count = signal_count
         self.filled_count = filled_count
         self.hit_rate = hit_rate
-        self.created_at = created_at or datetime.now()
+        self.created_at = created_at or datetime.now(_TZ_TAIPEI)
     
     def save(self):
         """儲存統計"""
@@ -77,6 +79,17 @@ class PaperSignalStats:
             return 0
         return (filled_count / signal_count) * 100
     
+    @staticmethod
+    def _iso_taipei(dt):
+        """Convert datetime to ISO 8601 with +08:00"""
+        if dt is None:
+            return None
+        if isinstance(dt, datetime):
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=_TZ_TAIPEI)
+            return dt.isoformat()
+        return str(dt)
+
     def to_dict(self):
         """轉換為字典"""
         return {
@@ -87,5 +100,5 @@ class PaperSignalStats:
             'signal_count': self.signal_count,
             'filled_count': self.filled_count,
             'hit_rate': float(self.hit_rate) if self.hit_rate else 0,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'created_at': self._iso_taipei(self.created_at),
         }

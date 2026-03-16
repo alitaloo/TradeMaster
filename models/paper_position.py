@@ -2,8 +2,10 @@
 """
 Paper Position Model - 模擬持倉
 """
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from config.database import get_db_cursor
+
+_TZ_TAIPEI = timezone(timedelta(hours=8))
 
 
 class PaperPosition:
@@ -23,7 +25,7 @@ class PaperPosition:
         self.unrealized_pnl = unrealized_pnl
         self.unrealized_pnl_pct = unrealized_pnl_pct
         self.realized_pnl = realized_pnl
-        self.updated_at = updated_at or datetime.now()
+        self.updated_at = updated_at or datetime.now(_TZ_TAIPEI)
     
     def save(self):
         """儲存持倉"""
@@ -78,6 +80,7 @@ class PaperPosition:
         if self.quantity > 0 and self.average_cost > 0:
             self.market_value = self.quantity * current_price
             self.unrealized_pnl = (current_price - float(self.average_cost)) * self.quantity
+            # DB 既有欄位 unrealized_pnl_pct 保留為「相對持倉成本」口徑，避免資料結構大改。
             self.unrealized_pnl_pct = (current_price / float(self.average_cost) - 1) * 100
         else:
             self.market_value = 0
@@ -85,17 +88,37 @@ class PaperPosition:
             self.unrealized_pnl_pct = 0
         return self.unrealized_pnl
     
+    @staticmethod
+    def _iso_taipei(dt):
+        """Convert datetime to ISO 8601 with +08:00"""
+        if dt is None:
+            return None
+        if isinstance(dt, datetime):
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=_TZ_TAIPEI)
+            return dt.isoformat()
+        return str(dt)
+
     def to_dict(self):
         """轉換為字典"""
+        average_cost = float(self.average_cost) if self.average_cost else 0
+        quantity = float(self.quantity) if self.quantity else 0
+        position_cost = average_cost * quantity
+        unrealized_pnl = float(self.unrealized_pnl) if self.unrealized_pnl else 0
+        unrealized_pnl_pct_position_cost = float(self.unrealized_pnl_pct) if self.unrealized_pnl_pct else 0
+
         return {
             'id': self.id,
             'symbol': self.symbol,
             'quantity': self.quantity,
-            'average_cost': float(self.average_cost) if self.average_cost else 0,
+            'average_cost': average_cost,
             'current_price': float(self.current_price) if self.current_price else 0,
             'market_value': float(self.market_value) if self.market_value else 0,
-            'unrealized_pnl': float(self.unrealized_pnl) if self.unrealized_pnl else 0,
-            'unrealized_pnl_pct': float(self.unrealized_pnl_pct) if self.unrealized_pnl_pct else 0,
+            'position_cost': position_cost,
+            'unrealized_pnl': unrealized_pnl,
+            'unrealized_pnl_pct_position_cost': unrealized_pnl_pct_position_cost,
+            # Deprecated alias: historically position-level unrealized_pnl_pct means pnl / position_cost.
+            'unrealized_pnl_pct': unrealized_pnl_pct_position_cost,
             'realized_pnl': float(self.realized_pnl) if self.realized_pnl else 0,
-            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+            'updated_at': self._iso_taipei(self.updated_at),
         }

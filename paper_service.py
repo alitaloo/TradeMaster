@@ -64,7 +64,13 @@ def get_status() -> dict:
         'total_assets': assets['total'],
         'cash': assets['cash'],
         'market_value': assets['market_value'],
+        'total_position_cost': assets['total_position_cost'],
         'unrealized_pnl': assets['unrealized_pnl'],
+        'unrealized_pnl_pct_total_assets': assets['unrealized_pnl_pct_total_assets'],
+        'unrealized_pnl_pct_initial_balance': assets['unrealized_pnl_pct_initial_balance'],
+        'unrealized_pnl_pct_position_cost': assets['unrealized_pnl_pct_position_cost'],
+        # Deprecated alias: equals unrealized_pnl_pct_total_assets.
+        'unrealized_pnl_pct': assets['unrealized_pnl_pct'],
         'realized_pnl': assets['realized_pnl'],
         'position_count': len(positions),
         'pending_orders': len(pending_orders)
@@ -83,9 +89,10 @@ def run_daily_settlement() -> dict:
         dict: 結算結果
     """
     from models import PaperDailySummary
-    from datetime import date
+    from datetime import date, timedelta
     
     today = date.today()
+    yesterday = today - timedelta(days=1)
     
     # 1. 更新持倉價格
     update_position_prices()
@@ -93,7 +100,26 @@ def run_daily_settlement() -> dict:
     # 2. 計算總資產
     assets = get_paper_total_assets()
     
-    # 3. 統計成交
+    # 3. 計算 daily_pnl = 今天 total_value - 昨天 total_value
+    daily_pnl = assets['total']
+    try:
+        with get_db_cursor() as cursor:
+            cursor.execute("""
+                SELECT total_value 
+                FROM paper_daily_summary 
+                WHERE date = %s 
+                LIMIT 1
+            """, (yesterday,))
+            row = cursor.fetchone()
+            if row and row['total_value']:
+                yesterday_total = float(row['total_value'])
+                daily_pnl = assets['total'] - yesterday_total
+    except Exception as e:
+        # 如果查詢失敗，使用當作當天的 unrealized_pnl
+        print(f"⚠️ 無法獲取昨日總值，使用 unrealized_pnl: {e}")
+        daily_pnl = assets['unrealized_pnl']
+    
+    # 4. 統計成交
     with get_db_cursor() as cursor:
         cursor.execute("""
             SELECT 
@@ -111,7 +137,7 @@ def run_daily_settlement() -> dict:
         sell_count = row['sell_count'] or 0
         realized = float(row['realized'] or 0)
     
-    # 4. 寫入每日 summary
+    # 5. 寫入每日 summary
     summary = PaperDailySummary(
         date=today,
         total_value=assets['total'],
@@ -119,7 +145,7 @@ def run_daily_settlement() -> dict:
         market_value=assets['market_value'],
         unrealized_pnl=assets['unrealized_pnl'],
         realized_pnl=assets['realized_pnl'],
-        daily_pnl=assets['unrealized_pnl'],
+        daily_pnl=daily_pnl,
         trade_count=trade_count,
         buy_count=buy_count,
         sell_count=sell_count
@@ -130,7 +156,15 @@ def run_daily_settlement() -> dict:
         'success': True,
         'date': today.isoformat(),
         'total_value': assets['total'],
+        'cash': assets['cash'],
+        'market_value': assets['market_value'],
+        'total_position_cost': assets['total_position_cost'],
         'unrealized_pnl': assets['unrealized_pnl'],
+        'unrealized_pnl_pct_total_assets': assets['unrealized_pnl_pct_total_assets'],
+        'unrealized_pnl_pct_initial_balance': assets['unrealized_pnl_pct_initial_balance'],
+        'unrealized_pnl_pct_position_cost': assets['unrealized_pnl_pct_position_cost'],
+        # Deprecated alias: equals unrealized_pnl_pct_total_assets.
+        'unrealized_pnl_pct': assets['unrealized_pnl_pct'],
         'realized_pnl': assets['realized_pnl'],
         'trade_count': trade_count,
         'buy_count': buy_count,

@@ -1,10 +1,21 @@
 #!/bin/zsh
 set -euo pipefail
 
+# ── Guard: reject OS-crontab invocation ──
+# OpenClaw sets OPENCLAW_SHELL in its exec environment.
+# If absent, this was launched by OS crontab (which should be removed).
+if [[ -z "${OPENCLAW_SHELL:-}" ]]; then
+  mkdir -p "$HOME/.openclaw/workspace/codes/TradeMaster_v2/logs/cron"
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] BLOCKED: OS crontab trigger rejected. Remove OS crontab entry: crontab -e" \
+    >> "$HOME/.openclaw/workspace/codes/TradeMaster_v2/logs/cron/news_batch_cron.log"
+  exit 0
+fi
+
 PROJECT_DIR="$HOME/.openclaw/workspace/codes/TradeMaster_v2"
 LOG_DIR="$PROJECT_DIR/logs/cron"
 LOCK_DIR="$PROJECT_DIR/.locks/news-batch-cron.lock"
-PYTHON_BIN="$(command -v python3)"
+# Pin to the system Python 3.14 that has requests installed
+PYTHON_BIN="/usr/local/bin/python3"
 
 mkdir -p "$LOG_DIR" "$PROJECT_DIR/.locks"
 

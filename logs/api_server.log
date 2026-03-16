@@ -1,42 +1,7 @@
-2026-02-24 23:36:04.881 | INFO     | modules.prediction.engine:__init__:35 - 預測引擎初始化完成
-2026-02-24 23:36:04.881 | INFO     | modules.prediction.engine:__init__:35 - 預測引擎初始化完成
-✅ 富途 SDK 已載入
+2026-03-13 22:02:40.741 | INFO     | modules.prediction.engine:__init__:35 - 預測引擎初始化完成
+2026-03-13 22:02:40.741 | INFO     | modules.prediction.engine:__init__:35 - 預測引擎初始化完成
+✅ 富途 SDK 已載入 (futu)
  * Serving Flask app 'api_server'
  * Debug mode: off
-[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:8080
- * Running on http://192.168.2.140:8080
-[33mPress CTRL+C to quit[0m
-127.0.0.1 - - [24/Feb/2026 23:36:12] "GET /health HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:40:18] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:40:41] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:40:49] "GET /health HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:42:14] "GET /health HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:43:13] "GET /health HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:45:06] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:45:14] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:46:21] "GET /api/v1/positions HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:46:21] "GET /api/v1/market HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:46:22] "GET /api/v1/news/weight/US.TSLA?hours=24 HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:46:22] "[35m[1mPOST /api/v1/signals HTTP/1.1[0m" 201 -
-127.0.0.1 - - [24/Feb/2026 23:46:22] "GET /api/v1/news/weight/US.UBER?hours=24 HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:50:19] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:50:28] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:51:06] "GET /health HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:51:10] "GET /api/v1/positions HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:51:10] "GET /api/v1/market HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:51:10] "[35m[1mPOST /api/v1/signals HTTP/1.1[0m" 201 -
-127.0.0.1 - - [24/Feb/2026 23:51:11] "GET /api/v1/news/weight/US.UBER?hours=24 HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:55:10] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
-127.0.0.1 - - [24/Feb/2026 23:55:19] "GET /api/v1/signals?status=PENDING&limit=20 HTTP/1.1" 200 -
-127.0.0.1 - - [25/Feb/2026 00:02:17] "GET /api/v1/positions HTTP/1.1" 200 -
-127.0.0.1 - - [25/Feb/2026 00:02:17] "GET /api/v1/stocks/live HTTP/1.1" 200 -
-127.0.0.1 - - [25/Feb/2026 00:02:17] "GET /api/v1/config/total_capital HTTP/1.1" 200 -
-127.0.0.1 - - [25/Feb/2026 00:02:17] "GET /api/v1/positions/summary HTTP/1.1" 200 -
-127.0.0.1 - - [25/Feb/2026 00:02:18] "GET /api/v1/paper/status HTTP/1.1" 200 -
-127.0.0.1 - - [25/Feb/2026 00:02:18] "GET /api/v1/paper/positions HTTP/1.1" 200 -
-127.0.0.1 - - [25/Feb/2026 00:02:18] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
-127.0.0.1 - - [25/Feb/2026 00:06:43] "GET /api/v1/positions HTTP/1.1" 200 -
-127.0.0.1 - - [25/Feb/2026 00:06:43] "GET /api/v1/market HTTP/1.1" 200 -
-127.0.0.1 - - [25/Feb/2026 00:06:44] "GET /api/v1/news/weight/US.UBER?hours=24 HTTP/1.1" 200 -
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.

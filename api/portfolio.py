@@ -7,6 +7,7 @@ Portfolio API - 投資組合端點
 from flask import Blueprint, jsonify
 import pymysql
 from pymysql.cursors import DictCursor
+from config.constants import DEFAULT_CAPITAL
 
 portfolio_bp = Blueprint('portfolio', __name__, url_prefix='/api/v1/portfolio')
 
@@ -17,9 +18,6 @@ DB_CONFIG = {
     'password': 'alitamysql',
     'database': 'trademaster'
 }
-
-# 默認總資金
-DEFAULT_CAPITAL = 100000
 
 
 def get_db_connection():

@@ -6,7 +6,8 @@
 寫入 MySQL 數據庫
 """
 
-import futu as ft
+from futu.quote.open_quote_context import OpenQuoteContext
+from futu.common.constant import KLType, RET_OK
 import pymysql
 import os
 import sys
@@ -64,11 +65,11 @@ def get_watchlist():
 WATCHLIST = get_watchlist()
 
 KL_TYPE_MAP = {
-    '5m': ft.KLType.K_5M,
-    '1h': ft.KLType.K_60M,
-    '1d': ft.KLType.K_DAY,
-    '1w': ft.KLType.K_WEEK,
-    '1M': ft.KLType.K_MON,
+    '5m': KLType.K_5M,
+    '1h': KLType.K_60M,
+    '1d': KLType.K_DAY,
+    '1w': KLType.K_WEEK,
+    '1M': KLType.K_MON,
 }
 
 INTERVALS = ['5m', '1h', '1d', '1w', '1M']
@@ -100,7 +101,7 @@ def main():
         print("✅ 交易時段，開始更新...")
     
     # 連接富途牛牛
-    quote_ctx = ft.OpenQuoteContext(host=FUTU_HOST, port=FUTU_PORT)
+    quote_ctx = OpenQuoteContext(host=FUTU_HOST, port=FUTU_PORT)
     print(f"✅ 連接成功")
     sys.stdout.flush()
     
@@ -120,13 +121,13 @@ def main():
             print(f"Fetching {symbol} {interval}...", flush=True)
             sys.stdout.flush()
             
-            ktype = KL_TYPE_MAP.get(interval, ft.KLType.K_DAY)
+            ktype = KL_TYPE_MAP.get(interval, KLType.K_DAY)
             kline_data = None  # 重置，避免使用上一輪的數據
             
             # 優先使用 get_cur_kline（訂閱方式，數據更齊全）
             ret, data = quote_ctx.get_cur_kline(symbol, 100, ktype)
             
-            if ret == ft.RET_OK and data is not None and not data.empty:
+            if ret == RET_OK and data is not None and not data.empty:
                 kline_data = data
             else:
                 # 備用：使用歷史 K 線 API
@@ -146,7 +147,7 @@ def main():
                 
                 if len(result) == 3:
                     ret, data, extra = result
-                    if ret == ft.RET_OK and data is not None and not data.empty:
+                    if ret == RET_OK and data is not None and not data.empty:
                         kline_data = data
                     else:
                         print(f"  ⚠️ {symbol} {interval} 歷史API返回空數據")

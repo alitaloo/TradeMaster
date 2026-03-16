@@ -20,10 +20,13 @@ TAIPEI_TZ = ZoneInfo("Asia/Taipei")
 # 數據目錄
 DATA_DIR = Path(__file__).parent / "data" / "historical"
 
+# 導入統一股票配置
+from config.constants import STOCKS as DEFAULT_STOCKS
 
 # 2026-02-12: 優化股票池 - 剔除 TSLA、INTC、RKLB（高波動/下降趨勢股票）
 # 專注於：科技巨頭、半導體龍頭、穩定成長股
-STOCKS = ["AAPL", "MSFT", "NVDA", "TSM", "AMZN", "META", "UBER", "MU", "AMD", "ORCL"]
+# 注意：若需要自定義股票池，可在運行時覆蓋
+STOCKS = DEFAULT_STOCKS
 
 
 def check_data_status() -> tuple:

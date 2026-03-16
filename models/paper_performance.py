@@ -2,8 +2,10 @@
 """
 Paper Performance Model - 回測對比
 """
-from datetime import datetime, date
+from datetime import datetime, date, timezone, timedelta
 from config.database import get_db_cursor
+
+_TZ_TAIPEI = timezone(timedelta(hours=8))
 
 
 class PaperPerformance:
@@ -20,7 +22,7 @@ class PaperPerformance:
         self.simulation_return = simulation_return
         self.diff = diff
         self.note = note
-        self.created_at = created_at or datetime.now()
+        self.created_at = created_at or datetime.now(_TZ_TAIPEI)
     
     def save(self):
         """儲存記錄"""
@@ -64,6 +66,17 @@ class PaperPerformance:
         """計算差異"""
         return simulation_return - backtest_return
     
+    @staticmethod
+    def _iso_taipei(dt):
+        """Convert datetime to ISO 8601 with +08:00"""
+        if dt is None:
+            return None
+        if isinstance(dt, datetime):
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=_TZ_TAIPEI)
+            return dt.isoformat()
+        return str(dt)
+
     def to_dict(self):
         """轉換為字典"""
         return {
@@ -73,5 +86,5 @@ class PaperPerformance:
             'simulation_return': float(self.simulation_return) if self.simulation_return else 0,
             'diff': float(self.diff) if self.diff else 0,
             'note': self.note,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'created_at': self._iso_taipei(self.created_at),
         }

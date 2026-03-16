@@ -10,16 +10,59 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from models import PaperPosition
 from paper_trading import submit_paper_order, update_order_status
+from paper_trading_portfolio import get_current_price
+from config.database import get_db_connection
+import logging
+
+logger = logging.getLogger(__name__)
 
 
-def get_current_price(symbol: str) -> float:
+def get_stop_loss_take_profit(symbol: str) -> tuple:
     """
-    取得現價
-    TODO: 實際從富途 API 取得
+    從 signals 表或 paper_orders 表獲取止損止盈價格
+    
+    Returns:
+        tuple: (stop_loss_price, take_profit_price) - 如果沒有則返回 (None, None)
     """
-    # 模擬: 隨機價格
-    import random
-    return round(random.uniform(100, 200), 2)
+    try:
+        from config.database import get_db_cursor
+        
+        with get_db_cursor() as cursor:
+            # 查詢最新的信號（持倉建倉時的信號）
+            cursor.execute("""
+                SELECT stop_loss, take_profit 
+                FROM signals 
+                WHERE symbol = %s AND stop_loss IS NOT NULL
+                ORDER BY created_at DESC 
+                LIMIT 1
+            """, (symbol,))
+            row = cursor.fetchone()
+            
+            if row:
+                return (row['stop_loss'], row['take_profit'])
+    except Exception as e:
+        logger.debug(f"從 signals 表獲取止損止盈失敗: {e}")
+    
+    # 也嘗試從 paper_orders 表獲取
+    try:
+        from config.database import get_db_cursor
+        
+        with get_db_cursor() as cursor:
+            cursor.execute("""
+                SELECT stop_loss, take_profit 
+                FROM paper_orders 
+                WHERE symbol = %s AND stop_loss IS NOT NULL
+                ORDER BY created_at DESC 
+                LIMIT 1
+            """, (symbol,))
+            row = cursor.fetchone()
+            
+            if row:
+                return (row['stop_loss'], row['take_profit'])
+    except Exception as e:
+        logger.debug(f"從 paper_orders 表獲取止損止盈失敗: {e}")
+    
+    return (None, None)
 
 
 def check_stop_loss_take_profit() -> List[Dict]:
@@ -39,26 +82,32 @@ def check_stop_loss_take_profit() -> List[Dict]:
     positions = PaperPosition.find_all()
     triggered = []
     
+    # 默認止損止盈比例（僅當數據庫中沒有設定時使用）
+    DEFAULT_STOP_LOSS_PCT = 0.05   # 5%
+    DEFAULT_TAKE_PROFIT_PCT = 0.10  # 10%
+    
     for pos in positions:
         if pos.quantity <= 0:
             continue
         
         # 取得現價
         current_price = get_current_price(pos.symbol)
+        if current_price is None:
+            logger.warning(f"無法獲取 {pos.symbol} 價格，跳過止損止盈檢查")
+            continue
+            
         pos.current_price = current_price
         pos.calculate_pnl(current_price)
         pos.save()
         
-        # 檢查止損 (這裡應該從訂單或持倉記錄中取得止損止盈價格)
-        # TODO: 從 paper_orders 或專門的止損止盈表取得
-        stop_loss_price = None  # 假設 5% 止損
-        take_profit_price = None  # 假設 10% 止盈
+        # 從信號或訂單表獲取止損止盈價格
+        stop_loss_price, take_profit_price = get_stop_loss_take_profit(pos.symbol)
         
-        # 計算止損止盈價格 (如果沒有設定)
+        # 如果沒有設定，從持倉成本計算（使用預設比例）
         if not stop_loss_price:
-            stop_loss_price = pos.average_cost * 0.95  # 5% 止損
+            stop_loss_price = pos.average_cost * (1 - DEFAULT_STOP_LOSS_PCT)  # 5% 止損
         if not take_profit_price:
-            take_profit_price = pos.average_cost * 1.10  # 10% 止盈
+            take_profit_price = pos.average_cost * (1 + DEFAULT_TAKE_PROFIT_PCT)  # 10% 止盈
         
         # 檢查是否觸發
         if current_price <= stop_loss_price:

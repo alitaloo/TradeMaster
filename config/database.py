@@ -6,6 +6,7 @@ Database Configuration - 統一資料庫配置
 
 import os
 import mysql.connector
+from mysql.connector import pooling
 from contextlib import contextmanager
 
 # MySQL 配置 (可通過環境變數覆蓋)
@@ -16,6 +17,21 @@ MYSQL_CONFIG = {
     'database': os.getenv('MYSQL_DATABASE', 'trademaster'),
     'charset': 'utf8mb4'
 }
+
+# 創建連接池（pool_size=10）
+_connection_pool = None
+
+def get_connection_pool():
+    """獲取資料庫連接池（懶惰初始化）"""
+    global _connection_pool
+    if _connection_pool is None:
+        _connection_pool = pooling.MySQLConnectionPool(
+            pool_name="trademaster_pool",
+            pool_size=10,
+            pool_reset_session=True,
+            **MYSQL_CONFIG
+        )
+    return _connection_pool
 
 # PyMySQL 格式 (某些模組使用)
 PYMYSQL_CONFIG = {
@@ -28,8 +44,8 @@ PYMYSQL_CONFIG = {
 
 
 def get_connection():
-    """獲取 MySQL 連接"""
-    return mysql.connector.connect(**MYSQL_CONFIG)
+    """獲取 MySQL 連接（從連接池）"""
+    return get_connection_pool().get_connection()
 
 
 @contextmanager
@@ -43,7 +59,7 @@ def get_db_cursor(dictionary=True):
     """
     conn = None
     try:
-        conn = mysql.connector.connect(**MYSQL_CONFIG)
+        conn = get_connection()
         cursor = conn.cursor(dictionary=dictionary)
         yield cursor
         conn.commit()
@@ -58,7 +74,7 @@ def get_db_cursor(dictionary=True):
 
 @contextmanager
 def get_db_connection():
-    """上下文管理器：自動處理連接
+    """上下文管理器：自動處理連接（從連接池）
     
     Usage:
         with get_db_connection() as conn:
@@ -68,7 +84,7 @@ def get_db_connection():
     """
     conn = None
     try:
-        conn = mysql.connector.connect(**MYSQL_CONFIG)
+        conn = get_connection()
         yield conn
     finally:
         if conn:

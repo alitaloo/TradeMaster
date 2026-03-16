@@ -2,14 +2,20 @@
 """
 Paper Daily Summary Model - 每日結算
 """
-from datetime import datetime, date
+from datetime import datetime, date, timezone, timedelta
 from config.database import get_db_cursor
+
+_TZ_TAIPEI = timezone(timedelta(hours=8))
 
 
 class PaperDailySummary:
     """每日結算"""
     
     TABLE_NAME = 'paper_daily_summary'
+    UPSERT_FIELDS = (
+        'total_value', 'cash', 'market_value', 'unrealized_pnl',
+        'realized_pnl', 'daily_pnl', 'trade_count', 'buy_count', 'sell_count'
+    )
     
     def __init__(self, id=None, date=None, total_value=0, cash=0, 
                  market_value=0, unrealized_pnl=0, realized_pnl=0,
@@ -27,10 +33,24 @@ class PaperDailySummary:
         self.trade_count = trade_count
         self.buy_count = buy_count
         self.sell_count = sell_count
-        self.created_at = created_at or datetime.now()
+        self.created_at = created_at or datetime.now(_TZ_TAIPEI)
     
+    def _upsert_values(self):
+        """回傳 upsert 欄位值"""
+        return (
+            self.total_value,
+            self.cash,
+            self.market_value,
+            self.unrealized_pnl,
+            self.realized_pnl,
+            self.daily_pnl,
+            self.trade_count,
+            self.buy_count,
+            self.sell_count,
+        )
+
     def save(self):
-        """儲存每日結算"""
+        """儲存每日結算；若同日期已存在則更新既有資料"""
         with get_db_cursor() as cursor:
             if self.id:
                 cursor.execute(f"""
@@ -39,19 +59,24 @@ class PaperDailySummary:
                         unrealized_pnl=%s, realized_pnl=%s, daily_pnl=%s,
                         trade_count=%s, buy_count=%s, sell_count=%s
                     WHERE id=%s
-                """, (self.total_value, self.cash, self.market_value,
-                      self.unrealized_pnl, self.realized_pnl, self.daily_pnl,
-                      self.trade_count, self.buy_count, self.sell_count, self.id))
-            else:
-                cursor.execute(f"""
-                    INSERT INTO {self.TABLE_NAME}
-                    (date, total_value, cash, market_value, unrealized_pnl,
-                     realized_pnl, daily_pnl, trade_count, buy_count, sell_count)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """, (self.date, self.total_value, self.cash, self.market_value,
-                      self.unrealized_pnl, self.realized_pnl, self.daily_pnl,
-                      self.trade_count, self.buy_count, self.sell_count))
-                self.id = cursor.lastrowid
+                """, self._upsert_values() + (self.id,))
+                return self.id
+
+            if not self.date:
+                raise ValueError('PaperDailySummary.save() requires date when id is not set')
+
+            update_clause = ', '.join(f"{field}=VALUES({field})" for field in self.UPSERT_FIELDS)
+            cursor.execute(f"""
+                INSERT INTO {self.TABLE_NAME}
+                (date, total_value, cash, market_value, unrealized_pnl,
+                 realized_pnl, daily_pnl, trade_count, buy_count, sell_count)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    {update_clause},
+                    id=LAST_INSERT_ID(id)
+            """, (self.date,) + self._upsert_values())
+            self.id = cursor.lastrowid
+
         return self.id
     
     @classmethod
@@ -71,6 +96,17 @@ class PaperDailySummary:
             cursor.execute(f"SELECT * FROM {cls.TABLE_NAME} ORDER BY date DESC LIMIT %s", (limit,))
             return [cls(**row) for row in cursor.fetchall()]
     
+    @staticmethod
+    def _iso_taipei(dt):
+        """Convert datetime to ISO 8601 with +08:00"""
+        if dt is None:
+            return None
+        if isinstance(dt, datetime):
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=_TZ_TAIPEI)
+            return dt.isoformat()
+        return str(dt)
+
     def to_dict(self):
         """轉換為字典"""
         return {
@@ -85,5 +121,5 @@ class PaperDailySummary:
             'trade_count': self.trade_count,
             'buy_count': self.buy_count,
             'sell_count': self.sell_count,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'created_at': self._iso_taipei(self.created_at),
         }

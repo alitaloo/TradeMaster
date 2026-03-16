@@ -14,16 +14,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from config.database import get_db_cursor, get_db_connection
-
-# 風控配置
-RISK_CONFIG = {
-    'max_single_amount': 10000,       # 單筆最大金額
-    'max_total_position': 50000,      # 總持倉最大金額
-    'max_leverage': 3.0,              # 最大杠桿倍數
-    'min_confidence': 0.6,            # 最小信心度
-    'max_position_per_stock': 20000,  # 單股票最大金額
-    'max_stocks': 10,                 # 最大持倉股票數
-}
+from config.constants import RISK_CONFIG
 
 
 class RiskEngine:
@@ -32,14 +23,33 @@ class RiskEngine:
     def __init__(self, config=None):
         self.config = config or RISK_CONFIG
     
+    def _get_total_assets(self):
+        """取得當前總資產（現金 + 持倉市值），用於動態計算風控閾值"""
+        try:
+            from paper_trading_portfolio import get_paper_total_assets
+            assets = get_paper_total_assets()
+            total = assets.get('total', 0)
+            return total if total > 0 else 1000000  # fallback 到初始資金
+        except Exception:
+            return 1000000  # fallback
+    
+    def _get_limit(self, pct_key, fallback=100000):
+        """根據總資產百分比動態計算風控上限"""
+        pct = self.config.get(pct_key, 0)
+        if pct <= 0:
+            return fallback
+        total_assets = self._get_total_assets()
+        return total_assets * pct
+    
     def check_single_amount(self, price, quantity):
         """檢查單筆金額"""
         amount = price * quantity
-        if amount > self.config['max_single_amount']:
+        limit = self._get_limit('max_single_amount_pct')
+        if amount > limit:
             return {
                 'passed': False,
                 'rule': 'max_single_amount',
-                'message': f'單筆金額 ${amount:.2f} 超過上限 ${self.config["max_single_amount"]}'
+                'message': f'單筆金額 ${amount:.2f} 超過上限 ${limit:.0f}（總資產的 {self.config.get("max_single_amount_pct", 0)*100:.0f}%）'
             }
         return {'passed': True, 'rule': 'max_single_amount'}
     
@@ -55,14 +65,14 @@ class RiskEngine:
                 row = cursor.fetchone()
                 total_value = row['total_value'] if row else 0
         except Exception as e:
-            # 如果查詢失敗，返回通過（避免阻塞交易）
-            return {'passed': True, 'rule': 'max_total_position', 'warning': f'查詢失敗: {e}'}
+            return {'passed': False, 'rule': 'max_total_position', 'reason': f'風控查詢失敗: {e}'}
         
-        if total_value >= self.config['max_total_position']:
+        limit = self._get_limit('max_total_position_pct')
+        if total_value >= limit:
             return {
                 'passed': False,
                 'rule': 'max_total_position',
-                'message': f'總持倉 ${total_value:.2f} 達到上限 ${self.config["max_total_position"]}'
+                'message': f'總持倉 ${total_value:.2f} 達到上限 ${limit:.0f}（總資產的 {self.config.get("max_total_position_pct", 0)*100:.0f}%）'
             }
         return {'passed': True, 'rule': 'max_total_position'}
     
@@ -78,17 +88,17 @@ class RiskEngine:
                 row = cursor.fetchone()
                 current_value = row['current_value'] if row else 0
         except Exception as e:
-            return {'passed': True, 'rule': 'max_position_per_stock', 'warning': f'查詢失敗: {e}'}
+            return {'passed': False, 'rule': 'max_position_per_stock', 'reason': f'風控查詢失敗: {e}'}
         
-        # 新增金額
         new_value = price * quantity
         total_value = current_value + new_value
         
-        if total_value > self.config['max_position_per_stock']:
+        limit = self._get_limit('max_position_per_stock_pct')
+        if total_value > limit:
             return {
                 'passed': False,
                 'rule': 'max_position_per_stock',
-                'message': f'{symbol} 持倉 ${total_value:.2f} 超過上限 ${self.config["max_position_per_stock"]}'
+                'message': f'{symbol} 持倉 ${total_value:.2f} 超過上限 ${limit:.0f}（總資產的 {self.config.get("max_position_per_stock_pct", 0)*100:.0f}%）'
             }
         return {'passed': True, 'rule': 'max_position_per_stock'}
     

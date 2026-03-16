@@ -45,6 +45,23 @@ class SystemConfig:
         return float(cls.get('paper_initial_balance', '1000000'))
     
     @classmethod
+    def get_bool(cls, key, default=False):
+        value = cls.get(key, 'true' if default else 'false')
+        if isinstance(value, bool):
+            return value
+        return str(value).strip().lower() in {'1', 'true', 'yes', 'on'}
+
+    @classmethod
+    def get_int(cls, key, default=0):
+        value = cls.get(key, default)
+        return int(value) if value not in (None, '') else int(default)
+
+    @classmethod
+    def get_float(cls, key, default=0.0):
+        value = cls.get(key, default)
+        return float(value) if value not in (None, '') else float(default)
+
+    @classmethod
     def get_all(cls):
         """取得所有配置"""
         with get_db_cursor() as cursor:

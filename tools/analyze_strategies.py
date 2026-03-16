@@ -11,7 +11,6 @@ TradeMaster v2 - 策略分析腳本
 
 import pandas as pd
 import numpy as np
-import sqlite3
 import sys
 import time
 from datetime import datetime
@@ -20,7 +19,9 @@ from pathlib import Path
 # 添加路徑
 PROJECT_ROOT = Path(__file__).parent
 DATA_DIR = PROJECT_ROOT / "data" / "historical"
-DB_PATH = PROJECT_ROOT / "data" / "trademaster.db"
+# SQLite DB_PATH 已移除 (2026-03-06: 遷移至 MySQL)
+sys.path.insert(0, str(PROJECT_ROOT))
+from config.database import get_db_connection
 
 # 配置
 # 2026-02-12: 優化股票池 - 剔除 TSLA、INTC、RKLB（高波動/下降趨勢股票）
@@ -67,19 +68,25 @@ def load_local_data(symbol: str) -> pd.DataFrame:
         df = pd.read_csv(csv_path, index_col=0, parse_dates=True)
         print(f"   📄 {symbol}: {len(df)} 天 (本地)")
         return df
-    
-    # 嘗試 SQLite
-    conn = sqlite3.connect(DB_PATH)
+
+    # 嘗試 MySQL kline_cache（2026-03-06: 改用 MySQL，已移除 SQLite）
     try:
-        df = pd.read_sql_query(f"SELECT * FROM stock_{symbol}", conn, index_col='index')
-        df.index = pd.to_datetime(df.index)
-        print(f"   🗄️ {symbol}: {len(df)} 天 (SQLite)")
-        return df
-    except:
+        with get_db_connection() as conn:
+            df = pd.read_sql(
+                "SELECT timestamp AS `index`, open_price AS Open, high_price AS High, "
+                "low_price AS Low, close_price AS Close, volume AS Volume "
+                "FROM kline_cache WHERE symbol = %s AND interval_val = '1d' ORDER BY timestamp",
+                conn,
+                params=(f"US.{symbol}",),
+                index_col='index',
+                parse_dates=['index']
+            )
+        if not df.empty:
+            print(f"   🗄️ {symbol}: {len(df)} 天 (MySQL kline_cache)")
+            return df
+    except Exception as e:
         pass
-    finally:
-        conn.close()
-    
+
     print(f"   ❌ {symbol}: 本地無數據")
     return None
 

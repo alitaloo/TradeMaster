@@ -2,8 +2,10 @@
 """
 Paper Order Model - 模擬訂單
 """
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from config.database import get_db_cursor
+
+_TZ_TAIPEI = timezone(timedelta(hours=8))
 
 
 class PaperOrder:
@@ -14,7 +16,8 @@ class PaperOrder:
     def __init__(self, id=None, symbol=None, order_type=None, quantity=None, 
                  price=None, status='pending', source_signal_id=None, 
                  futu_order_id=None, filled_quantity=0, filled_price=None,
-                 filled_at=None, created_at=None, updated_at=None):
+                 filled_at=None, stop_loss=None, take_profit=None,
+                 created_at=None, updated_at=None):
         self.id = id
         self.symbol = symbol
         self.order_type = order_type
@@ -26,8 +29,10 @@ class PaperOrder:
         self.filled_quantity = filled_quantity
         self.filled_price = filled_price
         self.filled_at = filled_at
-        self.created_at = created_at or datetime.now()
-        self.updated_at = updated_at or datetime.now()
+        self.stop_loss = stop_loss
+        self.take_profit = take_profit
+        self.created_at = created_at or datetime.now(_TZ_TAIPEI)
+        self.updated_at = updated_at or datetime.now(_TZ_TAIPEI)
     
     def save(self):
         """儲存訂單"""
@@ -37,20 +42,24 @@ class PaperOrder:
                     UPDATE {self.TABLE_NAME}
                     SET symbol=%s, order_type=%s, quantity=%s, price=%s,
                         status=%s, source_signal_id=%s, futu_order_id=%s,
-                        filled_quantity=%s, filled_price=%s, filled_at=%s
+                        filled_quantity=%s, filled_price=%s, filled_at=%s,
+                        stop_loss=%s, take_profit=%s
                     WHERE id=%s
                 """, (self.symbol, self.order_type, self.quantity, self.price,
                       self.status, self.source_signal_id, self.futu_order_id,
-                      self.filled_quantity, self.filled_price, self.filled_at, self.id))
+                      self.filled_quantity, self.filled_price, self.filled_at,
+                      self.stop_loss, self.take_profit, self.id))
             else:
                 cursor.execute(f"""
                     INSERT INTO {self.TABLE_NAME}
                     (symbol, order_type, quantity, price, status, source_signal_id,
-                     futu_order_id, filled_quantity, filled_price, filled_at)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                     futu_order_id, filled_quantity, filled_price, filled_at,
+                     stop_loss, take_profit)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """, (self.symbol, self.order_type, self.quantity, self.price,
                       self.status, self.source_signal_id, self.futu_order_id,
-                      self.filled_quantity, self.filled_price, self.filled_at))
+                      self.filled_quantity, self.filled_price, self.filled_at,
+                      self.stop_loss, self.take_profit))
                 self.id = cursor.lastrowid
         return self.id
     
@@ -64,9 +73,11 @@ class PaperOrder:
     
     @classmethod
     def find_pending(cls):
-        """查詢所有 pending 訂單"""
+        """查詢所有待輪詢訂單（pending / partial）"""
         with get_db_cursor() as cursor:
-            cursor.execute(f"SELECT * FROM {cls.TABLE_NAME} WHERE status = 'pending'")
+            cursor.execute(
+                f"SELECT * FROM {cls.TABLE_NAME} WHERE status IN ('pending', 'partial') ORDER BY created_at ASC"
+            )
             return [cls(**row) for row in cursor.fetchall()]
     
     @classmethod
@@ -83,6 +94,17 @@ class PaperOrder:
             cursor.execute(f"SELECT * FROM {cls.TABLE_NAME} ORDER BY created_at DESC LIMIT %s", (limit,))
             return [cls(**row) for row in cursor.fetchall()]
     
+    @staticmethod
+    def _iso_taipei(dt):
+        """Convert datetime to ISO 8601 with +08:00"""
+        if dt is None:
+            return None
+        if isinstance(dt, datetime):
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=_TZ_TAIPEI)
+            return dt.isoformat()
+        return str(dt)
+
     def to_dict(self):
         """轉換為字典"""
         return {
@@ -96,7 +118,9 @@ class PaperOrder:
             'futu_order_id': self.futu_order_id,
             'filled_quantity': self.filled_quantity,
             'filled_price': float(self.filled_price) if self.filled_price else None,
-            'filled_at': self.filled_at.isoformat() if self.filled_at else None,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
-            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+            'filled_at': self._iso_taipei(self.filled_at),
+            'stop_loss': float(self.stop_loss) if self.stop_loss else None,
+            'take_profit': float(self.take_profit) if self.take_profit else None,
+            'created_at': self._iso_taipei(self.created_at),
+            'updated_at': self._iso_taipei(self.updated_at),
         }

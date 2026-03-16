@@ -59,8 +59,11 @@ def push_paper_daily_summary() -> Dict:
 📈 持倉市值: ${assets['market_value']:,.2f}
 
 📈 **損益**:
-   未實現: ${assets['unrealized_pnl']:,.2f} ({assets.get('unrealized_pnl_pct', 0):.2f}%)
-   已實現: ${assets['realized_pnl']:,.2f}
+   未實現損益: ${assets['unrealized_pnl']:,.2f}
+   ├─ 佔總資產: {assets['unrealized_pnl_pct_total_assets']:.2f}%
+   ├─ 佔初始資金: {assets['unrealized_pnl_pct_initial_balance']:.2f}%
+   └─ 佔持倉成本: {assets['unrealized_pnl_pct_position_cost']:.2f}%
+   已實現損益: ${assets['realized_pnl']:,.2f}
 
 📊 **交易統計**:
    總成交: {trade_count}
@@ -70,8 +73,29 @@ def push_paper_daily_summary() -> Dict:
 持倉: {assets['position_count']} 檔
 """
     
-    # TODO: 推送到 Successor Bot
-    # 這裡應該呼叫 Successor Bot API
+    # 發送到 Telegram
+    import os
+    try:
+        import requests
+        TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
+        TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', '7506814516')
+        
+        if TELEGRAM_BOT_TOKEN:
+            url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+            payload = {
+                "chat_id": TELEGRAM_CHAT_ID,
+                "text": message,
+                "parse_mode": "Markdown"
+            }
+            response = requests.post(url, json=payload, timeout=10)
+            if response.status_code == 200:
+                print("✅ 已發送到 Telegram")
+            else:
+                print(f"⚠️ Telegram 發送失敗: {response.text}")
+        else:
+            print("⚠️ 沒有設定 TELEGRAM_BOT_TOKEN")
+    except Exception as e:
+        print(f"⚠️ 發送 Telegram 失敗: {e}")
     
     return {
         'success': True,
@@ -138,12 +162,17 @@ def generate_paper_report() -> Dict:
     report = f"""# 模擬交易報告 - {today}
 
 ## 總資產
+- 初始資金: ${assets['initial_balance']:,.2f}
 - 現金: ${assets['cash']:,.2f}
 - 持倉市值: ${assets['market_value']:,.2f}
+- 持倉成本: ${assets['total_position_cost']:,.2f}
 - 總資產: ${assets['total']:,.2f}
 
 ## 損益
-- 未實現損益: ${assets['unrealized_pnl']:,.2f} ({assets.get('unrealized_pnl_pct', 0):.2f}%)
+- 未實現損益: ${assets['unrealized_pnl']:,.2f}
+- 未實現損益 / 總資產: {assets['unrealized_pnl_pct_total_assets']:.2f}%
+- 未實現損益 / 初始資金: {assets['unrealized_pnl_pct_initial_balance']:.2f}%
+- 未實現損益 / 持倉成本: {assets['unrealized_pnl_pct_position_cost']:.2f}%
 - 已實現損益: ${assets['realized_pnl']:,.2f}
 
 ## 交易統計
@@ -164,7 +193,8 @@ def generate_paper_report() -> Dict:
         'success': True,
         'date': today.isoformat(),
         'summary': summary.to_dict(),
-        'report': report
+        'report': report,
+        'assets': assets
     }
 
 

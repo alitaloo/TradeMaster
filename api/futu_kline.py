@@ -5,8 +5,10 @@
 """
 
 from flask import Blueprint, jsonify, request
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import json
+
+_TZ_TAIPEI = timezone(timedelta(hours=8))
 
 # 嘗試導入 futu 庫，如果不可用則使用 Mock
 try:
@@ -178,7 +180,7 @@ class FutuClient:
             volume = int(random.uniform(1000000, 10000000))
             
             data.append({
-                'time': (base_time + timedelta(minutes=i * interval_minutes)).strftime('%Y-%m-%d %H:%M:%S'),
+                'time': (base_time.replace(tzinfo=_TZ_TAIPEI) + timedelta(minutes=i * interval_minutes)).strftime('%Y-%m-%dT%H:%M:%S+08:00'),
                 'open': round(open_price, 2),
                 'close': round(close_price, 2),
                 'high': round(high_price, 2),
@@ -288,5 +290,5 @@ def status():
         'status': 'ok',
         'connected': connected,
         'futu_available': FUTU_AVAILABLE,
-        'timestamp': datetime.now().isoformat()
+        'timestamp': datetime.now(_TZ_TAIPEI).isoformat()
     })

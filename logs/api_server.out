@@ -1,0 +1,1793 @@
+2026-03-11 23:29:53.627 | INFO     | modules.prediction.engine:__init__:35 - 預測引擎初始化完成
+2026-03-11 23:29:53.627 | INFO     | modules.prediction.engine:__init__:35 - 預測引擎初始化完成
+✅ 富途 SDK 已載入 (futu)
+ * Serving Flask app 'api_server'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [11/Mar/2026 23:30:00] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:30:18] "GET /api/v1/portfolio/summary HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:30:18] "GET /api/v1/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:30:18] "GET /api/v1/backtests HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:30:18] "GET /api/v1/strategies HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:31:42] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:31:42] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:31:52] "[33mGET /api/v1/api/v1/stock-strategies HTTP/1.1[0m" 404 -
+127.0.0.1 - - [11/Mar/2026 23:31:53] "GET /api/v1/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:31:54] "GET /api/v1/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:31:54] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:31:55] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:31:55] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:31:56] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:31:56] "GET /api/v1/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:31:56] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:00] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:00] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:01] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:01] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:01] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:01] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:01] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:02] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:02] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:02] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:02] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:03] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:03] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:03] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:03] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:07] "GET /api/v1/kline?symbol=US.AAPL&interval=1h&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:09] "GET /api/v1/kline?symbol=US.AAPL&interval=1d&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:11] "GET /api/v1/kline?symbol=US.AAPL&interval=1h&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:13] "GET /api/v1/kline?symbol=US.AAPL&interval=1d&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:15] "GET /api/v1/kline?symbol=US.AAPL&interval=1h&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:19] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:21] "GET /api/v1/kline?symbol=US.ADBE&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:22] "GET /api/v1/kline?symbol=US.AMZN&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:24] "GET /api/v1/kline?symbol=US.COIN&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:25] "GET /api/v1/kline?symbol=US.GOOG&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:26] "GET /api/v1/kline?symbol=US.MSFT&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:35] "GET /api/v1/kline?symbol=US.NFLX&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:32:37] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:33:28] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:33:28] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:33:28] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:34:33] "GET /api/v1/market/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:34:33] "[33mGET /api/v1/market/quote/US.TXN HTTP/1.1[0m" 404 -
+127.0.0.1 - - [11/Mar/2026 23:36:25] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:25] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:25] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:26] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:26] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:26] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:27] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:27] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:27] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:28] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:28] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:28] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:29] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:29] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:29] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:29] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:29] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:29] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:51] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:36:51] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:37:01] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:37:01] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:37:01] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:37:02] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:37:02] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:37:02] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:37:03] "GET /api/v1/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:37:03] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:37:04] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:37:05] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:37:05] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:37:05] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:37:34] "GET /api/v1/news/weight/US.TSLA?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:37:43] "GET /api/v1/market/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:49] "GET /api/v1/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:49] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:50] "GET /api/v1/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:50] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:50] "GET /api/v1/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:50] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:52] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:52] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:52] "GET /api/v1/strategies HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:53] "[33mGET /api/v1/api/v1/stock-strategies HTTP/1.1[0m" 404 -
+127.0.0.1 - - [11/Mar/2026 23:39:54] "GET /api/v1/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:56] "GET /api/v1/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:56] "GET /api/v1/kline?symbol=US.AAPL&interval=5m&limit=2000 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:57] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:57] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:57] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:39:58] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:00] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:02] "GET /api/v1/orders?limit=100 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:03] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:03] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:03] "GET /api/v1/config/total_capital HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:03] "GET /api/v1/stocks/live HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:03] "GET /api/v1/positions/summary HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:04] "GET /api/v1/orders?limit=100 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:17] "GET /api/v1/config/total_capital HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:17] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:17] "GET /api/v1/stocks/live HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:17] "GET /api/v1/positions/summary HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:20] "GET /api/v1/signals?limit=20&offset=0 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:20] "GET /api/v1/signals/summary HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:29] "GET /api/v1/portfolio/summary HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:29] "GET /api/v1/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:29] "GET /api/v1/strategies HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:29] "GET /api/v1/backtests HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:37] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:37] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:40:37] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:00] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:00] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:00] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:01] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:01] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:01] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:02] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:02] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:02] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:03] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:03] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:03] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:04] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:04] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:04] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:04] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:04] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:04] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:05] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:05] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:05] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:06] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:06] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:06] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:49] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:49] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:49] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:49] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:49] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:49] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:51] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:51] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:51] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:51] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:51] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:51] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:53] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:53] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:53] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:53] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:53] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:53] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:56] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:57] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:57] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:57] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:57] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:57] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:41:57] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:00] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:00] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:00] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:00] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:00] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:00] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:02] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:02] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:03] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:03] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:03] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:03] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:05] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:05] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:05] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:05] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:05] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:05] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:07] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:07] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:07] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:07] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:07] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:07] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:09] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:09] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:09] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:09] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:09] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:09] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:11] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:11] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:11] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:11] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:11] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:11] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:14] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:14] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:14] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:14] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:14] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:14] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:18] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:18] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:18] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:18] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:18] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:18] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:22] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:22] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:22] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:22] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:22] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:22] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:24] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:24] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:24] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:24] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:24] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:24] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:25] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:25] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:25] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:25] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:27] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:27] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:27] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:27] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:27] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:27] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:29] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:29] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:29] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:29] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:29] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:29] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:32] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:32] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:32] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:32] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:32] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:32] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:34] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:34] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:34] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:34] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:34] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:34] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:36] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:36] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:36] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:36] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:36] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:36] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:39] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:39] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:39] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:39] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:39] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:39] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:41] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:41] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:41] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:41] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:41] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:42:41] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:43:41] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:43:41] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:43:41] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:43:41] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:16] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:16] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:16] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:16] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:16] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:16] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:16] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:16] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:16] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:16] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:18] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:18] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:18] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:18] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:18] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:18] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:21] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-11 23:44:21,718] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [11/Mar/2026 23:44:21] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Mar/2026 23:44:21] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:21] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:21] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:21] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:24] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:24] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:24] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:24] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:24] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:24] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:24] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:24] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:24] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:24] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:26] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-11 23:44:26,118] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [11/Mar/2026 23:44:26] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Mar/2026 23:44:26] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:26] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:26] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:26] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:31] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:31] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:31] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:31] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:31] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:31] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:31] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:31] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:33] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-11 23:44:33,575] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [11/Mar/2026 23:44:33] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Mar/2026 23:44:33] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:33] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:33] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:33] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:36] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:36] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:36] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:36] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:36] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:36] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:38] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:38] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:38] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:38] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:38] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:38] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:41] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:41] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:41] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:41] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:41] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:41] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:44] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:44] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:44] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:44] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:46] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:46] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:46] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:46] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:46] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:46] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:46] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:48] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:48] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:48] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:48] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:48] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:48] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:50] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:50] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:50] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:50] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:50] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-11 23:44:50,940] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [11/Mar/2026 23:44:50] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Mar/2026 23:44:53] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:53] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:53] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:53] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:53] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:53] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:55] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:55] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:55] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:55] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:55] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:55] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:59] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:59] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:59] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:59] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:44:59] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:44:59] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:45:01] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:01] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:45:01] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:01] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:45:01] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:01] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:45:04] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:04] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:45:04] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:04] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:45:04] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:04] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:45:06] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:06] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:45:06] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:06] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:45:06] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:06] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:45:06] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:06] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:06] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:07] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:07] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:07] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:08] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:08] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:08] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:08] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:08] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:45:08] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:08] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:45:08] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:08] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [11/Mar/2026 23:45:09] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:09] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:09] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:09] "GET /api/v1/paper/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:09] "GET /api/v1/paper/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:45:09] "GET /api/v1/paper/orders?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:50:20] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:50:20] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:50:31] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:51:03] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:51:08] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:54:46] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:54:46] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:54:55] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:55:49] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:55:52] "GET /api/v1/market/summary HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:58:38] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:58:41] "GET /api/v1/stocks?enabled=true HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:58:48] "GET /api/v1/market/status HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:58:51] "GET /api/v1/news/weight/TSLA?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:58:51] "GET /api/v1/news/weight/AAPL?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:58:51] "GET /api/v1/news/weight/NVDA?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Mar/2026 23:58:51] "GET /api/v1/news/weight/MSFT?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:00:25] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:01:42] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:01:42] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:01:52] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:12:48] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:12:48] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:12:49] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:16:54] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:16:54] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:16:55] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:23:04] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:23:04] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 00:23:04] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:23:04] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 00:23:04] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:23:04] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 00:23:11] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:23:11] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 00:23:11] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:23:11] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 00:23:16] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 00:23:16,214] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 00:23:16] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 00:23:16] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:23:16] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 00:23:16] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:23:16] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 00:23:20] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:23:20] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 00:23:26] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:23:26] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 00:23:26] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:23:26] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 00:23:28] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:23:28] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 00:23:52] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:23:52] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 00:24:09] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:24:09] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 00:24:09] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 00:24:09,341] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 00:24:09] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 00:24:15] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:24:15] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 00:24:19] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 00:24:19,355] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 00:24:19] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 00:24:24] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 00:24:24,982] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 00:24:24] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 00:25:55] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:25:55] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:25:56] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:29:46] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:29:54] "[33mGET /api/v1/ HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 00:29:57] "[33mGET / HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 00:30:00] "[33mGET /docs HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 00:30:03] "GET /api/v1/signals?limit=5 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:30:21] "GET /api/v1/stocks?limit=5 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:31:02] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:31:06] "[33mGET /api/v1/analysis/run?strategy=fox_analysis_v2 HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 00:31:39] "[33mGET /api HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 00:33:26] "GET /api/v1/news/weight/TSLA?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:33:30] "[33mGET /api/v1/kline/US.TSLA?timeframe=5m&limit=10 HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 00:33:33] "[33mGET /openapi.json HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 00:34:18] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:34:18] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:34:19] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:35:15] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:49:14] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:49:17] "[33mGET /api/v1/ HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 00:49:29] "[33mGET / HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 00:50:00] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:50:00] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:50:01] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:50:15] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:50:19] "GET /api/v1/news/weight/TSLA?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:55:02] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:55:02] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:55:03] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:59:17] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:59:17] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 00:59:18] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:06:52] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:06:52] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:06:53] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:07:50] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:10:55] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:10:55] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:10:56] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:18:23] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:18:23] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:18:24] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:20:25] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:20:25] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 01:20:25] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:20:25] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 01:20:25] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 01:20:25,915] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 01:20:25] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 01:20:30] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:20:30] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 01:20:30] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:20:30] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 01:20:34] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:20:34] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 01:20:34] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:20:34] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 01:20:36] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:20:36] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 01:20:38] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:20:38] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 01:20:44] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:20:44] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 01:20:46] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 01:20:46,990] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 01:20:46] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 01:20:51] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:20:51] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 01:20:51] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 01:20:51,204] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 01:20:51] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 01:20:53] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 01:20:53,454] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 01:20:53] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 01:20:55] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:20:55] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 01:21:02] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:21:02] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 01:21:07] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:21:07] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 01:21:07] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:21:07] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 01:22:21] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:22:21] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:22:22] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:22:57] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:22:57] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:22:58] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:23:08] "GET /api/v1/signals?strategy=fox_analysis_v2&limit=21 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:23:10] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:23:10] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:23:11] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:27:38] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:27:38] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:27:39] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:33:08] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:33:11] "[33mGET /api/v1/ HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 01:33:14] "[33mGET /docs HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 01:33:16] "[33mGET /openapi.json HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 01:33:32] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:33:32] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:33:33] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:40:29] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:46:09] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:46:09] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:46:11] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:51:18] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:51:18] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:51:19] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:55:22] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:55:22] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 01:55:23] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:02:11] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:02:13] "[33mGET /api HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 02:02:16] "[33mGET /docs HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 02:02:58] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:02:58] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:02:59] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:14:00] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:15:10] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:15:10] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:15:11] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:23:29] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:23:29] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 02:23:29] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:23:29] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 02:23:29] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:23:29] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 02:23:31] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:23:31] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 02:23:31] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:23:31] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 02:23:34] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:23:34] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 02:23:34] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:23:34] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 02:23:43] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 02:23:43,034] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 02:23:43] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 02:23:50] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 02:23:50,942] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 02:23:50] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 02:23:52] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:23:52] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 02:23:55] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 02:23:55,451] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 02:23:55] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 02:24:04] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:24:04] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 02:24:06] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:24:06] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 02:24:06] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:24:06] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 02:24:11] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:24:11] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 02:25:10] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:25:10] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:25:11] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:33:11] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:33:11] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:33:12] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:40:32] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:40:32] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:40:33] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:47:14] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:47:49] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:47:49] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:47:50] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:56:40] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:56:42] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:56:42] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 02:56:43] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:01:36] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:01:36] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:01:37] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:10:44] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:10:44] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:10:44] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:14:30] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:14:34] "[33mGET /api/v1/ HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 03:14:47] "[33mGET /docs HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 03:14:49] "[33mGET /openapi.json HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 03:15:15] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:15:15] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:15:16] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:24:25] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:24:25] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 03:24:25] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:24:25] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 03:24:25] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:24:25] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 03:24:29] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:24:29] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 03:24:29] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:24:29] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 03:24:31] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:24:31] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 03:24:31] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:24:31] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 03:24:38] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:24:38] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 03:24:38] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 03:24:38,583] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 03:24:38] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 03:24:40] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 03:24:40,698] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 03:24:40] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 03:24:48] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:24:48] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 03:24:48] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 03:24:48,824] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 03:24:48] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 03:24:48] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:24:48] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 03:24:51] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:24:51] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 03:24:57] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+[2026-03-12 03:24:57,902] ERROR in app: Exception on /api/v1/news [POST]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 772, in cmd_query
+    self._cmysql.query(
+    ~~~~~~~~~~~~~~~~~~^
+        query,
+        ^^^^^^
+    ...<3 lines>...
+        query_attrs=self.query_attrs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+_mysql_connector.MySQLInterfaceError: Data too long for column 'url' at row 1
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/alita/.openclaw/workspace/codes/TradeMaster_v2/api/news_bp.py", line 90, in create_news
+    cursor.execute(
+    ~~~~~~~~~~~~~~^
+        '''
+        ^^^
+    ...<12 lines>...
+        )
+        ^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/cursor_cext.py", line 353, in execute
+    self._connection.cmd_query(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._stmt_partition["mappable_stmt"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        raw_as_string=self._raw_as_string,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/opentelemetry/context_propagation.py", line 97, in wrapper
+    return method(cnx, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/mysql/connector/connection_cext.py", line 781, in cmd_query
+    raise get_mysql_exception(
+        err.errno, msg=err.msg, sqlstate=err.sqlstate
+    ) from err
+mysql.connector.errors.DataError: 1406 (22001): Data too long for column 'url' at row 1
+127.0.0.1 - - [12/Mar/2026 03:24:57] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 500 -
+127.0.0.1 - - [12/Mar/2026 03:25:02] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:25:02] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 03:25:06] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:25:06] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 03:25:08] "POST /api/v1/news/analyze HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:25:08] "[35m[1mPOST /api/v1/news HTTP/1.1[0m" 201 -
+127.0.0.1 - - [12/Mar/2026 03:25:52] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:26:42] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:26:42] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:26:43] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:34:02] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:34:25] "[33mGET /api/cron/status HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Mar/2026 03:45:11] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:45:11] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:45:12] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 03:55:53] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 04:04:50] "GET /api/v1/positions HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 04:04:50] "GET /api/v1/market HTTP/1.1" 200 -
+127.0.0.1 - - [12/Mar/2026 04:04:51] "GET /api/v1/news/weight/QCOM?hours=24 HTTP/1.1" 200 -
