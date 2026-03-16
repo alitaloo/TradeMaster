@@ -438,6 +438,10 @@ def get_paper_total_assets() -> Dict:
     unrealized_pnl_pct_initial_balance = _safe_pct(unrealized_pnl, initial_balance)
     unrealized_pnl_pct_position_cost = _safe_pct(unrealized_pnl, total_position_cost)
     
+    # 整體盈虧 (vs 初始資金)
+    overall_pnl = round(total - initial_balance, 2)
+    overall_pnl_pct = round((total - initial_balance) / initial_balance * 100, 2) if initial_balance > 0 else 0
+    
     return {
         'cash': round(cash, 2),
         'market_value': round(market_value, 2),
@@ -451,7 +455,10 @@ def get_paper_total_assets() -> Dict:
         # Deprecated alias: historically this meant unrealized_pnl / total_assets * 100.
         'unrealized_pnl_pct': unrealized_pnl_pct_total_assets,
         'realized_pnl': round(realized_pnl, 2),
-        'position_count': len(positions)
+        'position_count': len(positions),
+        # 整體盈虧 (vs 初始資金)
+        'overall_pnl': overall_pnl,
+        'overall_pnl_pct': overall_pnl_pct
     }
 
 

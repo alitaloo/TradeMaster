@@ -73,7 +73,10 @@ def get_status() -> dict:
         'unrealized_pnl_pct': assets['unrealized_pnl_pct'],
         'realized_pnl': assets['realized_pnl'],
         'position_count': len(positions),
-        'pending_orders': len(pending_orders)
+        'pending_orders': len(pending_orders),
+        # 整體盈虧 (vs 初始資金)
+        'overall_pnl': assets.get('overall_pnl'),
+        'overall_pnl_pct': assets.get('overall_pnl_pct')
     }
 
 
