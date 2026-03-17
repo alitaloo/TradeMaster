@@ -13,6 +13,9 @@ from typing import List, Dict, Optional
 # Module-level variable for caching price updates
 _last_price_update_time = 0
 _PRICE_UPDATE_INTERVAL = 60  # seconds
+_cached_balance = None
+_last_balance_time = 0
+_BALANCE_CACHE_INTERVAL = 60  # seconds
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -303,9 +306,15 @@ def get_paper_balance() -> float:
     if not SystemConfig.is_paper_trading():
         return 0.0
     
+    # 快取：60 秒內直接返回上次結果
+    global _cached_balance, _last_balance_time
+    current_time = time.time()
+    if _cached_balance is not None and current_time - _last_balance_time < _BALANCE_CACHE_INTERVAL:
+        return _cached_balance
+    
     trading_mode = SystemConfig.get_trading_mode()
     
-    # 優先嘗試從富途 API 獲取現金餘額
+    # 優先嘗試從富途 API 獲取現金餘額（設 5 秒超時）
     if is_futu_available():
         try:
             from futu.trade.open_trade_context import OpenUSTradeContext
@@ -328,14 +337,18 @@ def get_paper_balance() -> float:
                             logger.warning(f"⚠️ 現金餘額差異: 富途=${cash:.2f}, 本地=${local_cash:.2f}, 差異={diff_pct*100:.2f}%")
                     
                     logger.info(f"✅ 現金餘額同步成功: ${cash:.2f} (source: futu)")
-                    return max(0, cash)
+                    _cached_balance = max(0, cash)
+                    _last_balance_time = time.time()
+                    return _cached_balance
         except Exception as e:
             logger.warning(f"富途 API 獲取現金失敗: {e}，fallback 到本地計算")
     
     # Fallback: 本地計算
     cash = _calculate_local_cash()
     logger.info(f"✅ 現金餘額計算成功: ${cash:.2f} (source: local)")
-    return max(0, cash)
+    _cached_balance = max(0, cash)
+    _last_balance_time = time.time()
+    return _cached_balance
 
 
 def _calculate_local_cash() -> float:
@@ -418,12 +431,13 @@ def get_paper_total_assets() -> Dict:
     # 現金
     cash = get_paper_balance()
     
-    # 更新持倉價格（帶緩存：60秒內不重複更新）
+    # 更新持倉價格（背景非阻塞：不卡 API 回應）
     global _last_price_update_time
     current_time = time.time()
     if current_time - _last_price_update_time >= _PRICE_UPDATE_INTERVAL:
-        update_position_prices()
-        _last_price_update_time = current_time
+        _last_price_update_time = current_time  # 先標記，防止重複觸發
+        import threading
+        threading.Thread(target=update_position_prices, daemon=True).start()
     
     # 持倉
     positions = PaperPosition.find_all()

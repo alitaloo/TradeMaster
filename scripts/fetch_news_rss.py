@@ -24,6 +24,11 @@ News RSS Fetcher - 從 RSS 源抓取新聞
 import warnings
 warnings.filterwarnings('ignore', message='Unverified HTTPS request')
 
+# 清除代理設定，避免 localhost API 調用走代理被 502
+import os
+for _proxy_key in ('HTTP_PROXY', 'HTTPS_PROXY', 'http_proxy', 'https_proxy', 'ALL_PROXY', 'all_proxy'):
+    os.environ.pop(_proxy_key, None)
+
 import sys
 import os
 import argparse

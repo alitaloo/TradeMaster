@@ -263,7 +263,7 @@ def run_server(host: str = "0.0.0.0", port: int = 8080, debug: bool = False):
     app = create_app(config)
     
     logger.info(f"啟動服務器: {host}:{port}")
-    app.run(host=host, port=port, debug=debug)
+    app.run(host=host, port=port, debug=debug, threaded=True)
 
 
 if __name__ == "__main__":
