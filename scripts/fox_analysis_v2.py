@@ -1763,11 +1763,16 @@ def analyze_position(position: Dict, market_data: Dict, max_age_minutes: Optiona
     strength = confidence_info['strength']
     logger.info(f"   信心度: {confidence} ({confidence_tier}/{strength})")
     
-    # 5. 決定信號 (TopK 共識時增強信心度)
+    # 5. 決定信號 (TopK 共識 + 信心度雙重確認)
+    min_conf = RISK_PARAMS['MIN_CONFIDENCE']  # 0.60
     if consensus == 'BUY':
         confidence = quantize_confidence(confidence + 0.10)
         confidence_tier, strength = classify_confidence(confidence)
-        signal_type = 'BUY'
+        if confidence >= min_conf:
+            signal_type = 'BUY'
+        else:
+            signal_type = 'HOLD'
+            logger.info(f"   ⚠️ {symbol} 共識 BUY 但信心度 {confidence} < {min_conf}，降級為 HOLD")
     elif consensus == 'SELL':
         # 檢查是否有持倉，沒有持倉則改為 HOLD
         current_qty = position.get('quantity', 0)
@@ -1777,11 +1782,15 @@ def analyze_position(position: Dict, market_data: Dict, max_age_minutes: Optiona
         else:
             confidence = quantize_confidence(confidence + 0.10)
             confidence_tier, strength = classify_confidence(confidence)
-            signal_type = 'SELL'
+            if confidence >= min_conf:
+                signal_type = 'SELL'
+            else:
+                signal_type = 'HOLD'
+                logger.info(f"   ⚠️ {symbol} 共識 SELL 但信心度 {confidence} < {min_conf}，降級為 HOLD")
     else:
         signal_type = 'HOLD'
     
-    signal_reason = f"TopK 共識 ({consensus}) | 1h={get_trend_label(tf_signals.get('1h'))} | tier={confidence_tier}" if signal_type != 'HOLD' or consensus == 'HOLD' else '無持倉，SELL → HOLD'
+    signal_reason = f"TopK 共識 ({consensus}) | 1h={get_trend_label(tf_signals.get('1h'))} | conf={confidence} tier={confidence_tier}" if signal_type != 'HOLD' else f'共識={consensus} conf={confidence} (未達門檻或無持倉)'
     logger.info(f"   信號: {signal_type} - {signal_reason} (信心度: {confidence})")
     
     return {
