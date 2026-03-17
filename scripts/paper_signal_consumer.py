@@ -407,6 +407,17 @@ def process_pending_signals(paper_trading: bool = True, dry_run: bool = False) -
             # 計算訂單金額
             order_amount = price * quantity
             
+            # === 空頭檢查：如果目標股票有空頭持倉，BUY 信號要先平空 ===
+            if order_type.upper() == 'BUY':
+                from models import PaperPosition
+                existing_pos = PaperPosition.find_by_symbol(symbol)
+                if existing_pos and existing_pos.quantity < 0:
+                    # 有空頭，不能直接買多。標記為 SKIPPED
+                    print(f"⚠️ {symbol} 有空頭持倉 ({existing_pos.quantity} 股)，無法直接做多，跳過信號 {signal['id']}")
+                    update_signal_status(signal['id'], 'SKIPPED')
+                    skipped.append(f'信號 {signal["id"]}: {symbol} 有空頭持倉 {existing_pos.quantity} 股')
+                    continue
+            
             # 現金檢查：如果是 BUY 類型
             if order_type.upper() == 'BUY':
                 # 計算最大可用金額（現金的 90%）
@@ -430,13 +441,12 @@ def process_pending_signals(paper_trading: bool = True, dry_run: bool = False) -
             if order_type.upper() == 'BUY' and has_risk_engine:
                 try:
                     risk_check = check_signal_risk(
-                        symbol=symbol,
-                        signal_type=order_type,
-                        quantity=quantity,
-                        price=price
+                        {'symbol': symbol, 'confidence': float(signal.get('confidence', 0.7)), 'stop_loss': signal.get('stop_loss'), 'take_profit': signal.get('take_profit')},
+                        price,
+                        quantity
                     )
-                    if not risk_check.get('approved', True):
-                        reason = risk_check.get('reason', '風控不通過')
+                    if not risk_check.get('passed', True):
+                        reason = '; '.join(str(w) for w in risk_check.get('warnings', []))
                         print(f"⚠️ 風控不通過，跳過信號 {signal['id']}: {symbol} {order_type} - {reason}")
                         update_signal_status(signal['id'], 'SKIPPED')
                         skipped.append(f'信號 {signal["id"]}: 風控不通過 - {reason}')

@@ -17,6 +17,11 @@ Fox 分析腳本 - 讀取持倉、新聞權重、市場數據，執行風控，�
 API Base: http://localhost:8080/api/v1
 """
 
+# 清除 HTTP 代理（和 fetch_news_rss.py 一樣）
+import os
+for _proxy_key in ('HTTP_PROXY', 'HTTPS_PROXY', 'http_proxy', 'https_proxy', 'ALL_PROXY', 'all_proxy'):
+    os.environ.pop(_proxy_key, None)
+
 import requests
 import json
 import logging
@@ -1641,12 +1646,19 @@ def create_signal(position: Dict, signal_type: str, confidence: float,
     take_profit_price = round(current_price * (1 + stop_loss_pct * 2 / 100), 2) if signal_type == 'BUY' else None
     
     # 計算建議股數 (假設每次操作 10% 倉位)
-    # 從系統配置獲取初始資金
-    if SystemConfig:
-        total_capital = SystemConfig.get_initial_balance()
-    else:
-        total_capital = 50000  # 預設值
-    quantity = int(total_capital * 0.1 / current_price) if current_price > 0 else 0
+    # 動態計算：取可用現金的 10%，而非總資金的 10%
+    try:
+        from paper_trading_portfolio import get_paper_balance
+        available_cash = get_paper_balance()
+        position_capital = available_cash * 0.1  # 每次用可用現金的 10%
+    except Exception:
+        # 從系統配置獲取初始資金作為 fallback
+        if SystemConfig:
+            total_capital = SystemConfig.get_initial_balance()
+        else:
+            total_capital = 50000  # 預設值
+        position_capital = total_capital * 0.1
+    quantity = int(position_capital / current_price) if current_price > 0 else 0
     
     signal_data = {
         'symbol': symbol,

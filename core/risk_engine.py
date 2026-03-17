@@ -59,7 +59,7 @@ class RiskEngine:
             with get_db_cursor() as cursor:
                 cursor.execute("""
                     SELECT COALESCE(SUM(quantity * current_price), 0) as total_value 
-                    FROM positions 
+                    FROM paper_positions 
                     WHERE quantity > 0
                 """)
                 row = cursor.fetchone()
@@ -82,7 +82,7 @@ class RiskEngine:
             with get_db_cursor() as cursor:
                 cursor.execute("""
                     SELECT COALESCE(quantity * current_price, 0) as current_value 
-                    FROM positions 
+                    FROM paper_positions 
                     WHERE symbol = %s AND quantity > 0
                 """, (symbol,))
                 row = cursor.fetchone()
@@ -91,7 +91,7 @@ class RiskEngine:
             return {'passed': False, 'rule': 'max_position_per_stock', 'reason': f'風控查詢失敗: {e}'}
         
         new_value = price * quantity
-        total_value = current_value + new_value
+        total_value = float(current_value) + new_value
         
         limit = self._get_limit('max_position_per_stock_pct')
         if total_value > limit:

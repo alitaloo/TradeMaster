@@ -87,21 +87,35 @@ def check_stop_loss_take_profit() -> List[Dict]:
     DEFAULT_TAKE_PROFIT_PCT = 0.10  # 10%
     
     for pos in positions:
-        if pos.quantity <= 0:
+        if pos.quantity == 0:
             continue
         
-        # 安全檢查：只管理我們系統下的單（本地 paper_orders 有 BUY 記錄的）
+        is_short = pos.quantity < 0
+        
+        # 安全檢查：只管理我們系統下的單
         from config.database import get_db_cursor
-        with get_db_cursor() as _c:
-            _c.execute(
-                "SELECT COUNT(*) as cnt FROM paper_orders WHERE symbol = %s AND order_type = 'BUY' AND status = 'filled'",
-                (pos.symbol,)
-            )
-            has_local_buy = _c.fetchone()['cnt'] > 0
-        
-        if not has_local_buy:
-            logger.info(f"跳過 {pos.symbol}：本地無 BUY 記錄，可能是手動買入的持倉")
-            continue
+        if is_short:
+            # 空頭持倉：查本地有 SELL 記錄
+            with get_db_cursor() as _c:
+                _c.execute(
+                    "SELECT COUNT(*) as cnt FROM paper_orders WHERE symbol = %s AND order_type = 'SELL' AND status = 'filled'",
+                    (pos.symbol,)
+                )
+                has_local_sell = _c.fetchone()['cnt'] > 0
+            if not has_local_sell:
+                logger.info(f"跳過 {pos.symbol}：本地無 SELL 記錄")
+                continue
+        else:
+            # 多頭持倉：保留現有邏輯
+            with get_db_cursor() as _c:
+                _c.execute(
+                    "SELECT COUNT(*) as cnt FROM paper_orders WHERE symbol = %s AND order_type = 'BUY' AND status = 'filled'",
+                    (pos.symbol,)
+                )
+                has_local_buy = _c.fetchone()['cnt'] > 0
+            if not has_local_buy:
+                logger.info(f"跳過 {pos.symbol}：本地無 BUY 記錄，可能是手動買入的持倉")
+                continue
         
         # 取得現價
         current_price = get_current_price(pos.symbol)
@@ -118,62 +132,122 @@ def check_stop_loss_take_profit() -> List[Dict]:
         
         # 合理性檢查：stop_loss 不能低於成本的 50%，take_profit 不能高於成本的 300%
         avg_cost = float(pos.average_cost)
-        if stop_loss_price and float(stop_loss_price) < avg_cost * 0.5:
-            logger.warning(f"⚠️ {pos.symbol} stop_loss={stop_loss_price} 不合理（< 成本 50%），改用預設值")
-            stop_loss_price = None
-        if take_profit_price and float(take_profit_price) > avg_cost * 3.0:
-            logger.warning(f"⚠️ {pos.symbol} take_profit={take_profit_price} 不合理（> 成本 300%），改用預設值")
-            take_profit_price = None
+        if is_short:
+            # 空頭：止損是價格上限（漲過止損），止盈是價格下限（跌過止盈）
+            if stop_loss_price and float(stop_loss_price) > avg_cost * 1.5:
+                logger.warning(f"⚠️ {pos.symbol} stop_loss={stop_loss_price} 不合理（> 成本 150%），改用預設值")
+                stop_loss_price = None
+            if take_profit_price and float(take_profit_price) < avg_cost * 0.5:
+                logger.warning(f"⚠️ {pos.symbol} take_profit={take_profit_price} 不合理（< 成本 50%），改用預設值")
+                take_profit_price = None
+        else:
+            # 多頭
+            if stop_loss_price and float(stop_loss_price) < avg_cost * 0.5:
+                logger.warning(f"⚠️ {pos.symbol} stop_loss={stop_loss_price} 不合理（< 成本 50%），改用預設值")
+                stop_loss_price = None
+            if take_profit_price and float(take_profit_price) > avg_cost * 3.0:
+                logger.warning(f"⚠️ {pos.symbol} take_profit={take_profit_price} 不合理（> 成本 300%），改用預設值")
+                take_profit_price = None
         
         # 如果沒有設定，從持倉成本計算（使用預設比例）
-        if not stop_loss_price:
-            stop_loss_price = avg_cost * (1 - DEFAULT_STOP_LOSS_PCT)  # 5% 止損
-        if not take_profit_price:
-            take_profit_price = avg_cost * (1 + DEFAULT_TAKE_PROFIT_PCT)  # 10% 止盈
+        if is_short:
+            # 空頭：止損 = 成本 * (1 + 5%)，止盈 = 成本 * (1 - 10%)
+            if not stop_loss_price:
+                stop_loss_price = avg_cost * (1 + DEFAULT_STOP_LOSS_PCT)
+            if not take_profit_price:
+                take_profit_price = avg_cost * (1 - DEFAULT_TAKE_PROFIT_PCT)
+        else:
+            # 多頭：止損 = 成本 * (1 - 5%)，止盈 = 成本 * (1 + 10%)
+            if not stop_loss_price:
+                stop_loss_price = avg_cost * (1 - DEFAULT_STOP_LOSS_PCT)
+            if not take_profit_price:
+                take_profit_price = avg_cost * (1 + DEFAULT_TAKE_PROFIT_PCT)
         
-        # 禁止做空：賣出數量不能超過目前持倉
-        sell_quantity = pos.quantity
+        # 數量（空頭用 abs）
+        quantity = abs(pos.quantity)
         
         # 檢查是否觸發
-        if current_price <= float(stop_loss_price):
-            # 觸發止損
-            result = submit_paper_order(
-                symbol=pos.symbol,
-                order_type='SELL',
-                quantity=sell_quantity,
-                price=current_price,
-                source_signal_id=None,
-                source_type='stop_loss'
-            )
-            triggered.append({
-                'symbol': pos.symbol,
-                'type': 'STOP_LOSS',
-                'trigger_price': current_price,
-                'stop_loss': float(stop_loss_price),
-                'quantity': sell_quantity,
-                'result': result
-            })
-            print(f'🚨 觸發止損: {pos.symbol} {sell_quantity}股 @ {current_price} (止損: {stop_loss_price})')
+        if is_short:
+            # 空頭：漲超止損線 → 買入平倉（止損）
+            if current_price >= float(stop_loss_price):
+                result = submit_paper_order(
+                    symbol=pos.symbol,
+                    order_type='BUY',
+                    quantity=quantity,
+                    price=current_price,
+                    source_signal_id=None,
+                    source_type='stop_loss'
+                )
+                triggered.append({
+                    'symbol': pos.symbol,
+                    'type': 'STOP_LOSS',
+                    'trigger_price': current_price,
+                    'stop_loss': float(stop_loss_price),
+                    'quantity': quantity,
+                    'result': result
+                })
+                print(f'🚨 觸發止損（空頭平倉）: {pos.symbol} {quantity}股 @ {current_price} (止損: {stop_loss_price})')
             
-        elif current_price >= float(take_profit_price):
-            # 觸發止盈
-            result = submit_paper_order(
-                symbol=pos.symbol,
-                order_type='SELL',
-                quantity=sell_quantity,
-                price=current_price,
-                source_signal_id=None,
-                source_type='take_profit'
-            )
-            triggered.append({
-                'symbol': pos.symbol,
-                'type': 'TAKE_PROFIT',
-                'trigger_price': current_price,
-                'take_profit': float(take_profit_price),
-                'quantity': sell_quantity,
-                'result': result
-            })
-            print(f'🎯 觸發止盈: {pos.symbol} {sell_quantity}股 @ {current_price} (止盈: {take_profit_price})')
+            # 空頭：跌超止盈線 → 買入平倉（止盈）
+            elif current_price <= float(take_profit_price):
+                result = submit_paper_order(
+                    symbol=pos.symbol,
+                    order_type='BUY',
+                    quantity=quantity,
+                    price=current_price,
+                    source_signal_id=None,
+                    source_type='take_profit'
+                )
+                triggered.append({
+                    'symbol': pos.symbol,
+                    'type': 'TAKE_PROFIT',
+                    'trigger_price': current_price,
+                    'take_profit': float(take_profit_price),
+                    'quantity': quantity,
+                    'result': result
+                })
+                print(f'🎯 觸發止盈（空頭平倉）: {pos.symbol} {quantity}股 @ {current_price} (止盈: {take_profit_price})')
+        else:
+            # 多頭：原有邏輯
+            if current_price <= float(stop_loss_price):
+                # 觸發止損
+                result = submit_paper_order(
+                    symbol=pos.symbol,
+                    order_type='SELL',
+                    quantity=quantity,
+                    price=current_price,
+                    source_signal_id=None,
+                    source_type='stop_loss'
+                )
+                triggered.append({
+                    'symbol': pos.symbol,
+                    'type': 'STOP_LOSS',
+                    'trigger_price': current_price,
+                    'stop_loss': float(stop_loss_price),
+                    'quantity': quantity,
+                    'result': result
+                })
+                print(f'🚨 觸發止損: {pos.symbol} {quantity}股 @ {current_price} (止損: {stop_loss_price})')
+                
+            elif current_price >= float(take_profit_price):
+                # 觸發止盈
+                result = submit_paper_order(
+                    symbol=pos.symbol,
+                    order_type='SELL',
+                    quantity=quantity,
+                    price=current_price,
+                    source_signal_id=None,
+                    source_type='take_profit'
+                )
+                triggered.append({
+                    'symbol': pos.symbol,
+                    'type': 'TAKE_PROFIT',
+                    'trigger_price': current_price,
+                    'take_profit': float(take_profit_price),
+                    'quantity': quantity,
+                    'result': result
+                })
+                print(f'🎯 觸發止盈: {pos.symbol} {quantity}股 @ {current_price} (止盈: {take_profit_price})')
     
     return triggered
 
