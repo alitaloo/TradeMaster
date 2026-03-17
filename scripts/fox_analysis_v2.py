@@ -1138,10 +1138,16 @@ def api_put(endpoint: str, data: dict) -> dict:
 def get_positions() -> List[Dict]:
     """獲取持倉列表"""
     logger.info("📊 獲取持倉數據...")
-    result = api_get('/positions')
+    result = api_get('/paper/positions')
     
     if result.get('status') == 'ok':
         positions = result.get('positions', [])
+        # 確保每個 position 都有 return_pct
+        for p in positions:
+            if 'return_pct' not in p and p.get('average_cost') and float(p['average_cost']) > 0:
+                cost = float(p['average_cost'])
+                curr = float(p.get('current_price', 0))
+                p['return_pct'] = round(((curr - cost) / cost) * 100, 2)
         logger.info(f"   找到 {len(positions)} 個持倉")
         return positions
     else:
@@ -1210,18 +1216,29 @@ def get_news_weight(symbol: str, hours: int = 24) -> Dict:
 
 
 def get_market_data() -> Dict:
-    """獲取市場數據"""
+    """獲取市場數據（含新鮮度檢查）"""
     logger.info("📈 獲取市場數據...")
-    result = api_get('/market')
+    from datetime import datetime, timedelta
     
-    if result.get('status') == 'ok':
-        markets = result.get('markets', [])
-        market_dict = {m['type'].lower(): m['value'] for m in markets}
-        logger.info(f"   市場數據: {market_dict}")
-        return market_dict
-    else:
-        logger.warning(f"   獲取市場數據失敗: {result.get('message')}")
-        return {}
+    market_dict = {}
+    try:
+        conn = mysql.connector.connect(**DB_CONFIG)
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT type, value, updated_at FROM market")
+        for row in cursor.fetchall():
+            mtype = row['type'].lower()
+            updated = row['updated_at']
+            if updated and (datetime.now() - updated).total_seconds() > 86400:
+                logger.warning(f"   ⚠️ {mtype} 數據過期 (更新於 {updated})，跳過")
+                continue
+            market_dict[mtype] = row['value']
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        logger.warning(f"   獲取市場數據失敗: {e}")
+    
+    logger.info(f"   市場數據: {market_dict}")
+    return market_dict
 
 
 def get_stock_price(symbol: str) -> float:
