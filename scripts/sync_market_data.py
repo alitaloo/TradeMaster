@@ -7,6 +7,36 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config.database import get_db_cursor
 from datetime import datetime
+import requests
+import re
+
+
+def fetch_vix() -> float:
+    """從 Yahoo Finance 獲取 VIX 指數"""
+    try:
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        r = requests.get(
+            'https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?interval=1d&range=2d',
+            headers=headers, timeout=10
+        )
+        closes = r.json()['chart']['result'][0]['indicators']['quote'][0]['close']
+        vix = [c for c in closes if c][-1]
+        return round(vix, 2)
+    except Exception:
+        pass
+    
+    # Fallback: Google Finance
+    try:
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        r = requests.get('https://www.google.com/finance/quote/VIX:INDEXCBOE', headers=headers, timeout=10)
+        m = re.search(r'data-last-price="([0-9.]+)"', r.text)
+        if m:
+            return float(m.group(1))
+    except Exception:
+        pass
+    
+    return 0.0
+
 
 def sync():
     results = {}
@@ -25,6 +55,11 @@ def sync():
                 latest = float(rows[0]['close_price'])
                 oldest = float(rows[-1]['close_price'])
                 results['MARKET_DROP'] = round((latest - oldest) / oldest * 100, 2)
+    
+    # VIX
+    vix = fetch_vix()
+    if vix > 0:
+        results['VIX'] = vix
     
     # 更新 market 表
     with get_db_cursor() as c:
