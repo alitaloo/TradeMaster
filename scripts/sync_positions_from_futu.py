@@ -64,10 +64,9 @@ def insert_positions(futu_data):
             if qty == 0:
                 continue
             
-            # Skip short positions (negative qty) for paper trading
+            # 空頭持倉也要同步（記錄為負數），方便對帳
             if qty < 0:
-                print(f"  ⚠️  Skipping short position: {symbol} | qty={qty}")
-                continue
+                print(f"  📉 Short position: {symbol} | qty={qty}")
             
             cost_price = float(row.get('cost_price', 0) or 0)
             market_val = float(row.get('market_val', 0) or row.get('market_value', 0) or 0)
@@ -76,8 +75,8 @@ def insert_positions(futu_data):
             nominal_price = float(row.get('nominal_price', 0) or 0)
             
             # Calculate current_price
-            if market_val and qty:
-                current_price = market_val / qty
+            if market_val and qty and qty != 0:
+                current_price = abs(market_val / qty)
             elif nominal_price:
                 current_price = nominal_price
             else:
@@ -94,7 +93,7 @@ def insert_positions(futu_data):
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """, (
                 symbol,
-                int(qty),  # Store as-is (positive)
+                int(qty),  # Store as-is (positive or negative for shorts)
                 cost_price,
                 current_price,
                 market_val,  # Store as-is for long positions
@@ -103,7 +102,8 @@ def insert_positions(futu_data):
                 0  # realized_pnl starts at 0
             ))
             inserted += 1
-            print(f"  ✅ Inserted: {symbol} | qty={abs(qty)} | cost=${cost_price} | current=${current_price} | mv=${abs(market_val)} | P&L=${pl_val}")
+            direction = "📉 SHORT" if qty < 0 else "✅ LONG"
+            print(f"  {direction}: {symbol} | qty={int(qty)} | cost=${cost_price} | current=${current_price} | mv=${market_val} | P&L=${pl_val}")
     
     return inserted
 
@@ -111,7 +111,7 @@ def insert_positions(futu_data):
 def get_current_positions():
     """Get current positions from database"""
     with get_db_cursor() as cursor:
-        cursor.execute("SELECT * FROM paper_positions WHERE quantity > 0")
+        cursor.execute("SELECT * FROM paper_positions WHERE quantity != 0")
         return cursor.fetchall()
 
 
