@@ -275,7 +275,7 @@ def get_watchlist():
         cursor.execute('SELECT symbol, name, type, is_backtest FROM stock_list ORDER BY symbol')
         rows = cursor.fetchall()
 
-    stocks = [{"symbol": row[0], "name": row[1], "type": row[2], "is_backtest": bool(row[3])} for row in rows]
+    stocks = [{"symbol": row['symbol'], "name": row['name'], "type": row['type'], "is_backtest": bool(row['is_backtest'])} for row in rows]
 
     return jsonify({
         "watchlist": stocks,
