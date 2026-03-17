@@ -92,23 +92,23 @@ def init_db():
 
         # 股票清單表
         cursor.execute('''
-            CREATE TABLE IF NOT EXISTS stock_list (
+            CREATE TABLE IF NOT EXISTS stocks (
                 symbol TEXT PRIMARY KEY,
                 name TEXT,
                 type TEXT DEFAULT 'live',
-                is_backtest BOOLEAN DEFAULT 0,
+                needsBacktest BOOLEAN DEFAULT 0,
                 created_at TEXT,
                 updated_at TEXT
             )
         ''')
 
-        # 如果 stock_list 為空，插入默認值
-        cursor.execute('SELECT COUNT(*) FROM stock_list')
+        # 如果 stocks 為空，插入默認值
+        cursor.execute('SELECT COUNT(*) FROM stocks')
         if cursor.fetchone()[0] == 0:
             now = datetime.now(_TZ_TAIPEI).isoformat()
             for stock in DEFAULT_WATCHLIST:
                 cursor.execute('''
-                    INSERT INTO stock_list (symbol, name, type, is_backtest, created_at, updated_at)
+                    INSERT INTO stocks (symbol, name, type, needsBacktest, created_at, updated_at)
                     VALUES (%s, %s, %s, %s, %s, %s)
                 ''', (stock['symbol'], stock['name'], stock['type'], 0, now, now))
 
@@ -272,10 +272,10 @@ def get_watchlist():
     """獲取股票清單（從數據庫）"""
     with get_db_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute('SELECT symbol, name, type, is_backtest FROM stock_list ORDER BY symbol')
+        cursor.execute('SELECT symbol, name, type, needsBacktest FROM stocks ORDER BY symbol')
         rows = cursor.fetchall()
 
-    stocks = [{"symbol": row['symbol'], "name": row['name'], "type": row['type'], "is_backtest": bool(row['is_backtest'])} for row in rows]
+    stocks = [{"symbol": row['symbol'], "name": row['name'], "type": row['type'], "is_backtest": bool(row['needsBacktest'])} for row in rows]
 
     return jsonify({
         "watchlist": stocks,
@@ -299,7 +299,7 @@ def add_stock():
 
         try:
             cursor.execute('''
-                INSERT OR REPLACE INTO stock_list (symbol, name, type, is_backtest, created_at, updated_at)
+                INSERT OR REPLACE INTO stocks (symbol, name, type, needsBacktest, created_at, updated_at)
                 VALUES (%s, %s, 'live', %s, %s, %s)
             ''', (symbol, name, 1 if is_backtest else 0, now, now))
 
@@ -320,7 +320,7 @@ def remove_stock():
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute('DELETE FROM stock_list WHERE symbol = %s', (symbol,))
+        cursor.execute('DELETE FROM stocks WHERE symbol = %s', (symbol,))
         conn.commit()
 
     return jsonify({"status": "ok", "symbol": symbol})
@@ -340,7 +340,7 @@ def toggle_backtest():
         now = datetime.now(_TZ_TAIPEI).isoformat()
 
         cursor.execute('''
-            UPDATE stock_list SET is_backtest = %s, updated_at = %s WHERE symbol = %s
+            UPDATE stocks SET needsBacktest = %s, updated_at = %s WHERE symbol = %s
         ''', (1 if is_backtest else 0, now, symbol))
 
         conn.commit()
@@ -355,10 +355,10 @@ def reset_watchlist():
         now = datetime.now(_TZ_TAIPEI).isoformat()
 
         # 清空並重新插入
-        cursor.execute('DELETE FROM stock_list')
+        cursor.execute('DELETE FROM stocks')
         for stock in DEFAULT_WATCHLIST:
             cursor.execute('''
-                INSERT INTO stock_list (symbol, name, type, is_backtest, created_at, updated_at)
+                INSERT INTO stocks (symbol, name, type, needsBacktest, created_at, updated_at)
                 VALUES (%s, %s, %s, 0, %s, %s)
             ''', (stock['symbol'], stock['name'], stock['type'], now, now))
 
@@ -376,8 +376,8 @@ def batch_get_kline():
         cursor = conn.cursor()
         
         # 批量獲取股票清單
-        cursor.execute('SELECT symbol FROM stock_list')
-        symbols = [row[0] for row in cursor.fetchall()]
+        cursor.execute('SELECT symbol FROM stocks')
+        symbols = [row['symbol'] for row in cursor.fetchall()]
         
         if not symbols:
             return jsonify({
@@ -461,8 +461,8 @@ def cache_status():
         cursor = conn.cursor()
 
         # 從數據庫獲取股票清單
-        cursor.execute('SELECT symbol FROM stock_list')
-        symbols = [row[0] for row in cursor.fetchall()]
+        cursor.execute('SELECT symbol FROM stocks')
+        symbols = [row['symbol'] for row in cursor.fetchall()]
 
         status = {}
         for symbol in symbols:
