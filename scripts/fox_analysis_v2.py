@@ -1623,9 +1623,22 @@ def create_signal(position: Dict, signal_type: str, confidence: float,
                 'confidence_updated': True
             }
     
-    # 計算止損價格
+    # 計算止損價格 - 轉換為實際價格而非百分比
+    # Bug fix: 之前直接傳 stop_loss_pct (5.0%) 而非價格，導致資料庫出現 $5.00 這種垃圾值
     if stop_loss_pct is None:
         stop_loss_pct = RISK_PARAMS['STOP_LOSS_PCT']
+    
+    # 根據信號類型計算止損價格
+    if signal_type == 'BUY':
+        stop_loss_price = round(current_price * (1 - stop_loss_pct / 100), 2)
+    elif signal_type == 'SELL':
+        # 賣出時止損是價格上限（防止過度上漲被軋空）
+        stop_loss_price = round(current_price * (1 + stop_loss_pct / 100), 2)
+    else:
+        stop_loss_price = 0
+    
+    # 計算止盈價格 (默認 2 倍止損)
+    take_profit_price = round(current_price * (1 + stop_loss_pct * 2 / 100), 2) if signal_type == 'BUY' else None
     
     # 計算建議股數 (假設每次操作 10% 倉位)
     # 從系統配置獲取初始資金
@@ -1644,7 +1657,8 @@ def create_signal(position: Dict, signal_type: str, confidence: float,
         'confidence': confidence,
         'status': 'PENDING',
         'news_weight': position.get('news_weight', 0),
-        'stop_loss': stop_loss_pct,
+        'stop_loss': stop_loss_price,
+        'take_profit': take_profit_price,
         'risk_score': 1 if (news_ok and market_ok) else 0,
         'metadata': {
             'reason': reason,

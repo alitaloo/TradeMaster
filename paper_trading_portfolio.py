@@ -7,7 +7,12 @@ import os
 import sys
 import socket
 import logging
+import time
 from typing import List, Dict, Optional
+
+# Module-level variable for caching price updates
+_last_price_update_time = 0
+_PRICE_UPDATE_INTERVAL = 60  # seconds
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -413,8 +418,12 @@ def get_paper_total_assets() -> Dict:
     # 現金
     cash = get_paper_balance()
     
-    # 更新持倉價格
-    update_position_prices()
+    # 更新持倉價格（帶緩存：60秒內不重複更新）
+    global _last_price_update_time
+    current_time = time.time()
+    if current_time - _last_price_update_time >= _PRICE_UPDATE_INTERVAL:
+        update_position_prices()
+        _last_price_update_time = current_time
     
     # 持倉
     positions = PaperPosition.find_all()

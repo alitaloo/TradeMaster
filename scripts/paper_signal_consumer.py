@@ -452,7 +452,8 @@ def process_pending_signals(paper_trading: bool = True, dry_run: bool = False) -
                 order_type=order_type,
                 quantity=quantity,
                 price=price,
-                source_signal_id=signal['id']
+                source_signal_id=signal['id'],
+                source_type='signal'
             )
             
             if result.get('success') and result.get('order_id'):

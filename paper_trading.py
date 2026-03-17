@@ -122,7 +122,8 @@ def submit_paper_order(symbol: str, order_type: str, quantity: int,
                        price: Optional[float] = None,
                        source_signal_id: Optional[int] = None,
                        stop_loss: Optional[float] = None,
-                       take_profit: Optional[float] = None) -> Dict:
+                       take_profit: Optional[float] = None,
+                       source_type: Optional[str] = None) -> Dict:
     """
     提交模擬訂單（真實調用富途 API）
     
@@ -259,7 +260,8 @@ def submit_paper_order(symbol: str, order_type: str, quantity: int,
             filled_price=None,
             filled_at=None,
             stop_loss=stop_loss,
-            take_profit=take_profit
+            take_profit=take_profit,
+            source_type=source_type
         )
         order.save()
         

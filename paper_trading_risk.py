@@ -142,7 +142,8 @@ def check_stop_loss_take_profit() -> List[Dict]:
                 order_type='SELL',
                 quantity=sell_quantity,
                 price=current_price,
-                source_signal_id=None
+                source_signal_id=None,
+                source_type='stop_loss'
             )
             triggered.append({
                 'symbol': pos.symbol,
@@ -161,7 +162,8 @@ def check_stop_loss_take_profit() -> List[Dict]:
                 order_type='SELL',
                 quantity=sell_quantity,
                 price=current_price,
-                source_signal_id=None
+                source_signal_id=None,
+                source_type='take_profit'
             )
             triggered.append({
                 'symbol': pos.symbol,

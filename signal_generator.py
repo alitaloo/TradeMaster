@@ -507,20 +507,42 @@ class SignalGenerator:
                 quantity = int(capital * kelly / price) if price > 0 else 0
 
                 # 計算止損止盈 (僅對買入信號 LONG)
+                # 新增：校驗 stop_loss 和 take_profit 的合理性
+                # - stop_loss 必須 > price * 0.5 且 < price
+                # - take_profit 必須 > price 且 < price * 3.0
+                # 不合理則使用預設：SL = price * 0.95, TP = price * 1.10
                 stop_loss = 0.0
                 take_profit = None
 
                 if signal_type == 'LONG' and price > 0:
-                    # 如果信號已有值則用原值，沒有才計算預設值
-                    if not data.get('stop_loss') or data.get('stop_loss', 0) == 0:
-                        stop_loss = round(price * (1 - 0.05), 2)  # -5%
-                    else:
-                        stop_loss = data.get('stop_loss')
+                    # 計算預設值
+                    default_sl = round(price * 0.95, 2)  # 5% below price (safer default)
+                    default_tp = round(price * 1.10, 2)  # 10% above price
 
-                    if not data.get('take_profit'):
-                        take_profit = round(price * (1 + 0.10), 2)  # +10%
+                    # 獲取原始值
+                    raw_sl = data.get('stop_loss')
+                    raw_tp = data.get('take_profit')
+
+                    # 校驗 stop_loss
+                    if raw_sl and raw_sl != 0:
+                        # 檢查是否在合理範圍
+                        if raw_sl > price * 0.5 and raw_sl < price:
+                            stop_loss = round(float(raw_sl), 2)
+                        else:
+                            logger.warning(f"⚠️ {symbol}: stop_loss={raw_sl} 不合理 (price={price}), 使用預設 {default_sl}")
+                            stop_loss = default_sl
                     else:
-                        take_profit = data.get('take_profit')
+                        stop_loss = default_sl
+
+                    # 校驗 take_profit
+                    if raw_tp:
+                        if raw_tp > price and raw_tp < price * 3.0:
+                            take_profit = round(float(raw_tp), 2)
+                        else:
+                            logger.warning(f"⚠️ {symbol}: take_profit={raw_tp} 不合理 (price={price}), 使用預設 {default_tp}")
+                            take_profit = default_tp
+                    else:
+                        take_profit = default_tp
 
                 cur.execute("""
                     INSERT INTO signals

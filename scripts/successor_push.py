@@ -144,9 +144,18 @@ def format_signal_message(signal: Dict) -> str:
         confidence = 0.0
     
     try:
-        stop_loss = float(signal.get('stop_loss', 5)) if signal.get('stop_loss') else 5.0
+        stop_loss = float(signal.get('stop_loss', 0)) if signal.get('stop_loss') else 0.0
     except (ValueError, TypeError):
-        stop_loss = 5.0
+        stop_loss = 0.0
+    
+    # 計算止損百分比 (如果 stop_loss 是價格而非百分比)
+    # Bug fix: 之前端傳入 stop_loss_pct (5.0%) 被當成價格存入，現在正確計算百分比
+    price = float(signal.get('price', 0)) if signal.get('price') else 0.0
+    if stop_loss > 0 and price > 0:
+        # stop_loss 可能是價格，計算百分比
+        stop_loss_pct = round((1 - stop_loss / price) * 100, 2)
+    else:
+        stop_loss_pct = 0.0
     
     # 方向映射
     direction_map = {
@@ -203,7 +212,7 @@ def format_signal_message(signal: Dict) -> str:
         quantity=quantity,
         total=f"{(price * quantity):.2f}",
         confidence=int(confidence * 100),
-        stop_loss=f"{stop_loss:.1f}",
+        stop_loss=f"{stop_loss_pct:.1f}",
         time=time_str
     )
     

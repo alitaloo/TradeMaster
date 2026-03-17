@@ -17,7 +17,7 @@ class PaperOrder:
                  price=None, status='pending', source_signal_id=None, 
                  futu_order_id=None, filled_quantity=0, filled_price=None,
                  filled_at=None, stop_loss=None, take_profit=None,
-                 created_at=None, updated_at=None):
+                 source_type=None, created_at=None, updated_at=None):
         self.id = id
         self.symbol = symbol
         self.order_type = order_type
@@ -31,6 +31,7 @@ class PaperOrder:
         self.filled_at = filled_at
         self.stop_loss = stop_loss
         self.take_profit = take_profit
+        self.source_type = source_type
         self.created_at = created_at or datetime.now(_TZ_TAIPEI)
         self.updated_at = updated_at or datetime.now(_TZ_TAIPEI)
     
@@ -43,23 +44,23 @@ class PaperOrder:
                     SET symbol=%s, order_type=%s, quantity=%s, price=%s,
                         status=%s, source_signal_id=%s, futu_order_id=%s,
                         filled_quantity=%s, filled_price=%s, filled_at=%s,
-                        stop_loss=%s, take_profit=%s
+                        stop_loss=%s, take_profit=%s, source_type=%s
                     WHERE id=%s
                 """, (self.symbol, self.order_type, self.quantity, self.price,
                       self.status, self.source_signal_id, self.futu_order_id,
                       self.filled_quantity, self.filled_price, self.filled_at,
-                      self.stop_loss, self.take_profit, self.id))
+                      self.stop_loss, self.take_profit, self.source_type, self.id))
             else:
                 cursor.execute(f"""
                     INSERT INTO {self.TABLE_NAME}
                     (symbol, order_type, quantity, price, status, source_signal_id,
                      futu_order_id, filled_quantity, filled_price, filled_at,
-                     stop_loss, take_profit)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                     stop_loss, take_profit, source_type)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """, (self.symbol, self.order_type, self.quantity, self.price,
                       self.status, self.source_signal_id, self.futu_order_id,
                       self.filled_quantity, self.filled_price, self.filled_at,
-                      self.stop_loss, self.take_profit))
+                      self.stop_loss, self.take_profit, self.source_type))
                 self.id = cursor.lastrowid
         return self.id
     
@@ -121,6 +122,7 @@ class PaperOrder:
             'filled_at': self._iso_taipei(self.filled_at),
             'stop_loss': float(self.stop_loss) if self.stop_loss else None,
             'take_profit': float(self.take_profit) if self.take_profit else None,
+            'source_type': self.source_type,
             'created_at': self._iso_taipei(self.created_at),
             'updated_at': self._iso_taipei(self.updated_at),
         }
