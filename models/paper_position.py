@@ -62,9 +62,9 @@ class PaperPosition:
     
     @classmethod
     def find_all(cls):
-        """查詢所有持倉"""
+        """查詢所有持倉（含多頭和空頭）"""
         with get_db_cursor() as cursor:
-            cursor.execute(f"SELECT * FROM {cls.TABLE_NAME} WHERE quantity > 0")
+            cursor.execute(f"SELECT * FROM {cls.TABLE_NAME} WHERE quantity != 0")
             return [cls(**row) for row in cursor.fetchall()]
     
     @classmethod
@@ -74,13 +74,17 @@ class PaperPosition:
             cursor.execute(f"DELETE FROM {cls.TABLE_NAME} WHERE symbol = %s", (symbol,))
     
     def calculate_pnl(self, current_price):
-        """計算未實現損益"""
+        """計算未實現損益（支援多頭和空頭）"""
         current_price = float(current_price)
         self.current_price = current_price
-        if self.quantity > 0 and self.average_cost > 0:
-            self.market_value = self.quantity * current_price
-            self.unrealized_pnl = (current_price - float(self.average_cost)) * self.quantity
-            # DB 既有欄位 unrealized_pnl_pct 保留為「相對持倉成本」口徑，避免資料結構大改。
+        if self.quantity != 0 and self.average_cost > 0:
+            self.market_value = self.quantity * current_price  # 空頭時為負值
+            if self.quantity > 0:
+                # 多頭：漲了賺、跌了虧
+                self.unrealized_pnl = (current_price - float(self.average_cost)) * self.quantity
+            else:
+                # 空頭：跌了賺、漲了虧（賣空價 - 現價）
+                self.unrealized_pnl = (float(self.average_cost) - current_price) * abs(self.quantity)
             self.unrealized_pnl_pct = (current_price / float(self.average_cost) - 1) * 100
         else:
             self.market_value = 0

@@ -96,7 +96,7 @@ def insert_positions(futu_data):
                 int(qty),  # Store as-is (positive or negative for shorts)
                 cost_price,
                 current_price,
-                market_val,  # Store as-is for long positions
+                int(qty) * current_price,  # market_value = qty × price (負數 for shorts)
                 pl_val,
                 unrealized_pnl_pct,
                 0  # realized_pnl starts at 0
