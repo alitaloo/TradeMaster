@@ -124,5 +124,6 @@ class PaperPosition:
             # Deprecated alias: historically position-level unrealized_pnl_pct means pnl / position_cost.
             'unrealized_pnl_pct': unrealized_pnl_pct_position_cost,
             'realized_pnl': float(self.realized_pnl) if self.realized_pnl else 0,
+            'return_pct': unrealized_pnl_pct_position_cost,  # alias for Fox Analysis
             'updated_at': self._iso_taipei(self.updated_at),
         }
