@@ -308,7 +308,8 @@ def reconcile_single_filled_order(order_id: int, apply: bool = True) -> Dict:
     if not order or order.status != 'filled' or int(order.filled_quantity or 0) <= 0:
         return {'success': False, 'reason': 'order_not_filled'}
 
-    report = reconcile_paper_positions(apply=apply)
+    # 不用 quick_check，確保每次成交都強制重建持倉
+    report = reconcile_paper_positions(apply=apply, quick_check=False)
     return {
         'success': True,
         'order_id': order_id,

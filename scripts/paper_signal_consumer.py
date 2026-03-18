@@ -183,9 +183,10 @@ def poll_orders():
                     try:
                         # 嘗試調用富途 API 取消訂單
                         ret_cancel, data_cancel = trade_ctx.modify_order(
+                            modify_order_op=ft.ModifyOrderOp.CANCEL,
                             order_id=futu_order_id,
-                            new_price=0,
-                            new_qty=0,
+                            qty=0,
+                            price=0,
                             trd_env=ft.TrdEnv.SIMULATE
                         )
                         
