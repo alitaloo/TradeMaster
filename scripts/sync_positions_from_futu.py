@@ -68,11 +68,17 @@ def insert_positions(futu_data):
             if qty < 0:
                 print(f"  📉 Short position: {symbol} | qty={qty}")
             
-            cost_price = float(row.get('cost_price', 0) or 0)
-            market_val = float(row.get('market_val', 0) or row.get('market_value', 0) or 0)
-            pl_val = float(row.get('pl_val', 0) or row.get('unrealized_pl', 0) or 0)
-            pl_ratio = float(row.get('pl_ratio', 0) or row.get('unrealized_pl_ratio', 0) or 0)
-            nominal_price = float(row.get('nominal_price', 0) or 0)
+            def safe_float(val, default=0):
+                try:
+                    return float(val) if val is not None and str(val).strip() not in ('', 'N/A', 'nan', 'None') else default
+                except (ValueError, TypeError):
+                    return default
+
+            cost_price = safe_float(row.get('cost_price'))
+            market_val = safe_float(row.get('market_val')) or safe_float(row.get('market_value'))
+            pl_val = safe_float(row.get('pl_val')) or safe_float(row.get('unrealized_pl'))
+            pl_ratio = safe_float(row.get('pl_ratio')) or safe_float(row.get('unrealized_pl_ratio'))
+            nominal_price = safe_float(row.get('nominal_price'))
             
             # Calculate current_price
             if market_val and qty and qty != 0:
