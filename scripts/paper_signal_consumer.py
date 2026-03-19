@@ -129,7 +129,7 @@ def poll_orders():
     try:
         from futu.quote.open_quote_context import OpenQuoteContext
         from futu.trade.open_trade_context import OpenUSTradeContext
-        from futu.common.constant import OrderStatus
+        from futu.common.constant import OrderStatus, ModifyOrderOp, TrdEnv
         ft = type('FT', (), {
             'OpenQuoteContext': OpenQuoteContext,
             'OpenUSTradeContext': OpenUSTradeContext,
@@ -183,11 +183,11 @@ def poll_orders():
                     try:
                         # 嘗試調用富途 API 取消訂單
                         ret_cancel, data_cancel = trade_ctx.modify_order(
-                            modify_order_op=ft.ModifyOrderOp.CANCEL,
+                            modify_order_op=ModifyOrderOp.CANCEL,
                             order_id=futu_order_id,
                             qty=0,
                             price=0,
-                            trd_env=ft.TrdEnv.SIMULATE
+                            trd_env=TrdEnv.SIMULATE
                         )
                         
                         if ret_cancel == 0:

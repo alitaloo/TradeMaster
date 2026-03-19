@@ -288,6 +288,60 @@ def quantize_confidence(value: float) -> float:
     return round(round(clipped / 0.05) * 0.05, 2)
 
 
+def get_agent_scores(symbol: str) -> Dict:
+    """
+    從 agent_scores 表讀取 Agent 評分
+    
+    Returns:
+    {
+        'news_risk': float,      # -1.0 ~ 1.0
+        'strategy_signal': float, # -1.0 ~ 1.0
+        'updated_at': datetime
+    }
+    """
+    try:
+        # 保持 symbol 格式 (可能帶 US. 前綴)
+        # 嘗試兩種格式都查詢
+        search_symbols = [symbol]
+        if symbol.startswith('US.'):
+            search_symbols.append(symbol.split('.', 1)[1])
+        else:
+            search_symbols.append(f'US.{symbol}')
+        
+        conn = mysql.connector.connect(**DB_CONFIG)
+        cursor = conn.cursor(dictionary=True)
+        
+        # 讀取該股票最近的評分
+        placeholders = ','.join(['%s'] * len(search_symbols))
+        cursor.execute(f"""
+            SELECT score_type, score, updated_at
+            FROM agent_scores
+            WHERE symbol IN ({placeholders})
+            AND updated_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+            ORDER BY updated_at DESC
+        """, search_symbols)
+        
+        rows = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        
+        result = {}
+        for row in rows:
+            score_type = row['score_type']
+            if score_type not in result:
+                result[score_type] = row['score']
+                result['updated_at'] = row['updated_at']
+        
+        if result:
+            logger.debug(f"📊 Agent Scores for {symbol}: {result}")
+        
+        return result
+        
+    except Exception as e:
+        logger.debug(f"讀取 agent_scores 失敗: {e}")
+        return {}
+
+
 def classify_confidence(confidence: float) -> Tuple[str, str]:
     for minimum, tier, strength in CONFIDENCE_TIERS:
         if confidence >= minimum:
@@ -1434,6 +1488,31 @@ def calculate_confidence(position: Dict, news_data: Dict, market_data: Dict, tf_
         if daily == consensus and consensus in ('BUY', 'SELL'):
             confidence += 0.03
             components.append('trend_1d:aligned')
+
+    # ===== Agent Scores 評分 (Async Advisor Mode) =====
+    symbol = position.get('symbol')
+    if symbol:
+        agent_scores = get_agent_scores(symbol)
+        if agent_scores:
+            # 新聞風險權重：負面新聞多 → confidence 下降
+            news_risk = agent_scores.get('news_risk', 0)
+            if news_risk != 0:
+                # news_risk > 0 表示負面新聞多，扣信心度
+                # news_risk < 0 表示正面新聞多，加信心度
+                # 權重 10%
+                confidence += (news_risk * 0.1)
+                components.append(f'agent:news_risk({news_risk:.2f})')
+            
+            # 策略信號權重：買入信號 → confidence 上升
+            strategy_signal = agent_scores.get('strategy_signal', 0)
+            if strategy_signal != 0:
+                # strategy_signal > 0 表示買入信號，加信心度
+                # strategy_signal < 0 表示賣出信號，扣信心度
+                # 權重 10%
+                confidence += (strategy_signal * 0.1)
+                components.append(f'agent:strategy_signal({strategy_signal:.2f})')
+            
+            logger.info(f"   🤖 Agent Scores: news_risk={news_risk:.2f}, strategy_signal={strategy_signal:.2f}")
 
     confidence = quantize_confidence(confidence)
     tier, strength = classify_confidence(confidence)
