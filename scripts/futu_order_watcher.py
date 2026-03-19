@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import futu
 from futu import (
-    OpenUSTradeContext, TradeOrderHandlerBase, TrdEnv, RET_OK
+    OpenUSTradeContext, TradeOrderHandlerBase, TradeDealHandlerBase, TrdEnv, RET_OK
 )
 
 FUTU_HOST = '127.0.0.1'
@@ -119,37 +119,96 @@ class OrderUpdateHandler(TradeOrderHandlerBase):
             print(f"  ❌ 更新本地訂單失敗: {e}")
 
 
+class DealUpdateHandler(TradeDealHandlerBase):
+    """處理富途成交即時推送 - 成交後直接從富途同步持倉"""
+    
+    def on_recv_rsp(self, rsp_pb):
+        ret, data = super().on_recv_rsp(rsp_pb)
+        if ret != RET_OK or data is None or len(data) == 0:
+            return ret, data
+        
+        for _, row in data.iterrows():
+            try:
+                code = row.get('code', '')
+                qty = int(float(row.get('qty', 0) or 0))
+                price = float(row.get('price', 0) or 0)
+                trd_side = str(row.get('trd_side', ''))
+                order_id = str(row.get('order_id', ''))
+                
+                print(f"💰 成交推送: {code} {trd_side} {qty}股 @ ${price:.2f} | order_id={order_id}")
+                
+                # 成交後直接從富途同步持倉（用富途作 source of truth）
+                self._sync_from_futu(code)
+                
+            except Exception as e:
+                print(f"❌ 處理成交推送異常: {e}")
+        
+        return ret, data
+    
+    def _sync_from_futu(self, symbol=None):
+        """直接從富途同步持倉到本地"""
+        try:
+            import subprocess
+            script = os.path.join(
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
+                'scripts', 'sync_positions_from_futu.py'
+            )
+            result = subprocess.run(
+                [sys.executable, script],
+                capture_output=True, text=True, timeout=30,
+                cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            )
+            if result.returncode == 0:
+                print(f"  ✅ 持倉已從富途同步")
+            else:
+                print(f"  ❌ 同步失敗: {result.stderr[-200:]}")
+        except Exception as e:
+            print(f"  ❌ 同步異常: {e}")
+
+
 def main():
     global running
     
+    RECONNECT_INTERVAL = 30  # 30 秒後重試
+    
     print("=" * 50)
-    print("  Futu Order Watcher - 訂單狀態即時推送")
+    print("  Futu Order Watcher - 訂單/成交即時推送")
     print("=" * 50)
     print(f"  Host: {FUTU_HOST}:{FUTU_PORT}")
     print(f"  Env: SIMULATE")
     print()
     
-    ctx = None
-    try:
-        ctx = OpenUSTradeContext(host=FUTU_HOST, port=FUTU_PORT)
-        handler = OrderUpdateHandler()
-        ctx.set_handler(handler)
-        
-        # 訂閱訂單推送
-        print("✅ 已連接富途，正在監聽訂單推送...")
-        print("   按 Ctrl+C 停止\n")
-        
-        while running:
-            time.sleep(1)
+    while running:
+        ctx = None
+        try:
+            ctx = OpenUSTradeContext(host=FUTU_HOST, port=FUTU_PORT)
+            order_handler = OrderUpdateHandler()
+            deal_handler = DealUpdateHandler()
+            ctx.set_handler(order_handler)   # 訂單狀態推送
+            ctx.set_handler(deal_handler)    # 成交即時推送
             
-    except KeyboardInterrupt:
-        print("\n🛑 手動停止")
-    except Exception as e:
-        print(f"❌ 連接失敗: {e}")
-    finally:
-        if ctx:
-            ctx.close()
-            print("✅ 已斷開富途連接")
+            print(f"✅ 已連接富途，正在監聽訂單/成交推送...")
+            print("   按 Ctrl+C 停止\n")
+            
+            while running:
+                time.sleep(1)
+                
+        except KeyboardInterrupt:
+            print("\n🛑 手動停止")
+            break
+        except Exception as e:
+            print(f"❌ 連接失敗: {e}")
+            if running:
+                print(f"⏳ {RECONNECT_INTERVAL}秒後重試...")
+                time.sleep(RECONNECT_INTERVAL)
+        finally:
+            if ctx:
+                try:
+                    ctx.close()
+                except:
+                    pass
+    
+    print("✅ 已停止 watcher")
 
 
 if __name__ == '__main__':
