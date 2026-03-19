@@ -1504,7 +1504,7 @@ def calculate_confidence(position: Dict, news_data: Dict, market_data: Dict, tf_
                 components.append(f'agent:news_risk({news_risk:.2f})')
             
             # 策略信號權重：買入信號 → confidence 上升
-            strategy_signal = agent_scores.get('strategy_signal', 0)
+            strategy_signal = float(agent_scores.get('strategy_signal', 0))
             if strategy_signal != 0:
                 # strategy_signal > 0 表示買入信號，加信心度
                 # strategy_signal < 0 表示賣出信號，扣信心度
