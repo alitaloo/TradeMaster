@@ -37,6 +37,27 @@ signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
 
 
+def sync_positions_from_futu():
+    """共用：從富途同步持倉到本地 DB"""
+    try:
+        import subprocess
+        script = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            'scripts', 'sync_positions_from_futu.py'
+        )
+        result = subprocess.run(
+            [sys.executable, script],
+            capture_output=True, text=True, timeout=30,
+            cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        )
+        if result.returncode == 0:
+            print(f"  ✅ 持倉已從富途同步")
+        else:
+            print(f"  ❌ 同步失敗: {result.stderr[-200:]}")
+    except Exception as e:
+        print(f"  ❌ 同步異常: {e}")
+
+
 class OrderUpdateHandler(TradeOrderHandlerBase):
     """處理富途訂單狀態推送"""
     
@@ -105,15 +126,10 @@ class OrderUpdateHandler(TradeOrderHandlerBase):
             update_order_status(order['id'], local_status, dealt_qty, dealt_price)
             print(f"  ✅ 更新訂單 {order['id']} ({code}): {order['status']} → {local_status}")
             
-            # 如果成交，觸發持倉更新
+            # 如果成交，直接從 Futu sync 持倉（最可靠的 source of truth）
             if local_status in ('filled', 'partial') and dealt_qty > 0:
-                from paper_trading import handle_buy_fill, handle_sell_fill
-                if order['order_type'] == 'BUY':
-                    handle_buy_fill(order['id'])
-                    print(f"  ✅ 觸發 BUY fill 處理: 訂單 {order['id']}")
-                elif order['order_type'] == 'SELL':
-                    handle_sell_fill(order['id'])
-                    print(f"  ✅ 觸發 SELL fill 處理: 訂單 {order['id']}")
+                print(f"  🔄 成交後同步持倉 (訂單 {order['id']} {code})...")
+                sync_positions_from_futu()
                     
         except Exception as e:
             print(f"  ❌ 更新本地訂單失敗: {e}")
@@ -138,32 +154,14 @@ class DealUpdateHandler(TradeDealHandlerBase):
                 print(f"💰 成交推送: {code} {trd_side} {qty}股 @ ${price:.2f} | order_id={order_id}")
                 
                 # 成交後直接從富途同步持倉（用富途作 source of truth）
-                self._sync_from_futu(code)
+                sync_positions_from_futu()
                 
             except Exception as e:
                 print(f"❌ 處理成交推送異常: {e}")
         
         return ret, data
     
-    def _sync_from_futu(self, symbol=None):
-        """直接從富途同步持倉到本地"""
-        try:
-            import subprocess
-            script = os.path.join(
-                os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
-                'scripts', 'sync_positions_from_futu.py'
-            )
-            result = subprocess.run(
-                [sys.executable, script],
-                capture_output=True, text=True, timeout=30,
-                cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            )
-            if result.returncode == 0:
-                print(f"  ✅ 持倉已從富途同步")
-            else:
-                print(f"  ❌ 同步失敗: {result.stderr[-200:]}")
-        except Exception as e:
-            print(f"  ❌ 同步異常: {e}")
+    # _sync_from_futu 已改為模組級共用函數 sync_positions_from_futu()
 
 
 def main():

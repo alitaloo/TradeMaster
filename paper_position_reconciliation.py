@@ -97,9 +97,13 @@ def rebuild_positions_from_orders(current_price_map: Optional[Dict[str, float]] 
             state['average_cost'] = (total_cost / state['quantity']) if state['quantity'] > 0 else 0.0
         elif side == 'SELL':
             if quantity > state['quantity']:
-                raise ValueError(
-                    f"Rebuild failed: SELL {symbol} qty={quantity} exceeds available qty={state['quantity']} (order id={order['id']})"
+                # 記錄警告但不中斷重建，將 qty clamp 到可用量（歷史骯數據容錯）
+                import logging
+                logging.warning(
+                    f"[reconcile] SELL {symbol} qty={quantity} exceeds available qty={state['quantity']} "
+                    f"(order id={order['id']}) — clamping to available"
                 )
+                quantity = state['quantity']  # clamp 到可用量，繼續重建
             realized_delta = (price - state['average_cost']) * quantity
             state['realized_pnl'] += realized_delta
             state['quantity'] -= quantity
