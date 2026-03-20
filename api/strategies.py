@@ -96,40 +96,17 @@ def extract_strategy_info(file_path: str) -> List[Dict]:
                     if 'stop_loss' in params and 'take_profit' in params:
                         params_str += f" SL={params.get('stop_loss', 0.05):.0%} TP={params.get('take_profit', 0.10):.0%}"
                     
-                    # 基於策略類型估算報酬和夏普
-                    name_lower = name.lower()
-                    if 'momentum' in name_lower or 'breakout' in name_lower or 'dual' in name_lower:
-                        default_return = 35.2
-                        default_sharpe = 2.1
-                    elif 'mean_reversion' in name_lower or 'reversal' in name_lower:
-                        default_return = 28.5
-                        default_sharpe = 1.8
-                    elif 'trend' in name_lower:
-                        default_return = 22.0
-                        default_sharpe = 1.5
-                    elif 'volatility' in name_lower:
-                        default_return = 25.0
-                        default_sharpe = 1.9
-                    elif 'quality' in name_lower:
-                        default_return = 40.0
-                        default_sharpe = 2.5
-                    elif 'advanced' in name_lower:
-                        default_return = 45.0
-                        default_sharpe = 2.8
-                    else:
-                        default_return = 15.0
-                        default_sharpe = 1.0
-                    
                     strategies.append({
                         "id": strategy_id,
                         "name": name.replace('_', ' '),
                         "description": description or f"{name} 策略",
                         "params": params_str or "預設參數",
-                        "return": default_return,
-                        "sharpe": default_sharpe,
+                        "return": None,
+                        "sharpe": None,
                         "enabled": True,
                         "is_loaded": True,
-                        "file": os.path.basename(file_path)
+                        "file": os.path.basename(file_path),
+                        "data_source": "no_backtest"
                     })
     
     except Exception as e:
