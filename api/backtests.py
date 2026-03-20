@@ -17,6 +17,133 @@ backtests_bp = Blueprint('backtests', __name__, url_prefix='/api/v1/backtests')
 # 回測結果目錄
 BACKTEST_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'backtest_results')
 
+# ============== 策略載入與回測 ==============
+import importlib
+import inspect
+
+_strategy_cache = {}
+
+
+def load_all_strategies():
+    """動態載入所有策略類別，結果 cache"""
+    global _strategy_cache
+    if _strategy_cache:
+        return _strategy_cache
+    
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    strategy_files = (
+        glob.glob(os.path.join(base_dir, 'strategies', '*.py')) +
+        glob.glob(os.path.join(base_dir, 'strategies', '**', '*.py'), recursive=True)
+    )
+    
+    for f in strategy_files:
+        if '__' in f:
+            continue
+        # 轉換為 module path
+        rel = os.path.relpath(f, base_dir).replace(os.sep, '.').replace('.py', '')
+        try:
+            mod = importlib.import_module(rel)
+            for name, cls in inspect.getmembers(mod, inspect.isclass):
+                if (hasattr(cls, 'generate_signal') and
+                    name not in ('BaseStrategy', 'SignalResult') and
+                    cls.__module__ == mod.__name__):
+                    try:
+                        instance = cls()
+                        _strategy_cache[name.lower()] = {
+                            'id': name.lower(),
+                            'name': name,
+                            'instance': instance,
+                            'file': os.path.basename(f)
+                        }
+                    except:
+                        pass
+        except:
+            pass
+    
+    return _strategy_cache
+
+
+def calculate_performance(df_bt, symbol, timeframe):
+    """根據信號序列計算績效指標"""
+    import numpy as np
+    
+    df_bt = df_bt.copy()
+    df_bt['returns'] = df_bt['close'].pct_change()
+    # 用前一天的信號決定今天持倉
+    df_bt['position'] = df_bt['signal'].shift(1).fillna(0)
+    df_bt['strategy_returns'] = df_bt['returns'] * df_bt['position']
+    df_bt.dropna(inplace=True)
+    
+    if len(df_bt) < 10:
+        return None
+    
+    total_return = (1 + df_bt['strategy_returns']).prod() - 1
+    
+    std = df_bt['strategy_returns'].std()
+    if std == 0 or np.isnan(std):
+        sharpe = 0.0
+    else:
+        sharpe = df_bt['strategy_returns'].mean() / std * (252 ** 0.5)
+    
+    # 只統計有持倉的交易
+    active = df_bt[df_bt['position'] != 0]
+    if len(active) > 0:
+        win_rate = float((active['strategy_returns'] > 0).sum() / len(active))
+        trade_count = len(active)
+    else:
+        win_rate = 0.0
+        trade_count = 0
+    
+    # 最大回撤
+    cumulative = (1 + df_bt['strategy_returns']).cumprod()
+    rolling_max = cumulative.expanding().max()
+    drawdown = (cumulative - rolling_max) / rolling_max
+    max_dd = abs(float(drawdown.min())) if len(drawdown) > 0 else 0.0
+    
+    if np.isnan(sharpe): sharpe = 0.0
+    if np.isnan(total_return): total_return = 0.0
+    
+    return {
+        'symbol': symbol,
+        'timeframe': timeframe,
+        'indicator': 'strategy',
+        'total_return': float(total_return),
+        'sharpe': float(sharpe),
+        'max_dd': float(max_dd),
+        'win_rate': float(win_rate),
+        'trades': trade_count,
+        'score': float(sharpe * (trade_count ** 0.5)) if sharpe > 0 and trade_count > 0 else 0.0
+    }
+
+
+def run_backtest_for_strategy(df, strategy_instance, symbol, timeframe):
+    """用策略類別跑回測"""
+    import pandas as pd
+    
+    if df is None or len(df) < 50:
+        return None
+    
+    # 重命名欄位讓策略可以讀（策略用大寫欄位名）
+    price_data = df.rename(columns={
+        'close': 'Close', 'open': 'Open', 'high': 'High', 'low': 'Low', 'volume': 'Volume'
+    })
+    
+    # 逐行生成信號
+    signals = [0] * 50  # 前 50 行 warmup
+    for i in range(50, len(price_data)):
+        window = price_data.iloc[:i+1]
+        try:
+            result = strategy_instance.generate_signal({}, window)
+            sig = result.signal if hasattr(result, 'signal') else str(result)
+            signals.append(1 if sig in ('LONG', 'BUY') else (-1 if sig in ('SHORT', 'SELL') else 0))
+        except:
+            signals.append(0)
+    
+    df_bt = df.copy()
+    df_bt['signal'] = signals[:len(df_bt)]
+    
+    return calculate_performance(df_bt, symbol, timeframe)
+
 
 def load_backtest_results():
     """加載所有回測結果"""
@@ -400,6 +527,8 @@ def run_backtest_task(run_id, symbols, timeframes, indicators):
     completed = 0
     results = []
     
+    print(f"[DEBUG] Starting backtest task: run_id={run_id}, symbols={symbols}, timeframes={timeframes}, indicators={indicators}")
+    
     with get_db_cursor() as c:
         c.execute("UPDATE backtest_runs SET total=%s, started_at=NOW() WHERE batch_id=%s", (total, run_id))
     
@@ -415,10 +544,22 @@ def run_backtest_task(run_id, symbols, timeframes, indicators):
             
             for indicator in indicators:
                 try:
-                    params = INDICATOR_PARAMS.get(indicator, {})
-                    result = run_backtest_for_indicator(df, indicator, params, symbol, tf)
-                    if result:
-                        results.append(result)
+                    print(f"[DEBUG] Processing indicator: {indicator}")
+                    if indicator.startswith('strategy:'):
+                        strategy_id = indicator.replace('strategy:', '').lower()
+                        all_strats = load_all_strategies()
+                        print(f"[DEBUG] Strategy detected: {indicator}, id: {strategy_id}, found: {strategy_id in all_strats}")
+                        if strategy_id in all_strats:
+                            result = run_backtest_for_strategy(df, all_strats[strategy_id]['instance'], symbol, tf)
+                            if result:
+                                result['indicator'] = indicator  # 保留完整 id
+                                print(f"[DEBUG] Strategy result: indicator={result['indicator']}, sharpe={result.get('sharpe')}")
+                                results.append(result)
+                    else:
+                        params = INDICATOR_PARAMS.get(indicator, {})
+                        result = run_backtest_for_indicator(df, indicator, params, symbol, tf)
+                        if result:
+                            results.append(result)
                 except Exception as e:
                     print(f"Error running backtest for {symbol}/{tf}/{indicator}: {e}")
                 
@@ -428,8 +569,10 @@ def run_backtest_task(run_id, symbols, timeframes, indicators):
                               (completed, run_id))
     
     # 完成：寫入結果 + 更新狀態
+    print(f"[DEBUG] Writing {len(results)} results to DB for run {run_id}")
     with get_db_cursor() as c:
         for r in results:
+            print(f"[DEBUG] Inserting: symbol={r['symbol']}, indicator={r['indicator']}, sharpe={r.get('sharpe')}")
             c.execute("""
                 INSERT INTO stock_strategies (symbol, timeframe, indicator, params, sharpe, return_pct, win_rate, trades, score, batch_id)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -515,18 +658,32 @@ def get_backtest_status(run_id):
 @backtests_bp.route('/indicators', methods=['GET'])
 def get_available_indicators():
     """取得可用的回測指標清單"""
-    indicators = [
-        {'value': 'RSI', 'label': 'RSI', 'desc': 'RSI(14) 超買超賣'},
-        {'value': 'RSI_7', 'label': 'RSI-7', 'desc': 'RSI(7) 短週期版'},
-        {'value': 'MACD', 'label': 'MACD', 'desc': 'MACD(12/26/9) 趨勢跟蹤'},
-        {'value': 'SMA_Cross', 'label': 'SMA Cross', 'desc': 'SMA(10/50) 均線交叉'},
-        {'value': 'EMA_Cross', 'label': 'EMA Cross', 'desc': 'EMA(12/26) 指數均線交叉'},
-        {'value': 'Bollinger', 'label': 'Bollinger Bands', 'desc': '布林帶(20,2) 均值回歸'},
-        {'value': 'VolumeMA_Crossover', 'label': 'Volume MA Crossover', 'desc': '成交量MA交叉'},
-        {'value': 'VolumePrice_Confirm', 'label': 'Volume Price Confirm', 'desc': '量價確認'},
-        {'value': 'VWAP_Reversion', 'label': 'VWAP Reversion', 'desc': 'VWAP均值回歸'},
+    all_strats = load_all_strategies()
+    
+    base_indicators = [
+        {'value': 'RSI', 'label': 'RSI (14)', 'desc': 'RSI超買超賣', 'type': 'indicator'},
+        {'value': 'RSI_7', 'label': 'RSI (7)', 'desc': 'RSI短週期', 'type': 'indicator'},
+        {'value': 'MACD', 'label': 'MACD', 'desc': 'MACD趨勢跟蹤', 'type': 'indicator'},
+        {'value': 'SMA_Cross', 'label': 'SMA Cross', 'desc': '均線交叉', 'type': 'indicator'},
+        {'value': 'EMA_Cross', 'label': 'EMA Cross', 'desc': 'EMA交叉', 'type': 'indicator'},
+        {'value': 'Bollinger', 'label': 'Bollinger Bands', 'desc': '布林帶', 'type': 'indicator'},
+        {'value': 'VolumeMA_Crossover', 'label': 'Volume MA', 'desc': '成交量MA交叉', 'type': 'indicator'},
+        {'value': 'VolumePrice_Confirm', 'label': 'Volume Price', 'desc': '量價確認', 'type': 'indicator'},
+        {'value': 'VWAP_Reversion', 'label': 'VWAP Reversion', 'desc': 'VWAP均值回歸', 'type': 'indicator'},
     ]
-    return jsonify({'status': 'ok', 'indicators': indicators, 'count': len(indicators)})
+    
+    strategy_list = [
+        {'value': f'strategy:{k}', 'label': v['name'], 'desc': v['file'].replace('.py',''), 'type': 'strategy'}
+        for k, v in sorted(all_strats.items(), key=lambda x: x[1]['name'])
+    ]
+    
+    return jsonify({
+        'status': 'ok',
+        'indicators': base_indicators + strategy_list,
+        'count': len(base_indicators) + len(strategy_list),
+        'base_count': len(base_indicators),
+        'strategy_count': len(strategy_list)
+    })
 
 
 @backtests_bp.route('/runs/<run_id>/results', methods=['GET'])
