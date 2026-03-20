@@ -327,15 +327,6 @@ def get_paper_balance() -> float:
                     # 獲取現金餘額
                     cash = float(data.iloc[0].get('cash', 0) or 0)
                     
-                    # 計算本地現金餘額進行比對
-                    local_cash = _calculate_local_cash()
-                    
-                    # 差異超過 5% 記 warning (模擬帳戶差異較正常)
-                    if local_cash > 0:
-                        diff_pct = abs(cash - local_cash) / local_cash
-                        if diff_pct > 0.05:
-                            logger.warning(f"⚠️ 現金餘額差異: 富途=${cash:.2f}, 本地=${local_cash:.2f}, 差異={diff_pct*100:.2f}%")
-                    
                     logger.info(f"✅ 現金餘額同步成功: ${cash:.2f} (source: futu)")
                     _cached_balance = max(0, cash)
                     _last_balance_time = time.time()
