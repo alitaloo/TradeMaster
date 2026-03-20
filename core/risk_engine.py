@@ -17,11 +17,49 @@ from config.database import get_db_cursor, get_db_connection
 from config.constants import RISK_CONFIG
 
 
+def _load_risk_config_from_db():
+    """從數據庫加載風控配置，覆蓋默認值"""
+    default_config = {
+        'max_single_amount_pct': 0.10,
+        'max_total_position_pct': 0.90,
+        'max_position_per_stock_pct': 0.25,
+        'max_leverage': 3.0,
+        'min_confidence': 0.60,
+        'max_stocks': 10,
+        'stop_loss_pct': 0.05,
+        'take_profit_pct': 0.10,
+    }
+    
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT config_key, config_value FROM system_config WHERE config_key LIKE 'risk.%'")
+            rows = cursor.fetchall()
+        
+        for row in rows:
+            key = row['config_key'].replace('risk.', '', 1)
+            try:
+                if '.' in row['config_value']:
+                    default_config[key] = float(row['config_value'])
+                else:
+                    default_config[key] = int(row['config_value'])
+            except (ValueError, TypeError):
+                pass
+    except Exception as e:
+        print(f"Warning: Failed to load risk config from DB: {e}")
+    
+    return default_config
+
+
 class RiskEngine:
     """風控引擎"""
     
     def __init__(self, config=None):
-        self.config = config or RISK_CONFIG
+        # 優先從 DB 讀取配置，否則使用傳入的 config 或默認 RISK_CONFIG
+        if config is None:
+            self.config = _load_risk_config_from_db()
+        else:
+            self.config = config
     
     def _get_total_assets(self):
         """取得當前總資產（現金 + 持倉市值），用於動態計算風控閾值"""
