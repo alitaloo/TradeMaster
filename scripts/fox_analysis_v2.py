@@ -368,6 +368,7 @@ def load_stock_strategies() -> dict:
         cursor.execute("""
             SELECT symbol, timeframe, indicator, params
             FROM stock_strategies
+            WHERE COALESCE(active, 1) = 1
         """)
         
         rows = cursor.fetchall()
