@@ -512,6 +512,23 @@ def get_backtest_status(run_id):
     })
 
 
+@backtests_bp.route('/indicators', methods=['GET'])
+def get_available_indicators():
+    """取得可用的回測指標清單"""
+    indicators = [
+        {'value': 'RSI', 'label': 'RSI', 'desc': 'RSI(14) 超買超賣'},
+        {'value': 'RSI_7', 'label': 'RSI-7', 'desc': 'RSI(7) 短週期版'},
+        {'value': 'MACD', 'label': 'MACD', 'desc': 'MACD(12/26/9) 趨勢跟蹤'},
+        {'value': 'SMA_Cross', 'label': 'SMA Cross', 'desc': 'SMA(10/50) 均線交叉'},
+        {'value': 'EMA_Cross', 'label': 'EMA Cross', 'desc': 'EMA(12/26) 指數均線交叉'},
+        {'value': 'Bollinger', 'label': 'Bollinger Bands', 'desc': '布林帶(20,2) 均值回歸'},
+        {'value': 'VolumeMA_Crossover', 'label': 'Volume MA Crossover', 'desc': '成交量MA交叉'},
+        {'value': 'VolumePrice_Confirm', 'label': 'Volume Price Confirm', 'desc': '量價確認'},
+        {'value': 'VWAP_Reversion', 'label': 'VWAP Reversion', 'desc': 'VWAP均值回歸'},
+    ]
+    return jsonify({'status': 'ok', 'indicators': indicators, 'count': len(indicators)})
+
+
 @backtests_bp.route('/runs/<run_id>/results', methods=['GET'])
 def get_run_results(run_id):
     """取得回測結果 - GET /api/v1/backtests/runs/{run_id}/results"""
