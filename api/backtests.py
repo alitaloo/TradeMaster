@@ -521,7 +521,7 @@ INDICATOR_PARAMS = {
 }
 
 
-def run_backtest_task(run_id, symbols, timeframes, indicators):
+def run_backtest_task(run_id, symbols, timeframes, indicators, days=365):
     """背景執行回測"""
     total = len(symbols) * len(timeframes) * len(indicators)
     completed = 0
@@ -534,7 +534,7 @@ def run_backtest_task(run_id, symbols, timeframes, indicators):
     
     for symbol in symbols:
         for tf in timeframes:
-            df = get_data(symbol, tf)
+            df = get_data(symbol, tf, days=days)
             if df is None or len(df) < 50:
                 completed += len(indicators)
                 with get_db_cursor() as c:
@@ -594,6 +594,9 @@ def trigger_backtest():
     symbols = data.get('symbols', [])
     timeframes = data.get('timeframes', ['1d'])
     indicators = data.get('indicators', ['RSI'])
+    days = int(data.get('days', 365))  # 預設1年
+    # 限制範圍：最少 90 天，最多 730 天
+    days = max(90, min(days, 730))
     
     if not symbols:
         return jsonify({"status": "error", "message": "symbols is required"}), 400
@@ -607,10 +610,10 @@ def trigger_backtest():
         c.execute("""
             INSERT INTO backtest_runs (batch_id, total, completed, status, notes)
             VALUES (%s, %s, 0, 'running', %s)
-        """, (run_id, total, f"symbols={symbols}, timeframes={timeframes}, indicators={indicators}"))
+        """, (run_id, total, f"symbols={symbols}, timeframes={timeframes}, indicators={indicators}, days={days}"))
     
     # 啟動背景執行緒
-    thread = threading.Thread(target=run_backtest_task, args=(run_id, symbols, timeframes, indicators))
+    thread = threading.Thread(target=run_backtest_task, args=(run_id, symbols, timeframes, indicators, days))
     thread.daemon = True
     thread.start()
     
