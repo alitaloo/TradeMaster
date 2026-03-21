@@ -751,16 +751,35 @@ def apply_backtest_result():
     if not symbol or not timeframe or not indicator:
         return jsonify({"status": "error", "message": "symbol, timeframe, indicator are required"}), 400
     
-    # 更新 stock_strategies 表，設 active=1
+    # 先從 strategy_results 查回測數據（如果有）
     with get_db_cursor() as c:
         c.execute("""
-            UPDATE stock_strategies
-            SET active = 1, updated_at = NOW()
-            WHERE symbol = %s AND timeframe = %s AND indicator = %s
+            SELECT sharpe, return_pct, win_rate, trades, score
+            FROM strategy_results
+            WHERE symbol=%s AND timeframe=%s AND indicator=%s
+            ORDER BY score DESC LIMIT 1
         """, (symbol, timeframe, indicator))
+        sr = c.fetchone()
         
-        if c.rowcount == 0:
-            return jsonify({"status": "error", "message": "Strategy not found"}), 404
+        # 先把所有同 symbol+timeframe 的設為 inactive
+        c.execute("""
+            UPDATE stock_strategies SET active=0, updated_at=NOW()
+            WHERE symbol=%s AND timeframe=%s
+        """, (symbol, timeframe))
+        
+        # upsert 到 stock_strategies 並設 active=1
+        sharpe = sr['sharpe'] if sr else 0
+        return_pct = sr['return_pct'] if sr else 0
+        win_rate = sr['win_rate'] if sr else 0
+        trades = sr['trades'] if sr else 0
+        score = sr['score'] if sr else 0
+        
+        c.execute("""
+            INSERT INTO stock_strategies (symbol, timeframe, indicator, params, sharpe, return_pct, win_rate, trades, score, active, batch_id)
+            VALUES (%s, %s, %s, '{}', %s, %s, %s, %s, %s, 1, %s)
+            ON DUPLICATE KEY UPDATE active=1, sharpe=%s, return_pct=%s, win_rate=%s, trades=%s, score=%s, updated_at=NOW()
+        """, (symbol, timeframe, indicator, sharpe, return_pct, win_rate, trades, score, 'manual_apply',
+              sharpe, return_pct, win_rate, trades, score))
     
     # 標記 Fox 重載
     _fox_cache_loaded = False
