@@ -572,15 +572,31 @@ def run_backtest_task(run_id, symbols, timeframes, indicators, days=365):
     print(f"[DEBUG] Writing {len(results)} results to DB for run {run_id}")
     with get_db_cursor() as c:
         for r in results:
-            print(f"[DEBUG] Inserting: symbol={r['symbol']}, indicator={r['indicator']}, sharpe={r.get('sharpe')}")
+            # 寫入 strategy_results（所有回測結果）
             c.execute("""
-                INSERT INTO stock_strategies (symbol, timeframe, indicator, params, sharpe, return_pct, win_rate, trades, score, batch_id)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                ON DUPLICATE KEY UPDATE sharpe=%s, return_pct=%s, win_rate=%s, trades=%s, batch_id=%s, updated_at=NOW()
-            """, (r['symbol'], r['timeframe'], r['indicator'], '{}',
-                  r.get('sharpe', 0), r.get('total_return', 0),
-                  r.get('win_rate', 0), r.get('trades', 0), r.get('score', 0), run_id,
-                  r.get('sharpe', 0), r.get('total_return', 0), r.get('win_rate', 0), r.get('trades', 0), run_id))
+                INSERT IGNORE INTO strategy_results (batch_id, symbol, timeframe, indicator, params, params_hash, sharpe, return_pct, win_rate, trades, score, created_at)
+                VALUES (%s, %s, %s, %s, '{}', MD5(CONCAT(%s,%s,%s,%s)), %s, %s, %s, %s, %s, NOW())
+            """, (run_id, r['symbol'], r['timeframe'], r['indicator'],
+                  run_id, r['symbol'], r['timeframe'], r['indicator'],
+                  r.get('sharpe', 0), r.get('total_return', 0), r.get('win_rate', 0), r.get('trades', 0), r.get('score', 0)))
+
+        # 更新 stock_strategies：每個 symbol+timeframe 只保留最佳策略（最高 score）
+        symbols_tfs = set((r['symbol'], r['timeframe']) for r in results)
+        for sym, tf in symbols_tfs:
+            c.execute("""
+                SELECT indicator, sharpe, return_pct, win_rate, trades, score
+                FROM strategy_results
+                WHERE symbol=%s AND timeframe=%s AND score > 0
+                ORDER BY score DESC LIMIT 1
+            """, (sym, tf))
+            best = c.fetchone()
+            if best:
+                c.execute("""
+                    INSERT INTO stock_strategies (symbol, timeframe, indicator, params, sharpe, return_pct, win_rate, trades, score, batch_id)
+                    VALUES (%s, %s, %s, '{}', %s, %s, %s, %s, %s, %s)
+                    ON DUPLICATE KEY UPDATE indicator=%s, sharpe=%s, return_pct=%s, win_rate=%s, trades=%s, score=%s, batch_id=%s, updated_at=NOW()
+                """, (sym, tf, best['indicator'], best['sharpe'], best['return_pct'], best['win_rate'], best['trades'], best['score'], run_id,
+                      best['indicator'], best['sharpe'], best['return_pct'], best['win_rate'], best['trades'], best['score'], run_id))
         
         c.execute("UPDATE backtest_runs SET status='completed', completed=%s WHERE batch_id=%s",
                   (total, run_id))
