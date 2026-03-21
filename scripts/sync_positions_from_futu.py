@@ -159,6 +159,24 @@ def main():
     for pos in final_positions:
         print(f"  {pos['symbol']}: {pos['quantity']} @ ${pos['average_cost']} (mv=${pos['market_value']}, P&L=${pos['unrealized_pnl']})")
     
+    # Step 6: 同步現金餘額到 system_config
+    try:
+        from futu.trade.open_trade_context import OpenUSTradeContext
+        from futu.common.constant import TrdEnv
+        with OpenUSTradeContext(host='127.0.0.1', port=11111) as trade_ctx:
+            ret, acc_data = trade_ctx.accinfo_query(trd_env=TrdEnv.SIMULATE)
+            if ret == 0 and acc_data is not None and len(acc_data) > 0:
+                cash = float(acc_data.iloc[0].get('cash', 0) or 0)
+                with get_db_cursor() as c:
+                    c.execute("""
+                        INSERT INTO system_config (config_key, config_value, description)
+                        VALUES ('paper.cash_balance', %s, 'Futu 模擬帳戶現金（由 sync 更新）')
+                        ON DUPLICATE KEY UPDATE config_value=%s, updated_at=NOW()
+                    """, (str(cash), str(cash)))
+                print(f"  ✅ 現金餘額已寫入 DB: ${cash:,.2f}")
+    except Exception as e:
+        print(f"  ⚠️ 現金餘額同步失敗: {e}")
+
     # Summary
     print("\n" + "=" * 60)
     print(f"✅ Sync completed: {inserted} positions inserted")

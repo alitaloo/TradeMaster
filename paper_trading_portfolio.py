@@ -314,26 +314,21 @@ def get_paper_balance() -> float:
     
     trading_mode = SystemConfig.get_trading_mode()
     
-    # 優先嘗試從富途 API 獲取現金餘額（設 5 秒超時）
-    if is_futu_available():
-        try:
-            from futu.trade.open_trade_context import OpenUSTradeContext
-            from futu.common.constant import TrdEnv
-            
-            with OpenUSTradeContext(host='127.0.0.1', port=11111) as trade_ctx:
-                ret, data = trade_ctx.accinfo_query(trd_env=TrdEnv.SIMULATE)
-                
-                if ret == 0 and data is not None and len(data) > 0:
-                    # 獲取現金餘額
-                    cash = float(data.iloc[0].get('cash', 0) or 0)
-                    
-                    logger.info(f"✅ 現金餘額同步成功: ${cash:.2f} (source: futu)")
-                    _cached_balance = max(0, cash)
-                    _last_balance_time = time.time()
-                    return _cached_balance
-        except Exception as e:
-            logger.warning(f"富途 API 獲取現金失敗: {e}，fallback 到本地計算")
-    
+    # 優先從 system_config 讀快取現金（由 sync_positions_from_futu.py 定時更新）
+    try:
+        from config.database import get_db_cursor
+        with get_db_cursor() as c:
+            c.execute("SELECT config_value FROM system_config WHERE config_key='paper.cash_balance'")
+            row = c.fetchone()
+            if row and row['config_value']:
+                cash = float(row['config_value'])
+                logger.debug(f"現金餘額來自 DB cache: ${cash:.2f}")
+                _cached_balance = max(0, cash)
+                _last_balance_time = time.time()
+                return _cached_balance
+    except Exception:
+        pass
+
     # Fallback: 本地計算
     cash = _calculate_local_cash()
     logger.info(f"✅ 現金餘額計算成功: ${cash:.2f} (source: local)")

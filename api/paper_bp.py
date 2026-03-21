@@ -22,7 +22,7 @@ from paper_reports import (
     track_signal_hit_rate,
     compare_backtest_simulation
 )
-from models import SystemConfig
+from models import SystemConfig, PaperPosition
 
 paper_bp = Blueprint('paper', __name__, url_prefix='/api/v1/paper')
 
@@ -44,14 +44,12 @@ def enable_paper_trading():
 
 @paper_bp.route('/positions', methods=['GET'])
 def get_positions():
-    """取得模擬持倉（實時更新價格）"""
-    # 先更新所有持倉價格
-    from paper_trading_portfolio import update_position_prices
-    positions = update_position_prices()
+    """取得模擬持倉（直接從DB讀取，由watcher定時同步價格）"""
+    positions = PaperPosition.find_all()
     
     return jsonify({
         'success': True,
-        'positions': positions,
+        'positions': [p.to_dict() for p in positions],
         'count': len(positions)
     })
 
