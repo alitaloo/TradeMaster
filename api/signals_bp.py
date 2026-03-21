@@ -34,6 +34,7 @@ def get_signals():
     """獲取信號列表 (支持 offset 分頁)"""
     status = request.args.get('status')
     symbol = request.args.get('symbol')
+    account_type = request.args.get('account_type', 'paper')  # 默認只返回 paper
     limit = int(request.args.get('limit', 100))
     offset = int(request.args.get('offset', 0))
 
@@ -54,6 +55,11 @@ def get_signals():
             query += " AND symbol = %s"
             count_query += " AND symbol = %s"
             params.append(symbol)
+
+        if account_type:
+            query += " AND account_type = %s"
+            count_query += " AND account_type = %s"
+            params.append(account_type)
 
         # Get total count
         cursor.execute(count_query, params)
@@ -84,13 +90,14 @@ def get_signals():
 def get_latest_signals():
     """獲取最新信號 (供 store/Dashboard 使用)"""
     limit = int(request.args.get('limit', 10))
+    account_type = request.args.get('account_type', 'paper')
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT * FROM signals ORDER BY created_at DESC LIMIT %s",
-            (limit,)
+            "SELECT * FROM signals WHERE account_type = %s ORDER BY created_at DESC LIMIT %s",
+            (account_type, limit)
         )
         rows = cursor.fetchall()
 
@@ -175,11 +182,14 @@ def create_signal():
     with get_db_connection() as conn:
         cursor = conn.cursor()
 
+        # 從數據中獲取 account_type，預設為 paper
+        account_type = data.get('account_type', 'paper')
+
         cursor.execute('''
             INSERT INTO signals (symbol, strategy_type, signal_type, price, quantity,
                               confidence, status, risk_score, news_weight, stop_loss,
-                              take_profit, metadata)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                              take_profit, metadata, account_type)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         ''', (
             data['symbol'],
             data.get('strategy_type'),
@@ -192,7 +202,8 @@ def create_signal():
             data.get('news_weight'),
             data.get('stop_loss'),
             data.get('take_profit'),
-            json.dumps(data.get('metadata', {}))
+            json.dumps(data.get('metadata', {})),
+            account_type
         ))
 
         signal_id = cursor.lastrowid

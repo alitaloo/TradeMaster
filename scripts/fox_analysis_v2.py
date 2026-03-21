@@ -1846,6 +1846,7 @@ def create_signal(position: Dict, signal_type: str, confidence: float,
         'stop_loss': stop_loss_price,
         'take_profit': take_profit_price,
         'risk_score': 1 if (news_ok and market_ok) else 0,
+        'account_type': 'paper',  # 模擬交易信號
         'metadata': {
             'reason': reason,
             'market_ok': market_ok,
@@ -2149,7 +2150,79 @@ def run_analysis(dry_run: bool = False, max_age_minutes: Optional[float] = None)
     logger.info(f"   觀望: {hold_count}")
     logger.info("=" * 60)
     
+    # ===== Phase 2: 生成 live 信號 =====
+    # 只從 paper 信號中篩選信心度 >= 0.75 的信號，轉換為 live 信號
+    if not dry_run:
+        _generate_live_signals_from_paper(signals_created)
+    
     return signals_created
+
+
+def _generate_live_signals_from_paper(paper_signals: List[Dict]) -> List[Dict]:
+    """
+    從 paper 信號中篩選符合 live 交易條件的信號，
+    只取信心度 >= 0.75 且非 HOLD 的，最多 5 檔。
+    """
+    from config.database import get_db_cursor
+    
+    # 讀取 live 風控設定
+    min_conf = 0.75
+    max_stocks = 5
+    try:
+        with get_db_cursor() as c:
+            c.execute("SELECT config_key, config_value FROM system_config WHERE config_key IN ('risk.live.min_confidence', 'risk.live.max_stocks')")
+            for r in c.fetchall():
+                if r['config_key'] == 'risk.live.min_confidence':
+                    min_conf = float(r['config_value'])
+                elif r['config_key'] == 'risk.live.max_stocks':
+                    max_stocks = int(float(r['config_value']))
+    except Exception as e:
+        logger.warning(f"   ⚠️ 無法讀取 live 風控設定，使用預設值: {e}")
+    
+    # 篩選：非 HOLD + 信心度 >= min_conf，按信心度降序，取前 max_stocks 檔
+    eligible = [
+        s for s in paper_signals
+        if s.get('signal_type') in ('BUY', 'SELL') 
+        and float(s.get('confidence', 0)) >= min_conf
+    ]
+    eligible.sort(key=lambda x: float(x.get('confidence', 0)), reverse=True)
+    live_candidates = eligible[:max_stocks]
+    
+    if not live_candidates:
+        logger.info("   ℹ️ 沒有符合 live 交易條件的信號（信心度 >= {})".format(min_conf))
+        return []
+    
+    logger.info(f"   🚀 產生 {len(live_candidates)} 個 live 信號候選")
+    
+    # 寫入 live 信號到 DB
+    live_signals = []
+    for sig in live_candidates:
+        live_sig = {
+            'symbol': sig.get('symbol'),
+            'strategy_type': sig.get('strategy_type', 'fox_analysis_v2'),
+            'signal_type': sig.get('signal_type'),
+            'price': sig.get('price'),
+            'quantity': sig.get('quantity'),
+            'confidence': sig.get('confidence'),
+            'status': 'PENDING',
+            'news_weight': sig.get('news_weight', 0),
+            'stop_loss': sig.get('stop_loss'),
+            'take_profit': sig.get('take_profit'),
+            'risk_score': sig.get('risk_score', 1),
+            'account_type': 'live',  # 真實交易信號
+            'metadata': sig.get('metadata', {})
+        }
+        
+        # 調用 API 寫入
+        response = api_post('/signals', live_sig)
+        if response.get('status') == 'ok':
+            logger.info(f"   ✅ Live 信號創建: {sig.get('symbol')} {sig.get('signal_type')} (信心度: {sig.get('confidence')})")
+            live_signals.append(live_sig)
+        else:
+            logger.error(f"   ❌ Live 信號創建失敗: {response.get('message')}")
+    
+    logger.info(f"   📊 共產生 {len(live_signals)} 個 live 信號")
+    return live_signals
 
 
 def main():

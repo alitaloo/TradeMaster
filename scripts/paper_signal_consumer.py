@@ -29,12 +29,13 @@ def is_futu_available() -> bool:
         return False
 
 
-def get_pending_signals(limit: int = 100) -> List[Dict]:
+def get_pending_signals(limit: int = 100, account_type: str = 'paper') -> List[Dict]:
     """
     獲取 pending 信號
 
     Args:
         limit: 最多獲取數量
+        account_type: 帳戶類型 ('paper' 或 'live')
 
     Returns:
         list: 信號列表
@@ -42,11 +43,78 @@ def get_pending_signals(limit: int = 100) -> List[Dict]:
     with get_db_cursor() as cursor:
         cursor.execute("""
             SELECT * FROM signals
-            WHERE status = 'PENDING'
+            WHERE status = 'PENDING' AND account_type = %s
             ORDER BY created_at ASC
             LIMIT %s
-        """, (limit,))
+        """, (account_type, limit))
         return cursor.fetchall()
+
+
+def process_live_signals(dry_run: bool = False) -> Dict:
+    """
+    處理 live 信號 → 下真實單
+    
+    Args:
+        dry_run: 是否模擬運行
+    
+    Returns:
+        dict: 處理結果
+    """
+    from config.database import get_db_cursor
+    from models import SystemConfig
+    
+    # 檢查是否啟用真實交易
+    if SystemConfig.get('live_trading_enabled', 'false') != 'true':
+        return {'message': '真實交易未啟用', 'processed': 0}
+    
+    # 檢查富途 API 是否可用
+    if not is_futu_available():
+        return {'success': False, 'message': '富途 API 未連接，無法處理真實信號'}
+    
+    # 獲取 live pending 信號
+    signals = get_pending_signals(limit=10, account_type='live')
+    
+    if not signals:
+        return {'message': '無 live pending 信號', 'processed': 0}
+    
+    # 導入真實下單模組
+    try:
+        from paper_trading import submit_live_order
+    except ImportError:
+        return {'success': False, 'message': '真實下單模組不可用'}
+    
+    processed = 0
+    for signal in signals:
+        if signal['signal_type'] not in ('BUY', 'SELL'):
+            continue
+        
+        symbol = signal['symbol']
+        order_type = signal['signal_type']
+        quantity = int(signal['quantity'] or 1)
+        price = float(signal['price']) if signal['price'] else None
+        
+        if dry_run:
+            print(f'[Dry Run] 真實下單: {symbol} {order_type} {quantity}')
+            continue
+        
+        # 提交真實訂單
+        result = submit_live_order(
+            symbol=symbol,
+            order_type=order_type,
+            quantity=quantity,
+            price=price,
+            source_signal_id=signal['id']
+        )
+        
+        if result.get('success'):
+            with get_db_cursor() as c:
+                c.execute("UPDATE signals SET status='SENT', updated_at=NOW() WHERE id=%s", (signal['id'],))
+            processed += 1
+            print(f"✅ 真實下單成功: {symbol} {order_type}")
+        else:
+            print(f"❌ 真實下單失敗: {symbol} - {result.get('message')}")
+    
+    return {'processed': processed}
 
 
 def update_signal_status(signal_id: int, status: str) -> bool:
@@ -354,7 +422,7 @@ def process_pending_signals(paper_trading: bool = True, dry_run: bool = False) -
         }
 
     # 獲取 pending 信號
-    signals = get_pending_signals()
+    signals = get_pending_signals(account_type='paper')
     
     if not signals:
         return {
@@ -474,7 +542,7 @@ def process_pending_signals(paper_trading: bool = True, dry_run: bool = False) -
                 print(f'✅ 信號 {signal["id"]} -> 訂單 {result["order_id"]} ({symbol} {order_type} {quantity} @ ${price})')
                 
                 # 若真實交易啟用，同步下真實單（獨立模式）
-                if SystemConfig.get_config('live_trading_enabled', 'false') == 'true':
+                if SystemConfig.get('live_trading_enabled', 'false') == 'true':
                     try:
                         from paper_trading import submit_live_order
                         signal_confidence = float(signal.get('confidence', 0.7))
@@ -537,8 +605,14 @@ if __name__ == '__main__':
         )
         print(f'結果: {result}')
 
-    # 2. 輪詢訂單狀態
-    print("\n[2/3] 輪詢訂單狀態...")
+    # 2. 處理 LIVE 信號（下真實單）
+    if not args.poll_only:
+        print("\n[2/3] 處理 LIVE 信號...")
+        live_result = process_live_signals(dry_run=args.dry_run)
+        print(f'結果: {live_result}')
+
+    # 3. 輪詢訂單狀態
+    print("\n[3/3] 輪詢訂單狀態...")
     poll_orders()
 
     print("\n✅ 完成")
