@@ -40,12 +40,13 @@ def get_trade_password():
 
 
 def get_live_ctx():
-    """取得真實交易 context（FUTUSG + US + 解鎖）"""
+    """取得真實交易 context（FUTUSG + US + 協議加密 + 解鎖）"""
     from futu import OpenSecTradeContext, TrdMarket, SecurityFirm
     ctx = OpenSecTradeContext(
         filter_trdmarket=TrdMarket.US,
         host=FUTU_HOST, port=FUTU_PORT,
         security_firm=SecurityFirm.FUTUSG
+        # is_encrypt=True 需要先在 OpenD 設定 RSA 公鑰才能啟用
     )
     pwd = get_trade_password()
     if pwd:
