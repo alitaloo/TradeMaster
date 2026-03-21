@@ -31,6 +31,7 @@ from api.stock_strategies_bp import stock_strategies_bp
 from api.paper_bp import paper_bp
 from api.system_status_bp import system_status_bp
 from api.manual_actions_bp import manual_actions_bp
+from api.live_bp import live_bp
 from modules.prediction import PredictionEngine
 from data import DataEngine
 
@@ -105,6 +106,7 @@ def create_app(config: dict = None) -> Flask:
     app.register_blueprint(paper_bp)
     app.register_blueprint(system_status_bp)
     app.register_blueprint(manual_actions_bp)
+    app.register_blueprint(live_bp)
     
     # 健康檢查
     @app.route('/health')

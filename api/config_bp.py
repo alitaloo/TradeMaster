@@ -9,6 +9,20 @@ from api.db import get_db_connection
 
 config_bp = Blueprint('config', __name__, url_prefix='/api/v1/config')
 
+# 初始化 live_trading_enabled 配置
+def init_live_trading_config():
+    """初始化真實交易開關配置"""
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT IGNORE INTO system_config (config_key, config_value, description, updated_at)
+            VALUES ('live_trading_enabled', 'false', '真實交易開關（false=模擬, true=真實）', NOW())
+        ''')
+        conn.commit()
+
+# 在模塊加載時初始化
+init_live_trading_config()
+
 # 風控參數默認值（與 constants.py 保持一致）
 DEFAULT_RISK_CONFIG = {
     'risk.max_single_amount_pct': '0.10',
@@ -162,4 +176,57 @@ def update_risk_config():
         "status": "ok",
         "message": f"Risk config updated: {', '.join(updated_keys)}",
         "updated": updated_keys
+    })
+
+
+# ========== 交易模式 API ==========
+# 使用 system_config 表存儲 live_trading_enabled
+
+@config_bp.route('/trading/mode', methods=['GET'])
+def get_trading_mode():
+    """獲取當前交易模式"""
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT config_value FROM system_config WHERE config_key = 'live_trading_enabled'",
+        )
+        row = cursor.fetchone()
+    
+    live_enabled = row and row['config_value'] == 'true'
+    
+    return jsonify({
+        "mode": "live" if live_enabled else "paper",
+        "live_enabled": live_enabled
+    })
+
+
+@config_bp.route('/trading/mode', methods=['PUT'])
+def set_trading_mode():
+    """設置交易模式（啟用/停用真實交易）"""
+    data = request.json
+    enable_live = data.get('enable_live', False)
+    confirm = data.get('confirm', '')
+    
+    # 檢查確認碼
+    if enable_live and confirm != 'ENABLE_LIVE_TRADING':
+        return jsonify({
+            "status": "error",
+            "message": "確認碼錯誤，請輸入 ENABLE_LIVE_TRADING"
+        }), 400
+    
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO system_config (config_key, config_value, updated_at)
+            VALUES ('live_trading_enabled', %s, NOW())
+            ON DUPLICATE KEY UPDATE config_value = %s, updated_at = NOW()
+        ''', ('true' if enable_live else 'false', 'true' if enable_live else 'false'))
+        conn.commit()
+    
+    action = "啟用" if enable_live else "停用"
+    return jsonify({
+        "status": "ok",
+        "message": f"真實交易已{action}",
+        "mode": "live" if enable_live else "paper",
+        "live_enabled": enable_live
     })
