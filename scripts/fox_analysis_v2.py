@@ -1468,13 +1468,90 @@ def calculate_confidence(position: Dict, news_data: Dict, market_data: Dict, tf_
             confidence -= 0.08
             components.append('vix:elevated')
 
-    market_drop = market_data.get('market_drop', 0) or 0
-    if market_drop > 1:
-        confidence += 0.05
-        components.append('market:broad_strength')
-    elif market_drop < -2:
-        confidence -= 0.10
-        components.append('market:broad_weakness')
+    # ===== 多因子大盤評分 (方案三) =====
+    def _market_factor_score(market_data: Dict, components: list) -> float:
+        """多因子大盤評分，返回 -0.20 ~ +0.15"""
+        score = 0.0
+        
+        # 1. 漲跌幅模組（每 1% ≈ ±0.04，上限 ±0.12）
+        md = float(market_data.get('market_drop', 0) or 0)
+        md_score = min(max(md * 0.04, -0.12), 0.08)
+        score += md_score
+        if md > 1:
+            components.append('market:broad_strength')
+        elif md < -1:
+            components.append('market:broad_weakness')
+        else:
+            components.append('market:neutral')
+        
+        # 2. SPY/QQQ 趨勢模組（從 kline_cache 查 5日/20日均線）
+        try:
+            from config.database import get_db_cursor
+            spy_trend = 0
+            qqq_trend = 0
+            with get_db_cursor() as c:
+                for sym in ['US.SPY', 'US.QQQ']:
+                    c.execute("""
+                        SELECT AVG(close) as avg FROM (
+                            SELECT close FROM kline_cache
+                            WHERE symbol=%s AND interval_val='1d'
+                            ORDER BY timestamp DESC LIMIT 5
+                        ) t5
+                    """, (sym,))
+                    ma5_row = c.fetchone()
+                    c.execute("""
+                        SELECT AVG(close) as avg FROM (
+                            SELECT close FROM kline_cache
+                            WHERE symbol=%s AND interval_val='1d'
+                            ORDER BY timestamp DESC LIMIT 20
+                        ) t20
+                    """, (sym,))
+                    ma20_row = c.fetchone()
+                    if ma5_row and ma20_row and ma5_row['avg'] and ma20_row['avg']:
+                        if float(ma5_row['avg']) > float(ma20_row['avg']):
+                            if sym == 'US.SPY': spy_trend = 1
+                            else: qqq_trend = 1
+                        else:
+                            if sym == 'US.SPY': spy_trend = -1
+                            else: qqq_trend = -1
+            
+            if spy_trend == 1 and qqq_trend == 1:
+                score += 0.03
+                components.append('market:dual_bull')
+            elif spy_trend == -1 and qqq_trend == -1:
+                score -= 0.03
+                components.append('market:dual_bear')
+        except Exception:
+            pass  # 查不到就不調整
+        
+        # 3. VIX 模組（絕對值 + 趨勢方向）
+        vix = market_data.get('vix')
+        if vix is not None:
+            vix = float(vix)
+            if vix > 25:
+                score -= 0.03
+            elif vix > 20:
+                score -= 0.01
+            # VIX 3日趨勢
+            try:
+                with get_db_cursor() as c:
+                    c.execute("""
+                        SELECT value, updated_at FROM market
+                        WHERE type='VIX' ORDER BY updated_at DESC LIMIT 1
+                    """)
+                    # 簡單判斷：若 VIX > 20 且市場下跌，VIX 可能在上升
+                    if vix > 20 and md < -0.5:
+                        score -= 0.02
+                        components.append('vix:rising_risk')
+            except Exception:
+                pass
+        
+        # 限制總影響範圍
+        return float(max(min(score, 0.15), -0.20))
+    
+    # 呼叫多因子評分
+    market_score = _market_factor_score(market_data, components)
+    confidence += market_score
 
     if tf_signals:
         consensus = tf_signals.get('consensus')
