@@ -472,6 +472,26 @@ def process_pending_signals(paper_trading: bool = True, dry_run: bool = False) -
                 update_signal_status(signal['id'], 'PROCESSING')
                 processed += 1
                 print(f'✅ 信號 {signal["id"]} -> 訂單 {result["order_id"]} ({symbol} {order_type} {quantity} @ ${price})')
+                
+                # 若真實交易啟用，同步下真實單（獨立模式）
+                if SystemConfig.get_config('live_trading_enabled', 'false') == 'true':
+                    try:
+                        from paper_trading import submit_live_order
+                        signal_confidence = float(signal.get('confidence', 0.7))
+                        live_result = submit_live_order(
+                            symbol=symbol,
+                            order_type=order_type,
+                            quantity=quantity,
+                            price=price,
+                            source_signal_id=signal['id'],
+                            signal_confidence=signal_confidence
+                        )
+                        if live_result.get('success'):
+                            print(f'✅ [LIVE] 信號 {signal["id"]} -> 真實訂單 {live_result.get("futu_order_id")} ({symbol} {order_type} {quantity} @ ${price})')
+                        else:
+                            print(f'⚠️ [LIVE] 信號 {signal["id"]} 真實下單失敗: {live_result.get("error")}')
+                    except Exception as e:
+                        print(f'❌ [LIVE] 真實下單異常: {e}')
             else:
                 # API 失败，标记为 FAIL
                 update_signal_status(signal['id'], 'FAIL')

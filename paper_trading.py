@@ -288,6 +288,94 @@ def submit_paper_order(symbol: str, order_type: str, quantity: int,
         }
 
 
+def submit_live_order(symbol: str, order_type: str, quantity: int,
+                      price: float, source_signal_id: int = None,
+                      signal_confidence: float = 0.7) -> Dict:
+    """
+    提交真實訂單（使用 OpenSecTradeContext + FUTUSG + unlock）
+    
+    Args:
+        symbol: 股票代碼 (如 US.AAPL)
+        order_type: BUY 或 SELL
+        quantity: 股數
+        price: 委託價格
+        source_signal_id: 來源信號 ID
+        signal_confidence: 信號信心度
+    
+    Returns:
+        dict: 訂單結果
+    """
+    from typing import Dict
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    # 檢查真實交易是否啟用
+    if SystemConfig.get_config('live_trading_enabled', 'false') != 'true':
+        return {'success': False, 'error': '真實交易未啟用'}
+    
+    # 讀取 live 專屬風控參數
+    from config.constants import RISK_CONFIG
+    from config.database import get_db_cursor
+    
+    live_config = RISK_CONFIG.copy()
+    with get_db_cursor() as c:
+        c.execute("SELECT config_key, config_value FROM system_config WHERE config_key LIKE 'risk.live.%'")
+        for r in c.fetchall():
+            key = r['config_key'].replace('risk.live.', '')
+            try:
+                live_config[key] = float(r['config_value'])
+            except (ValueError, TypeError):
+                pass
+    
+    # 信心度檢查
+    min_conf = live_config.get('min_confidence', 0.75)
+    if signal_confidence < min_conf:
+        return {'success': False, 'error': f'信心度 {signal_confidence} < live 最低要求 {min_conf}'}
+    
+    # 取得交易密碼
+    pwd = SystemConfig.get_config('live_trade_password', '')
+    
+    try:
+        from futu import OpenSecTradeContext, TrdMarket, SecurityFirm, TrdEnv, TrdSide, OrderType
+        
+        ctx = OpenSecTradeContext(
+            filter_trdmarket=TrdMarket.US,
+            host='127.0.0.1',
+            port=11111,
+            security_firm=SecurityFirm.FUTUSG
+        )
+        
+        # 解鎖
+        if pwd:
+            ret_unlock, _ = ctx.unlock_trade(password=pwd)
+            if ret_unlock != 0:
+                ctx.close()
+                return {'success': False, 'error': '解鎖失敗'}
+        
+        trd_side = TrdSide.BUY if order_type == 'BUY' else TrdSide.SELL
+        
+        ret, data = ctx.place_order(
+            price=price,
+            qty=quantity,
+            code=symbol,
+            trd_side=trd_side,
+            order_type=OrderType.NORMAL,
+            trd_env=TrdEnv.REAL
+        )
+        ctx.close()
+        
+        if ret == 0:
+            futu_order_id = str(data['order_id'].iloc[0]) if hasattr(data, 'iloc') else str(data)
+            logger.info(f"[LIVE] {symbol} {order_type} 真實下單成功: {futu_order_id}")
+            return {'success': True, 'futu_order_id': futu_order_id, 'mode': 'live'}
+        else:
+            logger.warning(f"[LIVE] {symbol} 真實下單失敗: {data}")
+            return {'success': False, 'error': str(data)}
+    except Exception as e:
+        logger.error(f"[LIVE] 真實下單異常: {e}")
+        return {'success': False, 'error': str(e)}
+
+
 def query_order_status(futu_order_id: str) -> Optional[Dict]:
     """向 Futu SIM 查詢單一訂單，回傳 polling/lifecycle 可直接使用欄位。"""
     if not FUTU_AVAILABLE:

@@ -35,6 +35,18 @@ DEFAULT_RISK_CONFIG = {
     'risk.take_profit_pct': '0.10',
 }
 
+# 真實交易風控參數默認值（更嚴格）
+DEFAULT_LIVE_RISK_CONFIG = {
+    'risk.live.max_single_amount_pct': '0.05',    # 單筆上限 5%（模擬是 10%）
+    'risk.live.max_total_position_pct': '0.70',   # 總持倉上限 70%（模擬是 90%）
+    'risk.live.max_position_per_stock_pct': '0.15',  # 單股上限 15%（模擬是 25%）
+    'risk.live.max_leverage': '1.0',              # 不允許槓桿
+    'risk.live.min_confidence': '0.75',           # 最低信心度 75%（模擬是 60%）
+    'risk.live.max_stocks': '5',                  # 最多 5 檔（模擬是 10）
+    'risk.live.stop_loss_pct': '0.03',            # 止損 3%（更緊）
+    'risk.live.take_profit_pct': '0.08',          # 止盈 8%
+}
+
 
 def init_risk_config():
     """初始化風控配置到數據庫（如果不存在）"""
@@ -45,6 +57,12 @@ def init_risk_config():
                 INSERT IGNORE INTO system_config (config_key, config_value, description, updated_at)
                 VALUES (%s, %s, %s, NOW())
             ''', (key, value, f'Auto-initialized risk config: {key}'))
+        # 真實交易風控配置
+        for key, value in DEFAULT_LIVE_RISK_CONFIG.items():
+            cursor.execute('''
+                INSERT IGNORE INTO system_config (config_key, config_value, description, updated_at)
+                VALUES (%s, %s, %s, NOW())
+            ''', (key, value, f'Auto-initialized live risk config: {key}'))
         conn.commit()
 
 
@@ -175,6 +193,70 @@ def update_risk_config():
     return jsonify({
         "status": "ok",
         "message": f"Risk config updated: {', '.join(updated_keys)}",
+        "updated": updated_keys
+    })
+
+
+# ========== Live 風控配置 API ==========
+
+@config_bp.route('/risk/live', methods=['GET'])
+def get_live_risk_config():
+    """獲取所有真實交易風控配置"""
+    # 確保風控配置已初始化
+    init_risk_config()
+    
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT config_key, config_value FROM system_config WHERE config_key LIKE 'risk.live.%'")
+        rows = cursor.fetchall()
+
+    # 轉換為 key: value 格式，去掉 'risk.live.' 前綴
+    config = {}
+    for row in rows:
+        key = row['config_key'].replace('risk.live.', '', 1)
+        # 嘗試轉換為數字
+        try:
+            if '.' in row['config_value']:
+                config[key] = float(row['config_value'])
+            else:
+                config[key] = int(row['config_value'])
+        except (ValueError, TypeError):
+            config[key] = row['config_value']
+
+    return jsonify({
+        "status": "ok",
+        "config": config
+    })
+
+
+@config_bp.route('/risk/live', methods=['PUT'])
+def update_live_risk_config():
+    """批量更新真實交易風控配置"""
+    data = request.json
+    
+    if not data:
+        return jsonify({"status": "error", "message": "No data provided"}), 400
+
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        updated_keys = []
+        
+        for key, value in data.items():
+            db_key = f'risk.live.{key}'
+            # 轉換為字符串存儲
+            str_value = str(value)
+            cursor.execute('''
+                INSERT INTO system_config (config_key, config_value, updated_at)
+                VALUES (%s, %s, NOW())
+                ON DUPLICATE KEY UPDATE config_value = %s, updated_at = NOW()
+            ''', (db_key, str_value, str_value))
+            updated_keys.append(key)
+        
+        conn.commit()
+
+    return jsonify({
+        "status": "ok",
+        "message": f"Live risk config updated: {', '.join(updated_keys)}",
         "updated": updated_keys
     })
 
